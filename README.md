@@ -2,6 +2,12 @@
 
 Evening lectures on Rust in Ghent Nov - Dec 2025 for experienced developers. Registration is possible [on pretix.eu](https://pretix.eu/devlab/rust-course/).
 
+## Pre-requisites
+
+- Familiarity with at least one multi-purpose programming language.
+- A laptop to solve exercises during the session.
+- Download of the slides for the next session.
+
 ## Course plan
 
 1. **Introduction** — Patterns, methods, traits and generics ([slides](./session-1/slides.pdf))
