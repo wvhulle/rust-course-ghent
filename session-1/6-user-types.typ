@@ -512,9 +512,11 @@
     edge(<compile-div-top>, <compile-div-bottom>, "=", stroke: gray),
     pause,
 
-    node((1, 0), text(fill: gray)[Wild West: \  embedded], name: <wild-west>),
-    node((2, -0.5), [*Runtime \ world*], name: <runtime>),
 
+    node((2, -0.5), [*Runtime \ world*], name: <runtime>),
+    pause,
+
+    node((1, 0), text(fill: gray)[Wild West: \  embedded], name: <wild-west>),
     pause,
     node((1, 2), [`OnceLock` \ `LazyLock` \ "init on use"], name: <once-lock>),
 
@@ -546,174 +548,6 @@
 
   Create a data structure to represent an event in an elevator control system.
 
-  #link("https://google.github.io/comprehensive-rust/user-defined-types/exercise.html")
+  Complete the code in `session-1/examples/s1e3-elevator.rs`.
 
-  #qrcode("https://google.github.io/comprehensive-rust/user-defined-types/exercise.html")
-
-  Requirements:
-  - Define types and functions to construct various events
-  - Use `#[derive(Debug)]` to allow formatting with `{:?}`
-  - This exercise only requires creating and populating data structures
-  - The `main` function should run without errors
-
-  #info[The next part of the course will cover getting data out of these structures.]
 ]
-
-
-#slide[
-  === Starter Code: Main Function
-
-  ```rust
-  fn main() {
-      println!(
-          "A ground floor passenger has pressed the up button: {:?}",
-          lobby_call_button_pressed(0, Direction::Up)
-      );
-      println!("The car has arrived on the ground floor: {:?}", car_arrived(0));
-      println!("The car door opened: {:?}", car_door_opened());
-      println!(
-          "A passenger has pressed the 3rd floor button: {:?}",
-          car_floor_button_pressed(3)
-      );
-      println!("The car door closed: {:?}", car_door_closed());
-      println!("The car has arrived on the 3rd floor: {:?}", car_arrived(3));
-  }
-  ```
-]
-
-#slide[
-  === Starter Code: Types
-
-  ```rust
-  #[derive(Debug)]
-  /// An event in the elevator system that the controller must react to.
-  enum Event {
-      // TODO: add required variants
-  }
-
-  /// A direction of travel.
-  #[derive(Debug)]
-  enum Direction {
-      Up,
-      Down,
-  }
-  ```
-]
-
-#slide[
-  === Starter Code: Helper Functions
-
-  ```rust
-  /// The car has arrived on the given floor.
-  fn car_arrived(floor: i32) -> Event {
-      todo!()
-  }
-
-  /// The car doors have opened.
-  fn car_door_opened() -> Event {
-      todo!()
-  }
-
-  /// The car doors have closed.
-  fn car_door_closed() -> Event {
-      todo!()
-  }
-  ```
-]
-
-#slide[
-
-  ```rust
-  /// A directional button was pressed in an elevator lobby on the given floor.
-  fn lobby_call_button_pressed(floor: i32, dir: Direction) -> Event {
-      todo!()
-  }
-
-  /// A floor button was pressed in the elevator car.
-  fn car_floor_button_pressed(floor: i32) -> Event {
-      todo!()
-  }
-  ```
-]
-
-
-#slide[
-  === Solution: event enum
-
-  ```rust
-  #[derive(Debug)]
-  /// An event in the elevator system that the controller must react to.
-  enum Event {
-      /// A button was pressed.
-      ButtonPressed(Button),
-      /// The car has arrived at the given floor.
-      CarArrived(Floor),
-      /// The car's doors have opened.
-      CarDoorOpened,
-      /// The car's doors have closed.
-      CarDoorClosed,
-  }
-  /// A floor is represented as an integer.
-  type Floor = i32;
-  ```
-]
-
-#slide[
-  === Solution: direction and button enums
-
-  ```rust
-  /// A direction of travel.
-  #[derive(Debug)]
-  enum Direction {
-      Up,
-      Down,
-  }
-  /// A user-accessible button.
-  #[derive(Debug)]
-  enum Button {
-      /// A button in the elevator lobby on the given floor.
-      LobbyCall(Direction, Floor),
-      /// A floor button within the car.
-      CarFloor(Floor),
-  }
-  ```
-]
-
-#slide[
-  === Solution: helper functions
-
-  ```rust
-  /// The car has arrived on the given floor.
-  fn car_arrived(floor: i32) -> Event {
-      Event::CarArrived(floor)
-  }
-
-  /// The car doors have opened.
-  fn car_door_opened() -> Event {
-      Event::CarDoorOpened
-  }
-
-  /// The car doors have closed.
-  fn car_door_closed() -> Event {
-      Event::CarDoorClosed
-  }
-  ```
-]
-
-#slide[
-
-  ```rust
-  /// A directional button was pressed in an elevator lobby on the given floor.
-  fn lobby_call_button_pressed(floor: i32, dir: Direction) -> Event {
-      Event::ButtonPressed(Button::LobbyCall(dir, floor))
-  }
-
-  /// A floor button was pressed in the elevator car.
-  fn car_floor_button_pressed(floor: i32) -> Event {
-      Event::ButtonPressed(Button::CarFloor(floor))
-  }
-  ```
-
-  #info[Use nested enums (`Event::ButtonPressed(Button::...)`) to model the domain clearly.]
-]
-

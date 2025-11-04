@@ -163,7 +163,7 @@
   #pause
 
   Exercises:
-  - Exercise from Comprehensive Rust book #link("https://google.github.io/comprehensive-rust/")[here]
+  - Exercise from Google's Rust course
   - More exercises #link("https://exercism.org/tracks/rust")
   - Lots of official documentation #link("https://doc.rust-lang.org/std/index.html")
 
@@ -184,13 +184,22 @@
   You don't have to install Rust for this first lecture:
 
   - Solve during lectures in playground https://play.rust-lang.org
-  - Code samples have a QR code that you can scan or click
+  - Code samples have a "playground link" at the bottom right
+
 
   #pause
 
+  Do you prefer to do exercises locally?
 
-  #info(title: [Unsatisfied?])[Find additional exercises on #link("https://exercism.org/tracks/rust/exercises").]
+  - Find copies of exercises in the `session-N/examples/` folders
+  - Run them with `cargo run --example s1e1-fibonacci` (from root or session folder).
 
+  #pause
+
+  Still need harder challenges:
+
+  - Find additional exercises on #link("https://exercism.org/tracks/rust/exercises").
+  - Work on your own project!
 
 
 ]

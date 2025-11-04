@@ -340,8 +340,5 @@ fn main() {
 #slide[
   Let's write a simple recursive evaluator for arithmetic expressions.
 
-  #link("https://google.github.io/comprehensive-rust/pattern-matching/exercise.html")
-
-  #qrcode("https://google.github.io/comprehensive-rust/pattern-matching/exercise.html")
-
+  Complete the `eval` function in the file `session-1/examples/s1e6-evaluation.rs`.
 ]

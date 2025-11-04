@@ -213,36 +213,7 @@
 
 #slide[
 
-  The Collatz Sequence is defined as follows, for an arbitrary n1 greater than zero:
-
-  - If n is even, the next number in the sequence is n / 2
-  - If n is odd, the next number in the sequence is 3n + 1
-  - The sequence ends when it reaches 1.
-
-
-  Determine the length of the collatz sequence beginning at `n`.
-  ```rust
-  fn collatz_length(mut n: i32) -> u32 { todo!("Implement this") }
-
-  fn main() {
-      println!("Length: {}", collatz_length(11)); // should be 15
-  }
-  ```
+  Solve the exercise about Collatz sequences by completing the code in `session-1/examples/s1e2-collatz.rs`.
 ]
 
-#slide[
-  Possible solution:
-
-  ```rust
-  fn collatz_length(mut n: i32) -> u32 {
-      let mut len = 1;
-      while n > 1 {
-          n = if n % 2 == 0 { n / 2 } else { 3 * n + 1 };
-          len += 1;
-      }
-      len
-  }
-  ```
-
-]
 

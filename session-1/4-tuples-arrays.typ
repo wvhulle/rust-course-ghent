@@ -199,70 +199,10 @@
       todo!()
   }
   ```
-
-  Try it out with this matrix:
-
-  ```rust
-  let matrix = [
-      [101, 102, 103], // <-- the comment makes rustfmt add a newline
-      [201, 202, 203],
-      [301, 302, 303],
-  ];
-
-  ```
-]
-
-
-== Solution
-
-
-
-#slide[
-  The brute-force solution:
-
-  ```rust
-  fn transpose(matrix: [[i32; 3]; 3]) -> [[i32; 3]; 3] {
-      let mut result = [[0; 3]; 3];
-      for i in 0..3 {
-          for j in 0..3 {
-              result[j][i] = matrix[i][j];
-          }
-      }
-      result
-  }
-  ```
-
-  #pause
-
-  #qa[How would you do it with destructuring?][See next slide.]
+  Find the exercise here: `session-1/examples/s1e3-transpose.rs`.
 
 ]
 
 
 
-#slide[
-  #set text(0.7em)
-  ```rust
-  fn transpose(matrix: [[i32; 3]; 3]) -> [[i32; 3]; 3] {
-      let [
-          [a11, a12, a13],
-          [a21, a22, a23],
-          [a31, a32, a33],
-      ] = matrix;
-      [
-          [a11, a21, a31],
-          [a12, a22, a32],
-          [a13, a23, a33],
-      ]
-  }
-  ```
-
-  #warning[You don't have to hardcode this. Use `const` generics (see later)!]
-
-  ```rust
-  fn transpose<const N: usize>(matrix: [[i32; N]; N]) -> [[i32; N]; N] {
-      let mut result = [[0; N]; N]; todo!()
-  }
-  ```
-]
 

@@ -170,39 +170,18 @@
 
 
 #slide[
-  #qa[Who was Pingala?][An ancient Indian scholar (circa 200 BC) who described the Fibonacci sequence in his work on prosody.]]
+  #qa[Who was Pingala?][An ancient Indian scholar (circa 200 BC) who described the Fibonacci sequence in his work on prosody.]
 
-== Exercise: Fibonacci
-
-#slide(composer: (1fr, 1fr))[
-
-  ```rust
-  fn fib(n: u32) -> u32 {
-    if n < 2 {
-        // The base case.
-        return todo!("Implement this");
-    } else {
-        // The recursive case.
-        return todo!("Implement this");
-    }
-  }
-
-
-  ```
-][
   #info[  The Fibonacci sequence begins with [0, 1]. For n > 1, the next number is the sum of the previous two.]
+
+
+  Complete the code in `session-1/examples/s1e1-fib.rs`.
 ]
 
 
 
 #slide[
-
-  ```rust
-  fn main() {
-      let n = 20;
-      println!("fib({n}) = {}", fib(n));
-  }
-  ```
+  === Follow-up questions
 
   #qa[  When will this function panic?][
     - When `n` is too large and the result overflows `u32`.
