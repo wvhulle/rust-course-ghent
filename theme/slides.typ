@@ -148,7 +148,10 @@
         }
 
         if info.url != none {
-          qrcode(info.url, options: (fg-color: self.colors.primary, scale: 2.0))
+          parbreak()
+          link(
+            info.url,
+          )[#info.url.replace("https://", "")]
         }
       },
     )

@@ -194,6 +194,9 @@
   - Find copies of exercises in the `session-N/examples/` folders
   - Run them with `cargo run --example s1e1-fibonacci` (from root or session folder).
 
+    #warning[Turn off AI extensions for exercises in Rust! Don't use AI to write code for you.]
+
+
   #pause
 
   Still need harder challenges:
