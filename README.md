@@ -7,7 +7,7 @@ Evening lectures on Rust in Ghent Nov - Dec 2025 for experienced developers. Reg
 Important:
 
 - Take a **laptop** to solve exercises during the session.
-- **Install Rust**, clone this repo.
+- **Install Rust**, clone this repo (do this in advance, otherwise you will miss important information).
 - Review topics covered in previous sessions.
 
 If possible:
@@ -41,7 +41,7 @@ cargo run --example s1e1-fibonacci
 
 ### Project
 
-You will have select a topic to work on and finish a larger task (in group or alone). Projects. Open a PR to [./projects.md](./projects.md) to list your project.
+You will have select a topic to work on and finish a larger task (in group or alone). Add your ideas to [./projects.md](./projects.md).
 
 ### Theory
 
