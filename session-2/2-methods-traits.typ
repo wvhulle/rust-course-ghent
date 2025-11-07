@@ -424,38 +424,3 @@
 
 ]
 
-= Conclusion
-
-
-
-#slide[
-
-
-
-  Homework (*deadline = next session*):
-
-  - *Read about generics* (and traits) in chapter 11 of "Programming Rust" (2nd edition): "Traits and Generics" p. 384-431 (PDF available)
-  - Do exercise on generics in `session-1/examples/s1e8-generics.rs`
-  #pause
-  - Think about *who you would like to work with* on a project and what you want to do.
-
-
-  #pause
-
-  Next week:
-
-  - Test about today's topics.
-  - New topics: closures, standard library
-
-  #pause
-
-  Questions?
-
-  Feel free to contact me:
-
-  - Video meeting / email: #link("willemvanhulle@protonmail.com")
-  - Phone: +32 479 080 252
-
-
-
-]

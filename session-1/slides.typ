@@ -23,5 +23,3 @@
 #include "./4-tuples-arrays.typ"
 #include "./5-references.typ"
 #include "./6-user-types.typ"
-#include "./7-pattern-matching.typ"
-#include "./8-methods-traits.typ"

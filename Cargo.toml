@@ -1,4 +1,10 @@
 [workspace]
 resolver = "2"
 
-members = ["session-1"]
+members = ["session-1", "session-2"]
+
+[workspace.lints.clippy]
+dead_code = "allow"
+neeldes_return = "allow"
+unreachable_code = "allow"
+unused_variables = "allow"

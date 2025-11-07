@@ -1,7 +1,8 @@
 #import "../template.typ": *
 
-= Pattern matching
 
+
+= Pattern matching
 
 == Irrefutable patterns
 
