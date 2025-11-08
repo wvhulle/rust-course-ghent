@@ -1,5 +1,48 @@
 #import "../template.typ": *
 
+= Tooling intermezzo
+
+== Debugger
+
+#focus-slide(
+  image("./images/debugger.png"),
+)
+
+== Clippy
+#slide[
+  #image("./images/clippy.png")
+]
+
+#slide[
+  Place clippy rules in your `Cargo.toml` like this:
+
+  ```toml
+  [lints.clippy]
+  complexity = { level = "deny", priority = -1 }
+  pedantic = { level = "deny", priority = -1 }
+  style = { level = "deny", priority = -1 }
+
+  absolute_paths = "deny"
+  allow_attributes_without_reason = "deny"
+  ...
+  ```
+
+  Find more lint rules at #link("https://rust-lang.github.io/rust-clippy/master/index.html")[rust-lang.github.io/rust-clippy].
+
+]
+
+== Summary
+
+#slide[
+  Typical development workflow in Rust:
+
+  1. Debug with GDB / LLDB or VS Code
+  2. Format with `cargo fmt`
+  3. Lint with `cargo clippy`
+  4. Test with `cargo test`
+  5. Build with `cargo build` or `cargo build --release`
+]
+
 = Methods and traits
 
 == Methods
@@ -156,7 +199,8 @@
   #pause
   - The *signatures* of the type's methods *must be identical* to the trait's method signatures
   #pause
-  - *Default implementations* can be provided
+
+  #info[*Default implementations* can be provided]
 ]
 
 == Implementing traits
@@ -419,7 +463,9 @@
 
 #slide[
 
-  Complete the test code in `session-1/tests/s1e8-min.rs`.
+  Complete the test code in `session-2/examples/s2e3-logger.rs`.
+
+  Run code with `cargo run --example s2e3-logger`.
 
 
 ]

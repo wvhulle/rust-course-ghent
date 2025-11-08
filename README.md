@@ -18,7 +18,7 @@ If possible:
 ## Course plan
 
 1. **Introduction** — Patterns, methods, traits and generics ([slides](./session-1/slides.pdf))
-2. **Functional Programming & Standard Library** — Closures, stdlib types, traits
+2. **Functional Programming & Standard Library** — Closures, stdlib types, traits [slides](./session-2/slides.pdf)
 3. **Ownership & Borrowing Fundamentals** — Borrowing, lifetimes, error handling
 4. **Advanced Memory Management** — Memory management, smart pointers
 5. **Code Organization & Quality** — Iterators, modules, testing
@@ -29,12 +29,15 @@ If possible:
 
 ### Exercises
 
+Install Rust as explained in [rustup.rs/](https://rustup.rs/). (For Windows users: don't use `winget` or `chocolatey`)
+
 Exercise statements for session X can be found in the `examples` or `tests` folder of session X. The name of the exercise file you need will be referenced at the end of each chapter in the slides.
 
 Test your solution to a particular exercise (from any subdirectory) with a command like this (for session 1, exercise 1):
 
 ```bash
-cargo run --example s1e1-fibonacci
+cargo run --example s1e1-fibonacci # For binary examples
+cargo run --test s1e1-fibonacci # For test examples
 ```
 
 (Please **avoid searching for existing solutions** or using AI unless you tried at least a few times.)

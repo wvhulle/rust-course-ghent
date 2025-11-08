@@ -13,7 +13,8 @@
 #import "theme/code-fragments.typ": embed-qr-code, embed-url-code, init-code-fragments
 #import "@preview/tiaoma:0.3.0": *
 #import "@preview/codly:1.3.0": *
-
+#import "theme/math-helpers.typ": *
+#import "@preview/curryst:0.5.1": *
 #let rust-course(
   aspect-ratio: "16-9",
   progress-bar: true,

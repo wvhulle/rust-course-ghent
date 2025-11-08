@@ -17,23 +17,17 @@
 
 #title-slide()
 
-= Quiz about last lecture
+
+#include "./1-quiz.typ"
+#include "./2-pattern-matching.typ"
+#include "./3-methods-traits.typ"
+#include "./4-generics.typ"
+#include "./5-closures.typ"
 
 
-#include "./1-pattern-matching.typ"
-#include "./2-methods-traits.typ"
-#include "./3-generics.typ"
-
-= Functional Programming & Standard Library
-
-== Closures
+= Standard library types
 // TODO
 
-== Rust-specific stdlib types
-// TODO
-
-== Standard library traits
-// TODO
 
 
 = Conclusion

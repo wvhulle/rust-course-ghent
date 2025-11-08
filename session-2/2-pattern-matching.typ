@@ -313,6 +313,7 @@ fn main() {
 == Let control flow
 
 #slide[
+  #set text(size: 0.8em)
   ```rust
   use std::time::Duration;
 
@@ -341,5 +342,7 @@ fn main() {
 #slide[
   Let's write a simple recursive evaluator for arithmetic expressions.
 
-  Complete the `eval` function in the file `session-1/examples/s1e6-evaluation.rs`.
+  Complete the `eval` function in the file `session-2/tests/s2e2-evaluation.rs`.
+
+  Run tests with `cargo test --test s2e2-evaluation`.
 ]
