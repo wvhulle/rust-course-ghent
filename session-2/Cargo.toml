@@ -1,6 +1,10 @@
 [package]
+edition = "2024"
 name = "session-2"
 version = "0.1.0"
-edition = "2024"
 
 [dependencies]
+
+[[example]]
+name = "s2d7-diamond-problem"
+path = "examples/s2d7-diamond-problem.rs"

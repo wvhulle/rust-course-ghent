@@ -2,17 +2,13 @@
 
 = Quiz about last lecture
 
-== Disclaimer
+#focus-slide[
+  #image("images/no_pain_no_gain.jpg")
 
-- These are difficult questions. Just try your best!
-- Will not be graded.
-
-
+]
 
 
-
-
-== Loop
+== Comparing pointers
 
 === Question
 
@@ -37,7 +33,7 @@ fn main() {
   #qa[What are zero-sized types?][Types that occupy no space at runtime.]
 
   #fletcher-diagram(
-    spacing: (8em, 0em),
+    spacing: (12em, 0em),
     node((0, 0), width: 23em, name: <original>, [
       ```rust
       struct S;
@@ -50,7 +46,7 @@ fn main() {
     ]),
 
     pause,
-    edge(<original>, <step1>, "->", label: [Desugaring \ pattern match]),
+    edge(<original>, <step1>, "->", label: [Desugaring array \ pattern match]),
     node((1, 0), width: 23em, name: <step1>, [
       ```rust
       fn main() {
@@ -74,7 +70,7 @@ fn main() {
       }
       ```
     ]),
-    edge(<step1>, <step2>, "->", label: [Operator precedence]),
+    edge(<step1>, <step2>, "->", label: [Operator `==` precedence\ above cast with `as`]),
     pause,
     node((1, 1), width: 20em, name: <step3>, [
       ```rust
@@ -119,6 +115,7 @@ fn main() {
   === Explanation
 
   #fletcher-diagram(
+    spacing: (10em, 1em),
     node(
       (1, 0),
       [
@@ -148,7 +145,7 @@ fn main() {
       ],
       name: <step1>,
     ),
-    edge(<original>, <step1>, "->", label: [Desugaring]),
+    edge(<original>, <step1>, "->", label: [Desugaring `..` \ as a range]),
     pause,
     node(
       (1, 1),
@@ -167,7 +164,7 @@ fn main() {
 
       ],
     ),
-    edge(<step1>, <step2>, "->", label: [Type inference]),
+    edge(<step1>, <step2>, "->", label: [Explicit type \ binary literal]),
     pause,
     node(
       (2, 1),

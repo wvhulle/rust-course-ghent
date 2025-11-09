@@ -14,6 +14,13 @@
 ]
 
 #slide[
+
+  Most useful lints:
+
+  - complexity
+  - style
+  - correctness
+
   Place clippy rules in your `Cargo.toml` like this:
 
   ```toml
@@ -390,7 +397,7 @@
 
   #pause
 
-  #qa[Why are associated types are sometimes also called "output types"][The implementer, not the caller, chooses the concrete associated type. (Compare with generics.)]
+  #qa[Why are associated types are sometimes also called "output types"][The implementer, not the caller, chooses the concrete associated type. ]
 
   #pause
 
@@ -406,6 +413,8 @@
   ```
 
 ]
+
+
 
 
 == Deriving

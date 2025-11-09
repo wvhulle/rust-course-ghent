@@ -33,9 +33,13 @@ fn pick_char(cond: bool, left: char, right: char) -> char {
 
 Generics are a zero-cost abstraction.
 
+#focus-slide[
+  #image("images/constraint.jpg", width: 100%)
+]
+
 == Trait bounds
 
-Require the types to implement some trait, so that you can call this trait’s methods
+Require the types to implement some trait, so that you can call this trait's methods
 
 ```rs
 fn duplicate<T: Clone>(a: T) -> (T, T) {
@@ -77,7 +81,7 @@ fn compare_and_print<T: PartialOrd + Display>(a: T, b: T) {
   #grid(columns: (1fr, 1fr), column-gutter: 3em)[
 
     #fletcher-diagram(
-      node((0, -0.5), [*Class inheritance*]),
+      node((0, -1.5), [*Class inheritance*]),
       node((0, 0), [Parent Class], name: <parent>, fill: red.lighten(70%)),
       node((0, 2), [Child Class], name: <child>, fill: red.lighten(70%)),
       edge(<child>, <parent>, "->", label: "inherits"),
@@ -88,26 +92,36 @@ fn compare_and_print<T: PartialOrd + Display>(a: T, b: T) {
       edge(<methods>, <parent>, "..>"),
       edge(<fields>, <child>, "..>"),
       edge(<methods>, <child>, "..>"),
+
+      pause,
+      node((0, -1), [Parent parent Class], name: <parent-parent>, fill: red.lighten(70%)),
+      edge(<parent>, <parent-parent>, "->", label: "inherits", stroke: red),
+      edge(<fields>, <parent-parent>, "..>", label: [overridable], stroke: red),
+      edge(<methods>, <parent-parent>, "..>", label: [overridable], stroke: red),
     )
   ][
     #pause
     #fletcher-diagram(
-      node((0, -1.5), [*Composition wit traits*]),
+      spacing: (0.8em, 3em),
+      node((0, -2), [*Composition with traits*]),
+
+      node((-1.5, -1.5), name: <div-left>),
+      node((1.5, -1.5), name: <div-right>),
+      edge(<div-left>, <div-right>, "="),
       node((0, 0), [Struct], name: <struct>, fill: green.lighten(70%)),
-      node((-0.7, 1), [Trait A], name: <trait-a>, fill: orange.lighten(70%)),
-      node((0.7, 1), [Trait B], name: <trait-b>, fill: orange.lighten(70%)),
+      node((-0.7, -1), [Trait A], name: <trait-a>, fill: orange.lighten(70%)),
+      node((0.7, -1), [Trait B], name: <trait-b>, fill: orange.lighten(70%)),
       edge(<struct>, <trait-a>, "->", label: "impl"),
       edge(<struct>, <trait-b>, "->", label: "impl"),
-      node((0, -1), [Field type], name: <other>, fill: blue.lighten(70%)),
+      node((0, 1), [Field type], name: <other>, fill: blue.lighten(70%)),
       edge(<other>, <struct>, "->", label: "field"),
     )
   ]
 
   #pause
 
-  *Rust approach:* Embed types as fields + implement multiple traits
 
-  #info[Types and traits are completely separate. No data inheritance.]
+  #qa[Are traits in Rust a kind of multiple inheritance?][Yes, but no data inheritance. No diamond problem (see example `diamond-problem`).]
 ]
 
 == `where` clauses
@@ -125,6 +139,8 @@ where
 
 == Feature of `where` clauses
 
+With `where` clauses you can put *trait bounds on composite types*:
+
 ```rs
 fn duplicate_option<T>(a: Option<T>) -> (Option<T>, Option<T>)
 where
@@ -140,11 +156,13 @@ fn main() {
 }
 ```
 
+#info[Powerful feature of generic programming in Rust!]
+
 == Generic datatypes
 
 #slide[
 
-  #set text(size: 0.8em)
+  #set text(size: 0.7em)
 
   #grid(columns: (1fr, 1fr), column-gutter: 2em)[
     ```rs
@@ -160,14 +178,22 @@ fn main() {
             eprintln!("verbosity={verbosity}: {message}");
         }
     }
+    ```
 
-    /// Only log messages up to the given verbosity level.
+    #pause
+
+
+    You can implement a trait for a generic datatype *if you provide template type parameters*.
+
+  ][
+    Only log messages up to the given verbosity level:
+
+    ```rs
     struct VerbosityFilter<L> {
         max_verbosity: u8,
         inner: L,
     }
-    ```
-  ][```rs
+
     impl<L: Logger> Logger for VerbosityFilter<L> {
         fn log(&self, verbosity: u8, message: &str) {
             if verbosity <= self.max_verbosity {
@@ -175,26 +201,32 @@ fn main() {
             }
         }
     }
-
-    fn main() {
-        let logger = VerbosityFilter { max_verbosity: 3, inner: StderrLogger };
-        logger.log(5, "FYI");
-        logger.log(2, "Uhoh");
-    }
     ```
-    Use generics to abstract over the concrete field type.
+
+    #qa[Why is `L` specified twice in `impl<L: Logger>` .. `VerbosityFilter<L>`? Isn't that redundant?][`impl` parameters are separate and usually carries trait bounds (not the datatype).]
+
+    #qa[What happens if you would just use a concrete type as in `impl VerbosityFilter<StderrLogger> { .. }`][Would only work with `StderrLogger` instances, not with any other type that implements `Logger`.]
   ]
 ]
 
 
 
 
-== If `X` impl, then `Y` impl
+
+
+
 
 #slide[
   #set text(size: 0.8em)
-  === Generic impl block
+  === Blanket `impl` blocks
 
+  A blanket implementation is an `impl` block that applies to *all types* that satisfy the trait bounds.
+
+  #codly(
+    highlights: (
+      (line: 6, start: 5, end: 15, fill: red),
+    ),
+  )
   ```rs
   struct VerbosityFilter<L> {
       max_verbosity: u8,
@@ -210,30 +242,34 @@ fn main() {
   }
   ```
 
-  #qa[Why is `L` specified twice in `impl<L: Logger>` .. `VerbosityFilter<L>`? Isn't that redundant?][`impl` parameters are separate and usually carries trait bounds (not the datatype).]
+  It is a bit like in mathematics:
 
-  #qa[What happens if you would just use a concrete type as in `impl VerbosityFilter<StderrLogger> { .. }`][Would only work with `StderrLogger` instances, not with any other type that implements `Logger`.]
+  $ forall l in "Logger": "VerbosityFilter"(l) -> "Logger"(l) $
+
+
 ]
 
-=== Blanket impls
+=== Visualisation
 
 #fletcher-diagram(
-  node((0, 0), [External \ Trait], name: <our-trait>),
   node((0, -1), [*External\ libary*]),
+  node(enclose: (<our-trait>, <method-1>, <method-2>), name: <trait-box>, fill: orange.lighten(90%)),
+  node((0, 0), [External \ Trait], name: <our-trait>),
+
   pause,
+  node(enclose: (<our-trait-2>, <method-3>, <method-4>), name: <our-trait-box-2>, fill: orange.lighten(90%)),
   node((-0.5, 1), [Method 1], name: <method-1>),
   node((0.5, 1), [Method 2], name: <method-2>),
   edge(<our-trait>, <method-1>, "->"),
   edge(<our-trait>, <method-2>, "->"),
   pause,
 
-  node(enclose: (<our-trait>, <method-1>, <method-2>), name: <trait-box>, fill: orange.lighten(90%)),
 
   node((1.5, -1.5), name: <div-up>),
   node((1.5, 2), name: <div-down>),
   edge(<div-up>, <div-down>, "="),
   node((2, -0.5), [Our \ Trait], name: <our-trait-2>),
-  node((4, 1), [Our concrete \ type], name: <our-type>),
+  node((4, 1), [Our concrete \ type], name: <our-type>, fill: blue.lighten(70%)),
 
   pause,
 
@@ -241,16 +277,16 @@ fn main() {
   edge(<our-trait-2>, <method-3>, "->"),
   node((3, -1), [Additional \ method 4], name: <method-4>),
   edge(<our-trait-2>, <method-4>, "->"),
-  node(enclose: (<our-trait-2>, <method-3>, <method-4>), name: <our-trait-box-2>, fill: orange.lighten(90%)),
+
   pause,
 
   node((2.5, 0.8), [Blanket \ impl], name: <blanket-impl>, fill: green.lighten(70%)),
   edge(<our-trait-2>, <blanket-impl>, "->"),
-  edge(<blanket-impl>, <our-type>, "->"),
+  edge(<blanket-impl>, <our-type>, "=>", label: [hooks up], bend: -15deg),
   edge(<trait-box>, <blanket-impl>, "->"),
 
 
-  edge(<our-type>, <our-trait-box-2>, "->"),
+  edge(<our-type>, <our-trait-box-2>, "->", label: [automatic]),
 )
 
 // #let tree = rule(
@@ -361,11 +397,11 @@ It may not always be clear when to pick an associated type or a generic type.
 
 #fletcher-diagram(
   spacing: (6em, 2em),
-  node((0.5, -1), [*Associated types*]),
+  node((0.5, -1), [*Associated types* \ (chosen by the implementer)]),
   node((0, 0), [Generic \ datatype], name: <type>, fill: green.lighten(70%)),
   node((1, 0), [Non-generic \ trait], name: <trait>, fill: orange.lighten(70%)),
   pause,
-  node((0.5, 2), [Single, unique \ associated type], name: <assoc-type>),
+  node((0.5, 2), text(fill: blue)[Single, unique \ associated type], name: <assoc-type>),
   edge(<trait>, <assoc-type>, "->"),
   edge(<type>, <assoc-type>, "->"),
 
@@ -373,10 +409,10 @@ It may not always be clear when to pick an associated type or a generic type.
   node((1.5, 2.5), name: <div-down>),
   edge(<div-up>, <div-down>, "="),
   pause,
-  node((2.5, -1), [*Generic types parameters*]),
+  node((2.5, -1), [*Generic types parameters*\ (chosen by the caller)]),
   node((2.5, 0), [Generic\ datatype], name: <generic-data-type>, fill: green.lighten(70%)),
-  node((2, 1), [Concrete type 1], name: <concrete-type-1>),
-  node((3, 1), [Concrete type 2], name: <concrete-type-2>),
+  node((2, 1), text(fill: blue)[Concrete type 1], name: <concrete-type-1>),
+  node((3, 1), text(fill: blue)[Concrete type 2], name: <concrete-type-2>),
   edge(<generic-data-type>, <concrete-type-1>, "->"),
   edge(<generic-data-type>, <concrete-type-2>, "->"),
   node((2.5, 2.5), [Generic\ trait], name: <trait-assoc>, fill: orange.lighten(70%)),
@@ -388,6 +424,8 @@ It may not always be clear when to pick an associated type or a generic type.
   edge(<concrete-type-2>, <impl-block-2>, "->"),
   edge(<impl-block-1>, <trait-assoc>, "->"),
   edge(<impl-block-2>, <trait-assoc>, "->"),
+  pause,
+  edge(<impl-block-1>, <impl-block-2>, "-/-", stroke: red, label: [May not \ overlap]),
 )
 
 - Associated types behave like output (first choice).
@@ -449,8 +487,14 @@ impl Container<i32> {
 
 #slide[
   === Inference for return type `impl Trait`
+
+  #codly(
+    highlights: (
+      (line: 1, start: 34, end: 45, fill: red),
+    ),
+  )
   ```rs
-  fn returns_impl_trait(x: i32) -> impl std::fmt::Display {
+  fn returns_impl_trait(x: i32) -> impl Display {
       if x > 0 {
           x
       } else {
