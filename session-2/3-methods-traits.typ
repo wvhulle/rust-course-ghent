@@ -414,7 +414,21 @@
 
 ]
 
+#slide[
 
+  #fletcher-diagram(
+    spacing: (7em, 4em),
+    node((0, 0), [Trait with \ associated types], stroke: blue.lighten(50%)),
+    node((0.5, 0.5), [Ass. type A \ placeholder], stroke: blue.lighten(50%)),
+    node((0.7, 0), [Ass. type B \ placeholder], stroke: blue.lighten(50%)),
+    node((0.5, -0.5), [Ass. type C \ placeholder], stroke: blue.lighten(50%)),
+
+    node((0, 0 + 2), [Concrete protocl], fill: blue.lighten(50%)),
+    node((0.5, 0.5 + 2), [Concrete \ ass. type A], fill: blue.lighten(50%)),
+    node((0.7, 0 + 2), [Concrete \ ass. type B], fill: blue.lighten(50%)),
+    node((0.5, -0.5 + 2), [Concrete ass. Type C], fill: blue.lighten(50%)),
+  )
+]
 
 
 == Deriving
