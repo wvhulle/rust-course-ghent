@@ -208,6 +208,38 @@ fn main() {
   #qa[Why are function pointers bad?][May need heap allocation. Cannot capture variables.]
 ]
 
+== Practice: Rustlings Iterators
+
+#slide[
+
+
+  *Rustlings exercises*:
+  - `exercises/18_iterators/iterators1.rs` - Basic iterator usage
+  - `exercises/18_iterators/iterators2.rs` - Iterator methods
+  - `exercises/18_iterators/iterators3.rs` - `map` and `collect`
+  - `exercises/18_iterators/iterators4.rs` - Factorial with fold
+  - `exercises/18_iterators/iterators5.rs` - Complex iterator chains
+
+
+]
+
+== Practice: Exercism Accumulate
+
+#slide[
+  #set text(size: 0.9em)
+
+  Implement your own `map` function using closures:
+
+  *Exercism: Accumulate*:
+  - Path: `exercises/practice/accumulate/`
+  - Goal: Implement a generic map function
+  - Requires: Closures, generics, function trait bounds
+
+  #info[Great for understanding how closures work as function parameters!]
+
+  Online: #link("https://exercism.org/tracks/rust/exercises/accumulate")
+]
+
 #focus-slide[
   #image("images/dark_magic.jpg")
 ]
@@ -360,6 +392,10 @@ fn main() {
 
 == Exercise
 
-Please find the statement of the exercise at `session-2/examples/s2d6-closures.rs` in this repo.
+#slide[
+  #warning[*Important Exercise*]
 
-Run it with `cargo run --example s2d6-closures`.
+  Please find the statement of the exercise at `session-2/examples/s2d6-closures.rs` in this repo.
+
+  Run it with `cargo run --example s2d6-closures`.
+]

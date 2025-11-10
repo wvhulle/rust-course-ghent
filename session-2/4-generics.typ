@@ -58,6 +58,19 @@ fn main() {
 #qa[What happens if we pass `NotCloneable` to duplicate? (Try in playground!)][A compile-time error, because `NotCloneable` does not implement the Clone trait.]
 
 
+== Practice: Rustlings Generics
+
+#slide[
+
+
+  *Rustlings exercises*:
+  - `exercises/14_generics/generics1.rs` - Basic generic functions
+  - `exercises/14_generics/generics2.rs` - Generic implementations
+
+
+
+]
+
 == Combining traits
 
 When multiple traits are necessary, use + to join them.
@@ -514,6 +527,10 @@ impl Container<i32> {
 
 == Exercise
 
-Please find the exercise in `./session-2/tests/s2e4-min.rs`.
+#slide[
+  #warning[*Important Exercise*]
 
-Test using the command: `cargo test --test s2e4-min -- --nocapture`
+  Please find the exercise in `./session-2/tests/s2e4-min.rs`.
+
+  Test using the command: `cargo test --test s2e4-min -- --nocapture`
+]

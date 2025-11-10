@@ -505,6 +505,20 @@ fn main() {
 
   #qa[Do you remember what `&str` is?][A string slice, a view into a UTF-8 encoded string stored elsewhere.]
 ]
+
+== Practice: Exercism Luhn Trait
+
+#slide[
+
+  *Exercism: Luhn Trait*:
+  - Path: `exercises/practice/luhn-trait/`
+  - Goal: Implement Luhn algorithm using a custom trait
+  - Requires: Generic trait implementation for multiple types
+
+
+  Online: #link("https://exercism.org/tracks/rust/exercises/luhn-trait")
+]
+
 === Creating strings
 
 In practice, `String` instances are generated with the `to_string` or `into` method from compile-time static string slices:
@@ -560,7 +574,25 @@ assert_eq!(xs.pop(), Some(42));
 Note that we need a compile-time `const` upper-bound on the storage size (8).
 
 
+== Practice: Exercism Nucleotide Count
+
+#slide[
+
+
+  *Exercism: Nucleotide Count*:
+  - Path: `exercises/practice/nucleotide-count/`
+  - Goal: Count DNA nucleotides and handle invalid inputs
+  - Requires: `Result`, `HashMap`, error handling, iterators
+
+
+  Online: #link("https://exercism.org/tracks/rust/exercises/nucleotide-count")
+]
+
 == Exercise
 
-Please solve exercise `session-2/examples/s2d8-counter.rs`
+#slide[
+  #warning[*Important Exercise*]
+
+  Please solve exercise `session-2/examples/s2d8-counter.rs`
+]
 

@@ -142,6 +142,22 @@
 
 ]
 
+== Practice: Rustlings Enums
+
+#slide[
+  #set text(size: 0.9em)
+
+  Practice basic enums and pattern matching:
+
+  *Rustlings exercises*:
+  - `exercises/08_enums/enums1.rs` - Define basic enums
+  - `exercises/08_enums/enums2.rs` - Enums with associated data
+  - `exercises/08_enums/enums3.rs` - Pattern matching with enums
+
+
+  Online: #link("https://github.com/rust-lang/rustlings")
+]
+
 == Structs
 
 Like tuples, structs can also be destructured by matching:
@@ -337,9 +353,26 @@ fn main() {
   // TODO: some slides  skipped
 ]
 
+== Practice: Exercism Clock
+
+#slide[
+
+
+  *Exercism: Clock*:
+  - Path: `exercises/practice/clock/`
+  - Goal: Implement a clock that handles times without dates
+  - Requires: Structs, methods, pattern matching with `match`
+
+
+  Online: #link("https://exercism.org/tracks/rust/exercises/clock")
+]
+
 == Exercise: Expression evaluation
 
 #slide[
+
+  #warning[*Important Exercise*]
+
   Let's write a simple recursive evaluator for arithmetic expressions.
 
   Complete the `eval` function in the file `session-2/tests/s2e2-evaluation.rs`.

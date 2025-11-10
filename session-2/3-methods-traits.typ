@@ -273,6 +273,20 @@
 
 ]
 
+== Practice: Rustlings Traits
+
+#slide[
+
+
+  *Rustlings exercises*:
+  - `exercises/15_traits/traits1.rs` - Basic trait implementation
+  - `exercises/15_traits/traits2.rs` - Trait methods
+  - `exercises/15_traits/traits3.rs` - Default implementations
+  - `exercises/15_traits/traits4.rs` - Trait bounds
+  - `exercises/15_traits/traits5.rs` - Advanced trait usage
+
+]
+
 == Contracts
 
 
@@ -534,9 +548,26 @@
   #info[The derive attribute is similar to `deriving` in Haskell.]
 ]
 
+== Practice: Exercism Robot Simulator
+
+#slide[
+
+
+  *Exercism: Robot Simulator*:
+  - Path: `exercises/practice/robot-simulator/`
+  - Goal: Simulate a robot moving on a grid
+  - Requires: Structs, enums (Direction), methods, pattern matching
+
+
+  Online: #link("https://exercism.org/tracks/rust/exercises/robot-simulator")
+]
+
 == Exercise: Logger trait
 
 #slide[
+  #set text(size: 0.9em)
+
+  #warning[*Important Exercise*]
 
   Complete the test code in `session-2/examples/s2e3-logger.rs`.
 
