@@ -23,10 +23,8 @@
 #include "./3-methods-traits.typ"
 #include "./4-generics.typ"
 #include "./5-closures.typ"
+#include "./6-std-types.typ"
 
-
-= Standard library types
-// TODO
 
 
 
@@ -37,7 +35,11 @@
 #slide[
 
 
-  Homework: study standard library traits
+  Homework:
+  - study the standard library API and helper functions of `Result`
+  - study standard library traits
+  - (optional) read the `unsafe` chapter of Blandy and discussion about making safe buffer
+
 
   Questions?
 
