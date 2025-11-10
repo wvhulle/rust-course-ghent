@@ -414,7 +414,73 @@
 
 ]
 
+#slide[
+  Use cases for associated types: implementing (network) *protocols*.
 
+
+  ```rs
+  trait Protocol {
+      type Message;
+      fn send(&self, msg: Self::Message);
+      fn receive(&self) -> Self::Message;
+  }
+
+  impl Protocol for Tcp {
+      type Message = TcpPacket;
+      fn send(&self, msg: Self::Message) {
+          // Send the TCP packet
+      }
+      fn receive(&self) -> Self::Message {
+          // Receive a TCP packet
+      }
+  }
+  ```
+
+][
+  #pause
+  #fletcher-diagram(
+    spacing: (8em, 4em),
+    node-shape: shapes.circle,
+
+    node((0, 0 + 2), [Protocol], fill: blue.lighten(50%), name: <protocol>),
+
+    pause,
+
+
+    node((0, 0), [Trait], stroke: blue.lighten(50%), name: <trait>),
+
+    pause,
+    node((0.5, 0.5), [Generic A], stroke: red.lighten(50%), name: <assoc-A>),
+    node((0.7, 0), [Generic B], stroke: green.lighten(50%), name: <assoc-B>),
+    node((0.9, -0.5), [Generic C], stroke: orange.lighten(50%), name: <assoc-C>),
+    edge(<trait>, <assoc-A>, "-->"),
+    edge(<trait>, <assoc-B>, "-->"),
+    edge(<trait>, <assoc-C>, "-->", label: [Associated]),
+
+
+    pause,
+    node((0.5, 0.5 + 2), [Type A], fill: red.lighten(50%), name: <type-A>),
+    node((0.7, 0 + 2), [Type B], fill: green.lighten(50%), name: <type-B>),
+    node((0.9, -0.5 + 2), [Type C], fill: orange.lighten(50%), name: <type-C>),
+
+
+    edge(<assoc-A>, <type-A>, "-->"),
+    edge(<assoc-B>, <type-B>, "-->", label: [Instantiation], label-pos: 0.22),
+    edge(<assoc-C>, <type-C>, "-->"),
+
+    pause,
+
+    edge(<type-A>, <protocol>),
+    edge(<type-B>, <protocol>),
+    edge(<type-C>, <protocol>),
+
+    pause,
+
+    node((-0.5, 1), name: <div-left>),
+    node((1.5, 1), name: <div-right>),
+    edge(<div-left>, <div-right>, "="),
+  )
+]
 
 
 == Deriving
