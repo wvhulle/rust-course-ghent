@@ -247,7 +247,7 @@
 
 
 
-  #qa[What is the "niche optimisation" in the context of `Option`?][Certain types have unused bit patterns (niches) that can be used to represent `None` without extra space.]
+
 
   === The actual machine representation
 
@@ -277,7 +277,6 @@
 
 #slide(composer: (1fr, 1fr))[
 
-  === Representation of `bool` and `Option<bool>`
 
   ```rust
   unsafe {
@@ -308,7 +307,6 @@
 
 #slide(composer: (1fr, 1fr))[
 
-  === Representation of `Option<Option<bool>>`
 
   ```rust
   unsafe {
@@ -338,7 +336,9 @@
 
 #slide(composer: (1fr, 1fr))[
 
-  === `Option<&i32>` and null pointer optimization
+
+  #qa[What is the "niche optimisation" in the context of `Option`?][Certain types have unused bit patterns (niches) that can be used to represent `None` without extra space.]
+
 
   ```rust
   unsafe {
@@ -395,8 +395,6 @@
 ]
 
 
-=== Interpretation
-
 `Result` is similar to `Option`, but indicates the success or failure of an operation.
 
 #pause
@@ -424,7 +422,7 @@
 ]
 
 
-== Heap allocation
+== Heap allocation with `alloc`
 
 #slide[
 

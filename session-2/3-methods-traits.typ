@@ -456,12 +456,12 @@
     spacing: (8em, 4em),
     node-shape: shapes.circle,
 
-    node((0, 0 + 2), [Protocol], fill: blue.lighten(50%), name: <protocol>),
+    node((0, 0 + 2), [Type \ (Host)], fill: blue.lighten(50%), name: <protocol>),
 
     pause,
 
 
-    node((0, 0), [Trait], stroke: blue.lighten(50%), name: <trait>),
+    node((0, 0), [Trait \ (Protocol)], stroke: blue.lighten(50%), name: <trait>),
 
     pause,
     node((0.5, 0.5), [Generic A], stroke: red.lighten(50%), name: <assoc-A>),
