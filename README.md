@@ -2,28 +2,154 @@
 
 Evening lectures on Rust in Ghent Nov - Dec 2025 for experienced developers. Registration is possible [on pretix.eu](https://pretix.eu/devlab/rust-course/).
 
-## Before each session
+## Guidelines
 
-Important:
+The day after each session I will send an e-mail with the chapters we covered and what you can do to prepare for the next session.
+
+Please **spend at least 60 min. a week at home reading the chapters** mentioned in the e-mail in the [freely available official Rust book](https://doc.rust-lang.org) or making exercises.
+
+For the in-person sessions:
 
 - Take a **laptop** to solve exercises during the session.
-- **Install Rust**, clone this repo (do this in advance, otherwise you will miss important information).
-- Review topics covered in previous sessions.
-
-If possible:
-
+- Do not spend time cloning, pulling or installing during the session.
+- Download the PDF of the slides which contain links to the playground. Click the links during the session if needed.
 - Turn of your AI editor extensions (you can do it for Rust only).
-- Download the PDF of the slides (as back-up).
 
-## Course plan
+## Session 1
 
-1. **Introduction** — Patterns, methods, traits and generics ([slides](./session-1/slides.pdf))
-2. **Functional Programming & Standard Library** — Closures, stdlib types, traits [slides](./session-2/slides.pdf)
-3. **Ownership & Borrowing Fundamentals** — Borrowing, lifetimes, error handling
-4. **Advanced Memory Management** — Memory management, smart pointers
-5. **Code Organization & Quality** — Iterators, modules, testing
-6. **Concurrency & Error Handling** — Threads, channels, Send/Sync, shared state
-7. **Asynchronous Programming** (Bonus) — Async basics, channels, Pin, cancellation
+**Covered in class:**
+
+- Welcome: *5 min*
+- Hello, world: *15 min*
+- Types and values: *40 min*
+- Control flow basics: *45 min*
+- Tuples and arrays: *35 min*
+- References: *55 min* (partially)
+
+**Not covered in session 1:**
+
+- User-defined types: *60 min*
+- Pattern matching: *50 min*
+
+**Homework:**
+
+- User defined types
+  - [Structs](https://doc.rust-lang.org/book/ch05-00-structs.html)
+  - [Enums](https://doc.rust-lang.org/book/ch06-00-enums.html)
+- Pattern matching (if needed)
+  - [Enums and Pattern Matching](https://doc.rust-lang.org/book/ch06-00-enums.html)
+  - [Advanced Patterns](https://doc.rust-lang.org/book/ch19-00-patterns.html)
+
+---
+
+## Session 2
+
+**Covered in class:**
+
+- Methods and traits: *45 min*
+  - [Traits](https://doc.rust-lang.org/book/ch10-02-traits.html)
+- Generics: *50 min*
+  - [Generic Types, Traits, and Lifetimes](https://doc.rust-lang.org/book/ch10-01-syntax.html)
+  - [Advanced Traits](https://doc.rust-lang.org/book/ch20-02-advanced-traits.html)
+- Closures: *30 min* (see homework)
+
+**Not covered in session 2** *(see homework)*:
+
+- Standard library types: *60 min*
+- Standard library traits: *60 min*
+
+**Homework:**
+
+- Review closures:
+  - [How Functions Work](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
+  - [Closures: Anonymous Functions that Capture Their Environment](https://doc.rust-lang.org/book/ch13-01-closures.html)
+  - [Advanced Functions and Closures](https://doc.rust-lang.org/book/ch20-04-advanced-functions-and-closures.html)
+- Standard library types
+  - [Common Collections](https://doc.rust-lang.org/book/ch08-00-common-collections.html)
+  - [Advanced Types](https://doc.rust-lang.org/book/ch20-03-advanced-types.html)
+- Standard library traits
+  - [Functional Language Features: Iterators and Closures](https://doc.rust-lang.org/book/ch13-00-functional-features.html)
+- Read the chapter about ownership to prepare for session 3:
+  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
+  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
+
+---
+
+## Session 3
+
+**Planned for in-session:**
+
+- Memory Management: *60 min*
+  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
+
+- Smart pointers: *55 min*
+  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
+
+**Homework:**
+
+- Borrowing: *45 min*
+- Prepare lifetimes for next session: *65 min*
+
+---
+
+## Session 4
+
+**Planned for in-session:**
+
+- Lifetimes: *65 min*
+- Iterators: *55 min*
+
+**Homework:**
+
+- Testing: *45 min*
+- Modules: *45 min*
+
+---
+
+## Session 5
+
+**Planned for in-session:**
+
+- Error handling: *55 min*
+- Threads: *30 min*
+- Channels: *20 min*
+
+**Homework:**
+
+- Unsafe rust: *75 min*
+
+---
+
+## Session 6
+
+**Planned for in-session:**
+
+- Send and Sync: *15 min*
+- Shared state: *30 min*
+- Project work (find a partner): *65 min*
+
+**Homework:**
+
+- Project work (find a partner)
+- Exercises concurrency: *70 min*
+
+---
+
+## Session 7
+
+**Planned for in-session:**
+
+- Async basics: *40 min*
+- Channels and control flow: *20 min*
+- Project presentation: *60 min*
+
+**Homework:**
+
+- Blocking the Executor: *10 min*
+- Pin: 20 min
+- Async traits: 5 min
+- Cancellation: 20 min
+- Exercises: *70 min*
 
 ## Lecture material
 
