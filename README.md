@@ -85,14 +85,17 @@ For the in-person sessions:
 
 **Planned for in-session:**
 
-- Memory Management: *60 min*
+- Mid-series exercise session: *60 min.*
+- Standard library traits: 15 min. (depending on students)
+  - <https://doc.rust-lang.org/book/appendix-03-derivable-traits.html>
+- Memory Management: *30 min*
   - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
-
-- Smart pointers: *55 min*
-  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
 
 **Homework:**
 
+- Review the chapter about ownership:
+  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
+  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
 - Borrowing: *45 min*
 - Prepare lifetimes for next session: *65 min*
 
