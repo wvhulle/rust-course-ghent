@@ -17,6 +17,8 @@ For the in-person sessions:
 
 ## Session 1
 
+[Slides](./session-1/slides.pdf)
+
 **Covered in class:**
 
 - Welcome: *5 min*
@@ -43,6 +45,8 @@ For the in-person sessions:
 ---
 
 ## Session 2
+
+[Slides](./session-2/slides.pdf)
 
 **Covered in class:**
 
@@ -76,6 +80,8 @@ For the in-person sessions:
 ---
 
 ## Session 3
+
+[Slides](./session-3/slides.pdf)
 
 **Planned for in-session:**
 
