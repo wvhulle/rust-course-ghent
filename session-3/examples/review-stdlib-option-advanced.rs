@@ -38,7 +38,6 @@ fn sum_nested_options(values: Vec<Option<Option<i32>>>) -> i32 {
 
 fn main() {
     demonstrate_advanced();
-    println!();
 
     dbg!(safe_divide(10, 2));
     dbg!(safe_divide(10, 0));

@@ -27,7 +27,6 @@ fn count_some_values(values: &[Option<i32>]) -> usize {
 
 fn main() {
     demonstrate_basics();
-    println!();
 
     dbg!(greet_user(Some("Alice")));
     dbg!(greet_user(None));

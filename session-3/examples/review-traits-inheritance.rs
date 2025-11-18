@@ -1,5 +1,3 @@
-//! Traits vs Inheritance Exercise
-//!
 //! Rust doesn't have class inheritance like Python or Java.
 //! This exercise shows the Rust way: composition and traits.
 

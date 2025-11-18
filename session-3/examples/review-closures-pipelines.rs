@@ -1,0 +1,108 @@
+//! Functional programming style with method chaining pipelines
+//!
+//! You're processing user data for analytics and want to transform it using pipelines
+
+// Demonstrate: A typical imperative approach
+fn imperative_process(numbers: &[i32]) -> i32 {
+    let mut result = Vec::new();
+    for n in numbers {
+        if *n > 0 {
+            result.push(n * 2);
+        }
+    }
+    let mut sum = 0;
+    for n in result {
+        sum += n;
+    }
+    sum
+}
+
+// Demonstrate: The same logic in functional style
+fn functional_process(numbers: &[i32]) -> i32 {
+    numbers
+        .iter()
+        .filter(|n| **n > 0)
+        .map(|n| n * 2)
+        .sum()
+}
+
+// Exercise: Process user ages
+fn process_ages(ages: &[i32]) -> Vec<i32> {
+    todo!("Step 1: Use .iter() to start the pipeline");
+    todo!("Step 2: Use .filter() to keep only ages >= 18");
+    todo!("Step 3: Use .map() to add 1 year to each age");
+    todo!("Step 4: Use .collect() to gather results into Vec<i32>");
+}
+
+// Exercise: Find average of positive numbers
+fn average_positive(numbers: &[i32]) -> Option<i32> {
+    todo!("Step 1: Filter to keep only positive numbers");
+    todo!("Step 2: Collect into a Vec");
+    todo!("Step 3: Use .len() to get count (handle empty case with if-else)");
+    todo!("Step 4: Use .iter().sum() divided by count, wrapped in Some, or None if empty");
+}
+
+// Exercise: Transform names pipeline
+fn format_names(names: &[&str]) -> Vec<String> {
+    todo!("Step 1: Start with .iter()");
+    todo!("Step 2: Use .map() to convert each name to uppercase with .to_uppercase()");
+    todo!("Step 3: Use .map() again to add 'Hello, ' prefix with format!()");
+    todo!("Step 4: Use .collect() to gather into Vec<String>");
+}
+
+// Exercise: Complex data transformation
+fn count_valid_emails(emails: &[&str]) -> usize {
+    todo!("Step 1: Filter emails that contain '@'");
+    todo!("Step 2: Filter emails with length > 5");
+    todo!("Step 3: Use .count() to get the final count");
+}
+
+// Attempt 1: Mixing imperative and functional style
+// Uncomment to see why this is awkward:
+//
+// fn mixed_style(numbers: &[i32]) -> i32 {
+//     let mut sum = 0;
+//     numbers
+//         .iter()
+//         .filter(|n| **n > 0)
+//         .for_each(|n| sum += n);  // Captures sum mutably
+//     sum
+// }
+
+// Attempt 2: Breaking the chain unnecessarily
+// Uncomment to see the verbose version:
+//
+// fn broken_chain(numbers: &[i32]) -> Vec<i32> {
+//     let iter = numbers.iter();
+//     let filtered = iter.filter(|n| **n > 0);
+//     let mapped = filtered.map(|n| n * 2);
+//     let result = mapped.collect();
+//     result
+// }
+
+fn main() {
+    let demo_numbers = vec![1, -2, 3, -4, 5];
+
+    dbg!(imperative_process(&demo_numbers));
+    dbg!(functional_process(&demo_numbers));
+
+    todo!("Uncomment Attempt 1 to see the mixed style issue");
+    todo!("Uncomment Attempt 2 to see how verbose broken chains are");
+
+    // Test process_ages
+    let ages = vec![15, 18, 25, 17, 30];
+    dbg!(process_ages(&ages));
+
+    // Test average_positive
+    let numbers = vec![-5, 10, -3, 20, 30];
+    dbg!(average_positive(&numbers));
+    dbg!(average_positive(&[]));
+
+    // Test format_names
+    let names = vec!["alice", "bob", "charlie"];
+    dbg!(format_names(&names));
+
+    // Test count_valid_emails
+    let emails = vec!["a@b.com", "invalid", "test@example.com", "x@y", "nope"];
+    dbg!(count_valid_emails(&emails));
+}

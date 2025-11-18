@@ -48,7 +48,7 @@ Install and run Rustlings:
 #slide[
   #set text(size: 0.8em)
 
-  === Rustling exercises
+  === Rustlings
 
   Review first session:
 
@@ -70,25 +70,10 @@ Install and run Rustlings:
   - Ex 11. HashMaps
 
 ][
+  === Custom
 
-  === Google exercises
-
-
-  - `session-3/examples/s2d6-closures.rs`
-  - `session-3/examples/s2d8-counter.rs`
-
-
-
-][
-  === Additional exercises
-
-  - `session-3/examples/s3e2-trait-conflicts.rs`
-  - `session-3/examples/s3e3-basic-traits.rs`
-  - `session-3/examples/s2d5-fn-trait.rs`
-  - `session-3/examples/s2d6-fnmut-trait.rs`
-  - `session-3/examples/s3e4-supertraits.rs`
-  - `session-3/examples/s3e5-multiple-bounds.rs`
-  - `session-3/examples/s3e6-dispatch.rs`
+  - `session-3/examples/`: start with traits and end with stdlib
+  - `session-3/tests/`: stdlib traits
 
 ]
 
