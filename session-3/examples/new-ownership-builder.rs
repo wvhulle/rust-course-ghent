@@ -1,6 +1,6 @@
-// In this example, we will implement a complex data type that owns all of its data. We will use the “builder pattern” to support building a new value piece-by-piece, using convenience functions.
-
-// Fill in the missing pieces.
+//! Builder Pattern Exercise
+//!
+//! Implement a builder pattern for constructing Package structs
 
 #[derive(Debug)]
 enum Language {
@@ -15,7 +15,6 @@ struct Dependency {
     version_expression: String,
 }
 
-/// A representation of a software package.
 #[derive(Debug)]
 struct Package {
     name: String,
@@ -26,40 +25,33 @@ struct Package {
 }
 
 impl Package {
-    /// Return a representation of this package as a dependency, for use in
-    /// building other packages.
     fn as_dependency(&self) -> Dependency {
-        todo!("1")
+        todo!("Return a Dependency with this package's name and version")
     }
 }
 
-/// A builder for a Package. Use `build()` to create the `Package` itself.
 struct PackageBuilder(Package);
 
 impl PackageBuilder {
-    fn new(name: impl Into<String>) -> Self {
-        todo!("2")
+    fn new(_name: impl Into<String>) -> Self {
+        todo!("Create a PackageBuilder with the given name, empty version, empty authors, empty dependencies, and None for language")
     }
 
-    /// Set the package version.
     fn version(mut self, version: impl Into<String>) -> Self {
         self.0.version = version.into();
         self
     }
 
-    /// Set the package authors.
-    fn authors(mut self, authors: Vec<String>) -> Self {
-        todo!("3")
+    fn authors(mut self, _authors: Vec<String>) -> Self {
+        todo!("Set the authors field and return self")
     }
 
-    /// Add an additional dependency.
-    fn dependency(mut self, dependency: Dependency) -> Self {
-        todo!("4")
+    fn dependency(mut self, _dependency: Dependency) -> Self {
+        todo!("Add the dependency to the dependencies Vec and return self")
     }
 
-    /// Set the language. If not set, language defaults to None.
-    fn language(mut self, language: Language) -> Self {
-        todo!("5")
+    fn language(mut self, _language: Language) -> Self {
+        todo!("Set the language to Some(language) and return self")
     }
 
     fn build(self) -> Package {
@@ -83,3 +75,4 @@ fn main() {
         .build();
     dbg!(serde);
 }
+

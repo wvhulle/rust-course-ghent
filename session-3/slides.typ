@@ -18,10 +18,6 @@
 
 #title-slide()
 
-#focus-slide[
-  #image("images/ownership.png")
-]
-
 = Review
 
 
@@ -72,7 +68,6 @@ Install and run Rustlings:
 
   - Ex 14. Generics
   - Ex 11. HashMaps
-  - Ex 6. Move semantics
 
 ][
 
