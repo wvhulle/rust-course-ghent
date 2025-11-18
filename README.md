@@ -56,10 +56,11 @@ For the in-person sessions:
   - [Generic Types, Traits, and Lifetimes](https://doc.rust-lang.org/book/ch10-01-syntax.html)
   - [Advanced Traits](https://doc.rust-lang.org/book/ch20-02-advanced-traits.html)
 - Closures: *30 min* (see homework)
+- Standard library types: *15 min* (partially)
 
 **Not covered in session 2** *(see homework)*:
 
-- Standard library types: *60 min*
+- Standard library types: *15 min* (partially)
 - Standard library traits: *60 min*
 
 **Homework:**

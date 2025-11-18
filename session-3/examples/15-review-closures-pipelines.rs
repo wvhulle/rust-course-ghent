@@ -1,6 +1,7 @@
 //! Functional programming style with method chaining pipelines
 //!
-//! You're processing user data for analytics and want to transform it using pipelines
+//! You're processing user data for analytics and want to transform it using
+//! pipelines
 
 // Demonstrate: A typical imperative approach
 fn imperative_process(numbers: &[i32]) -> i32 {
@@ -19,42 +20,38 @@ fn imperative_process(numbers: &[i32]) -> i32 {
 
 // Demonstrate: The same logic in functional style
 fn functional_process(numbers: &[i32]) -> i32 {
-    numbers
-        .iter()
-        .filter(|n| **n > 0)
-        .map(|n| n * 2)
-        .sum()
+    numbers.iter().filter(|n| **n > 0).map(|n| n * 2).sum()
 }
 
 // Exercise: Process user ages
 fn process_ages(ages: &[i32]) -> Vec<i32> {
-    todo!("Step 1: Use .iter() to start the pipeline");
-    todo!("Step 2: Use .filter() to keep only ages >= 18");
-    todo!("Step 3: Use .map() to add 1 year to each age");
-    todo!("Step 4: Use .collect() to gather results into Vec<i32>");
+    todo!("Use .iter() to start the pipeline");
+    todo!("Use .filter() to keep only ages >= 18");
+    todo!("Use .map() to add 1 year to each age");
+    todo!("Use .collect() to gather results into Vec<i32>");
 }
 
 // Exercise: Find average of positive numbers
 fn average_positive(numbers: &[i32]) -> Option<i32> {
-    todo!("Step 1: Filter to keep only positive numbers");
-    todo!("Step 2: Collect into a Vec");
-    todo!("Step 3: Use .len() to get count (handle empty case with if-else)");
-    todo!("Step 4: Use .iter().sum() divided by count, wrapped in Some, or None if empty");
+    todo!("Filter to keep only positive numbers");
+    todo!("Collect into a Vec");
+    todo!("Use .len() to get count (handle empty case with if-else)");
+    todo!("Use .iter().sum() divided by count, wrapped in Some, or None if empty");
 }
 
 // Exercise: Transform names pipeline
 fn format_names(names: &[&str]) -> Vec<String> {
-    todo!("Step 1: Start with .iter()");
-    todo!("Step 2: Use .map() to convert each name to uppercase with .to_uppercase()");
-    todo!("Step 3: Use .map() again to add 'Hello, ' prefix with format!()");
-    todo!("Step 4: Use .collect() to gather into Vec<String>");
+    todo!("Start with .iter()");
+    todo!("Use .map() to convert each name to uppercase with .to_uppercase()");
+    todo!("Use .map() again to add 'Hello, ' prefix with format!()");
+    todo!("Use .collect() to gather into Vec<String>");
 }
 
 // Exercise: Complex data transformation
 fn count_valid_emails(emails: &[&str]) -> usize {
-    todo!("Step 1: Filter emails that contain '@'");
-    todo!("Step 2: Filter emails with length > 5");
-    todo!("Step 3: Use .count() to get the final count");
+    todo!("Filter emails that contain '@'");
+    todo!("Filter emails with length > 5");
+    todo!("Use .count() to get the final count");
 }
 
 // Attempt 1: Mixing imperative and functional style

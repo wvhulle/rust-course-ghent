@@ -1,4 +1,5 @@
-// In this short exercise, you will implement a generic min function that determines the minimum of two values, using the Ord trait.
+// In this short exercise, you will implement a generic min function that
+// determines the minimum of two values, using the Ord trait.
 
 use std::cmp::Ordering;
 

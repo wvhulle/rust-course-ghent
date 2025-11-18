@@ -1,4 +1,5 @@
-// Implement a Filter that uses a closure to filter log messages, sending those that pass the filtering predicate to an inner logger.
+// Implement a Filter that uses a closure to filter log messages, sending those
+// that pass the filtering predicate to an inner logger.
 
 pub trait Logger {
     /// Log a message at the given verbosity level.

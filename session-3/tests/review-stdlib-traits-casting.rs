@@ -1,4 +1,7 @@
-// In this example, you will implement the classic “ROT13” cipher. Implement the missing bits. Only rotate ASCII alphabetic characters, to ensure the result is still valid UTF-8.
+// In this example, you will implement the classic “ROT13” cipher. Implement the
+// missing bits. Only rotate ASCII alphabetic characters, to ensure the result
+// is still valid UTF-8.
+// Run this file with `cargo test --test [FILENAME_WITHOUT_EXT]`
 
 use std::io::Read;
 
@@ -42,4 +45,5 @@ mod test {
     }
 }
 
-// What happens if you chain two RotDecoder instances together, each rotating by 13 characters?
+// What happens if you chain two RotDecoder instances together, each rotating by
+// 13 characters?

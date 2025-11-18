@@ -8,29 +8,46 @@ fn log_value<T: Display>(value: &T, level: &str) {
     println!("[{}] {}", level, value);
 }
 
-// Attempt 1: Add methods to the Display trait
+// Creating a generic method does not feel optimal. A better approach would be to do something that is more akin to conventional OOP classes interfaces.
+//
+// What happens when you add methods to the Display trait directly?
+// (uncomment following code block)
 //
 // impl Display {
 //     fn log_info(&self) {
 //         println!("[INFO] {}", self);
 //     }
 // }
+//
+// Does this work? Can we just add methods to standard library traits?
+// Indeed, everything in the standard library is *foreign*.
 
-// Attempt 2: Add methods to trait objects
+// You might have seen compiler messages in the previous attempt.
+// What happens when you treat Display as a trait object with `dyn`?
+// A trait object is more similar to a OOP class object.
 //
 // impl dyn Display {
 //     fn log_info(&self) {
 //         println!("[INFO] {}", self);
 //     }
 // }
+//
+// Why did you see the message that you saw?
+// Putting `dyn` in front of a trait turns it into objects with dynamic method dispatch.
+// However, they are still *foreign objects*, derived from *foreign traits*.
+//
+// IMPORTANT: Why do you think standard library traits are foreign?
 
-// Attempt 3: Implement Display for a type we don't own
+// What happens if we try to implement a foreign trait for a foreign type?
+// Yes, vectors are foreign, since they are std types.
 //
 // impl Display for Vec<i32> {
 //     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 //         write!(f, "{:?}", self)
 //     }
 // }
+
+// Try it out yourself:
 
 // Let's try implementing our own trait for a foreign type
 trait Loggable {
@@ -43,7 +60,7 @@ impl Loggable for String {
     }
 }
 
-// Attempt 4: Implement our trait for another type from std
+// Implement our trait for another type from std
 // Uncomment to see:
 //
 // impl Loggable for Vec<i32> {
@@ -86,9 +103,9 @@ fn test_orphan_combinations() {
 }
 
 fn summarize_orphan_rule() {
-    dbg!("Foreign trait + Foreign type = ❌");
-    dbg!("Our trait + Foreign type = ✓");
-    dbg!("Foreign trait + Our type = ✓");
+    println!("Foreign trait + Foreign type = ❌");
+    println!("Our trait + Foreign type = ✓");
+    println!("Foreign trait + Our type = ✓");
 }
 
 fn main() {

@@ -133,9 +133,7 @@ mod test {
         let max = temps.iter().max();
         assert_eq!(max, Some(&Temperature::new(30.0)));
 
-        let formatted: Vec<String> = temps.iter()
-            .map(|t| format!("{}", t))
-            .collect();
+        let formatted: Vec<String> = temps.iter().map(|t| format!("{}", t)).collect();
 
         assert_eq!(formatted, vec!["30°C", "15°C", "25°C"]);
     }

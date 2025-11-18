@@ -1,7 +1,6 @@
 //! Example from std: `Copy` requires `Clone`
 
-use std::error::Error;
-use std::fmt::Debug;
+use std::{error::Error, fmt::Debug};
 
 trait Serializable {
     fn serialize(&self) -> String;

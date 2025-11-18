@@ -12,7 +12,10 @@ impl<T> Counter<T> {
     }
 
     fn count(&mut self, _value: T) {
-        todo!("Increment the count for the given value. If the value hasn't been seen, insert it with count 1")
+        todo!(
+            "Increment the count for the given value. If the value hasn't been seen, insert it \
+             with count 1"
+        )
     }
 
     fn times_seen(&self, _value: T) -> u64 {

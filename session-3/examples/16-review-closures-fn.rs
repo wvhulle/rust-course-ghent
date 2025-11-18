@@ -23,11 +23,23 @@ fn apply_to_each<F>(_numbers: &[i32], _f: F) -> Vec<i32> {
     todo!("Step 2: Use .iter(), .map() with f, and .collect()");
 }
 
+// Attempt 1: Try returning Fn without impl
+// Uncomment to see the error:
+//
+// fn broken_make_adder(n: i32) -> Fn(i32) -> i32 {
+//     |x| x + n
+// }
+
 // Exercise: Return a closure
 fn make_multiplier(_factor: i32) -> impl Fn(i32) -> i32 {
     todo!("Return a closure that multiplies its parameter by factor");
     todo!("Use 'move' keyword to capture factor by value");
 }
+// Note: the previous is equivalent to:
+// fn make_multiplier<F>(_factor: i32) -> F
+// where
+//     F: Fn(i32) -> i32,
+// { ... }
 
 // Exercise: Closure that takes multiple parameters
 fn combine_values<F>(_x: i32, _y: i32, _combiner: F) -> i32
@@ -37,13 +49,6 @@ where
     todo!("Call combiner with x and y, return the result");
 }
 
-// Attempt 1: Try returning Fn without impl
-// Uncomment to see the error:
-//
-// fn broken_make_adder(n: i32) -> Fn(i32) -> i32 {
-//     |x| x + n
-// }
-
 // Attempt 2: Try using fn pointer when you need Fn trait
 // Uncomment to see what happens:
 //
@@ -52,6 +57,8 @@ where
 //     let add_captured = |x| x + captured;
 //     apply_to_each(numbers, add_captured)  // Won't work!
 // }
+//
+// Why does this not work? What does Fn have that fn pointers don't have?
 
 fn main() {
     let prefix = "Hello";

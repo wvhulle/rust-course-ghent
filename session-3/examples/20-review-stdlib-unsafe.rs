@@ -1,7 +1,9 @@
 //! Discover how Rust optimizes memory layout for Option
 
 use std::mem::{size_of, transmute};
+use std::num::NonZeroU32;
 
+/// Compares the size of a type with its Option wrapper to detect niche optimization
 macro_rules! compare_sizes {
     ($t:ty) => {
         println!(
@@ -14,16 +16,13 @@ macro_rules! compare_sizes {
     };
 }
 
-fn show_bool_bits(value: bool, label: &str) {
-    unsafe {
-        println!("  {}: {:#x}", label, transmute::<bool, u8>(value));
-    }
-}
-
-fn show_option_bool_bits(value: Option<bool>, label: &str) {
-    unsafe {
-        println!("  {}: {:#x}", label, transmute::<Option<bool>, u8>(value));
-    }
+/// Shows the raw bit representation of a value by transmuting to u8
+macro_rules! show_bits {
+    ($value:expr) => {
+        println!("  {}: {:#x}", stringify!($value), unsafe {
+            transmute::<_, u8>($value)
+        });
+    };
 }
 
 fn main() {
@@ -35,11 +34,11 @@ fn main() {
     println!("\nWhy is Option<bool> the same size as bool, but Option<u8> is larger?");
     println!("\n=== Investigating bool ===\n");
 
-    show_bool_bits(false, "false");
-    show_bool_bits(true, "true");
-    show_option_bool_bits(None, "None::<bool>");
-    show_option_bool_bits(Some(false), "Some(false)");
-    show_option_bool_bits(Some(true), "Some(true)");
+    show_bits!(false);
+    show_bits!(true);
+    show_bits!(None::<bool>);
+    show_bits!(Some(false));
+    show_bits!(Some(true));
 
     println!("\n=== Your Turn ===\n");
 
@@ -58,9 +57,11 @@ fn main() {
 
     compare_sizes!(Temperature);
 
-    todo!(
-        "Can you create an enum that has the same size as Option<YourEnum>? Hint: use all possible values"
-    );
+    // Temperature has niche values - can you create a UserId type that also gets optimized?
+    // Hint: Use a wrapper around NonZeroU32 to get the niche optimization
+
+    struct UserId(NonZeroU32);
+    compare_sizes!(UserId);
 
     println!("\n=== Bonus: Nested Options ===\n");
 

@@ -35,7 +35,8 @@ fn main() {
 
     let id_gen = || {
         todo!(
-            "Increment next_id and return it. You'll need to fix compilation errors about mutability"
+            "Increment next_id and return it. You'll need to fix compilation errors about \
+             mutability"
         )
     };
 

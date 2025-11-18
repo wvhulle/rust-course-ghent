@@ -34,7 +34,10 @@ struct PackageBuilder(Package);
 
 impl PackageBuilder {
     fn new(_name: impl Into<String>) -> Self {
-        todo!("Create a PackageBuilder with the given name, empty version, empty authors, empty dependencies, and None for language")
+        todo!(
+            "Create a PackageBuilder with the given name, empty version, empty authors, empty \
+             dependencies, and None for language"
+        )
     }
 
     fn version(mut self, version: impl Into<String>) -> Self {
@@ -75,4 +78,3 @@ fn main() {
         .build();
     dbg!(serde);
 }
-
