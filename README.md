@@ -86,7 +86,9 @@ For the in-person sessions:
 
 **Planned for in-session:**
 
-- Mid-series exercise session: *60 min.*
+- Mid-series exercise session (see subfolder `examples`): *60 min.*
+  - Replace `todo!` macro calls by real code
+  - Use `cargo run --example` to test your solutions
 - Standard library traits: 15 min. (depending on students)
   - <https://doc.rust-lang.org/book/appendix-03-derivable-traits.html>
 - Memory Management: *30 min*
