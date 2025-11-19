@@ -1,7 +1,6 @@
 //! Example from std: `Copy` requires `Clone`
 
-use std::error::Error;
-use std::fmt::Debug;
+use std::{error::Error, fmt::Debug};
 
 trait Serializable {
     fn serialize(&self) -> String;
@@ -68,5 +67,5 @@ fn main() {
     persist_item(&config, "/tmp/config.txt").unwrap();
 
     // Create a Product and persist it
-    todo!();
+    todo!("deref");
 }

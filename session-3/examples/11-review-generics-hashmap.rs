@@ -8,15 +8,22 @@ struct Counter<T> {
 
 impl<T> Counter<T> {
     fn new() -> Self {
-        todo!("Create a new Counter with an empty HashMap")
+        // TODO: Create a new Counter with an empty HashMap
+        todo!("use map")
     }
 
     fn count(&mut self, _value: T) {
-        todo!("Increment the count for the given value. If the value hasn't been seen, insert it with count 1")
+        // TODO: Add trait bounds Eq + Hash to the impl block
+        // TODO: Increment count for _value (insert 1 if not seen before)
+        // TODO: Use entry() API or get + insert
+        todo!("inc count")
     }
 
     fn times_seen(&self, _value: T) -> u64 {
-        todo!("Return the number of times the given value has been seen, or 0 if never seen")
+        // TODO: Add trait bounds Eq + Hash to the impl block
+        // TODO: Return count for _value, or 0 if never seen
+        // TODO: Use get() and unwrap_or
+        todo!("use unwrap_or")
     }
 }
 

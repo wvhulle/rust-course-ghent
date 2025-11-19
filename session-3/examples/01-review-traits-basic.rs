@@ -22,7 +22,8 @@ struct Triangle {
 
 impl Shape for Triangle {
     fn area(&self) -> f64 {
-        todo!("Implement area for Triangle: (base * height) / 2.0")
+        // TODO: Implement area for Triangle (base * height / 2.0)
+        todo!("implement")
     }
 }
 
@@ -32,12 +33,14 @@ struct Circle {
 
 impl Shape for Circle {
     fn area(&self) -> f64 {
-        todo!("Implement area for Circle: π * radius². Hint: Use std::f64::consts::PI")
+        // TODO: Implement area for Circle (use std::f64::consts::PI)
+        todo!("implement")
     }
 }
 
 fn print_area<T: Shape>(_shape: &T) {
-    todo!("Print the area of the shape")
+    // TODO: Print the area of the shape
+    todo!("use self")
 }
 
 fn main() {
@@ -46,11 +49,13 @@ fn main() {
         height: 5.0,
     };
 
-    println!("Rectangle area: {}", rect.area());
+    dbg!(rect.area());
 
-    todo!("Create a Triangle with base=6.0 and height=4.0, then print its area");
+    // TODO: Create a Triangle with base=6.0 and height=4.0
+    // TODO: Call dbg! on its area
 
-    todo!("Create a Circle with radius=3.0, then print its area");
+    // TODO: Create a Circle with radius=3.0
+    // TODO: Call dbg! on its area
 
-    todo!("Use print_area() function on all three shapes");
+    // TODO: Call print_area() on rect, triangle, and circle
 }

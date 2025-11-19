@@ -18,17 +18,22 @@ fn demonstrate_runtime() {
 }
 
 fn get_required_config() -> String {
-    todo!("Step 1: Use env! to read CARGO_PKG_NAME at compile time")
+    // TODO: Step 1: Use env! to read CARGO_PKG_NAME at compile time
+    todo!("use env!");
 }
 
 fn get_optional_config() -> Option<String> {
-    todo!("Step 2: Use std::env::var to read USER at runtime");
-    todo!("Step 3: Convert Result to Option using .ok()");
+    // TODO: Step 2: Use std::env::var to read USER at runtime
+    todo!("use var");
+    // TODO: Step 3: Convert Result to Option using .ok()
+    todo!("convert type");
 }
 
 fn get_config_with_default() -> String {
-    todo!("Step 4: Read EDITOR runtime variable, default to 'vim' if missing");
-    todo!("Hint: Use unwrap_or_default() or unwrap_or()");
+    // TODO: Step 4: Read EDITOR runtime variable, default to 'vim' if missing
+    todo!("use if");
+    // TODO: Hint: Use unwrap_or_default() or unwrap_or()
+    todo!("use unwrap_or");
 }
 
 // Attempt 1: Try to use env! for runtime variables
@@ -50,8 +55,10 @@ fn main() {
 
     demonstrate_runtime();
 
-    todo!("Uncomment Attempt 1 - Can you use env! for USER?");
-    todo!("Uncomment Attempt 2 - What happens with missing compile vars?");
+    // TODO: Uncomment Attempt 1 - Can you use env! for USER?
+    todo!("uncomment");
+    // TODO: Uncomment Attempt 2 - What happens with missing compile vars?
+    todo!("uncomment");
 
     dbg!(get_required_config());
     dbg!(get_optional_config());

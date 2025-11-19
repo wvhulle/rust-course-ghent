@@ -12,13 +12,17 @@ trait Printable {
     }
 }
 
+// We create a unit struct: a struct with no fields (or runtime overhead)
 struct Document;
+
+// Assume the following impl blocks are useful
 impl Drawable for Document {}
 impl Printable for Document {}
 
 trait Displayable {
     fn render(&self) {
-        todo!("Print 'Rendering to screen'")
+        // TODO: Print 'Rendering to screen'
+        todo!("print msg")
     }
 }
 
@@ -27,9 +31,7 @@ impl Displayable for Document {}
 fn main() {
     let doc = Document;
 
-    todo!("Call doc.render() using fully qualified syntax to call Drawable's version");
+    // TODO: Try to print all messages (use the trait names like this: `Trait::render`)
 
-    todo!("Call doc.render() using fully qualified syntax to call Printable's version");
-
-    todo!("Call doc.render() using fully qualified syntax to call Displayable's version");
+    // doc.render();
 }

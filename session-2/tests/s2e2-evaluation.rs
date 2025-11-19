@@ -1,5 +1,6 @@
 // Let’s write a simple recursive evaluator for arithmetic expressions.
-// A bigger and more complex expression would be (10 * 9) + ((3 - 4) * 5), which evaluates to 85.
+// A bigger and more complex expression would be (10 * 9) + ((3 - 4) * 5), which
+// evaluates to 85.
 
 /// An operation to perform on two subexpressions.
 #[derive(Debug)]
@@ -24,7 +25,10 @@ enum Expression {
     Value(i64),
 }
 
-// The Box type here is a smart pointer, and will be covered in detail later in the course. An expression can be “boxed” with Box::new as seen in the tests. To evaluate a boxed expression, use the deref operator (*) to “unbox” it: eval(*boxed_expr).
+// The Box type here is a smart pointer, and will be covered in detail later in
+// the course. An expression can be “boxed” with Box::new as seen in the tests.
+// To evaluate a boxed expression, use the deref operator (*) to “unbox” it:
+// eval(*boxed_expr).
 
 fn eval(e: Expression) -> i64 {
     todo!()

@@ -1,4 +1,5 @@
-//   The Collatz Sequence is defined as follows, for an arbitrary n1 greater than zero:
+//   The Collatz Sequence is defined as follows, for an arbitrary n1 greater
+// than zero:
 
 //   - If n is even, the next number in the sequence is n / 2
 //   - If n is odd, the next number in the sequence is 3n + 1
