@@ -21,7 +21,8 @@ impl Printable for Document {}
 
 trait Displayable {
     fn render(&self) {
-        todo!("Print 'Rendering to screen'")
+        // TODO: Print 'Rendering to screen'
+        todo!("print msg")
     }
 }
 
@@ -30,7 +31,7 @@ impl Displayable for Document {}
 fn main() {
     let doc = Document;
 
-    todo!("Try to print all messages (use the trait names like this: `Trait::render`).");
+    // TODO: Try to print all messages (use the trait names like this: `Trait::render`)
 
     // doc.render();
 }

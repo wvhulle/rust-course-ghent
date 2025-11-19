@@ -25,33 +25,37 @@ fn functional_process(numbers: &[i32]) -> i32 {
 
 // Exercise: Process user ages
 fn process_ages(ages: &[i32]) -> Vec<i32> {
-    todo!("Use .iter() to start the pipeline");
-    todo!("Use .filter() to keep only ages >= 18");
-    todo!("Use .map() to add 1 year to each age");
-    todo!("Use .collect() to gather results into Vec<i32>");
+    // TODO: Use .iter() to start the pipeline
+    // TODO: Use .filter() to keep only ages >= 18
+    // TODO: Use .map() to add 1 year to each age
+    // TODO: Use .collect() to gather results into Vec<i32>
+    todo!("use collect")
 }
 
 // Exercise: Find average of positive numbers
 fn average_positive(numbers: &[i32]) -> Option<i32> {
-    todo!("Filter to keep only positive numbers");
-    todo!("Collect into a Vec");
-    todo!("Use .len() to get count (handle empty case with if-else)");
-    todo!("Use .iter().sum() divided by count, wrapped in Some, or None if empty");
+    // TODO: Filter to keep only positive numbers
+    // TODO: Collect into a Vec
+    // TODO: Use .len() to get count (handle empty case with if-else)
+    // TODO: Use .iter().sum() divided by count, wrapped in Some, or None if empty
+    todo!("use iter")
 }
 
 // Exercise: Transform names pipeline
 fn format_names(names: &[&str]) -> Vec<String> {
-    todo!("Start with .iter()");
-    todo!("Use .map() to convert each name to uppercase with .to_uppercase()");
-    todo!("Use .map() again to add 'Hello, ' prefix with format!()");
-    todo!("Use .collect() to gather into Vec<String>");
+    // TODO: Start with .iter()
+    // TODO: Use .map() to convert each name to uppercase with .to_uppercase()
+    // TODO: Use .map() again to add 'Hello, ' prefix with format!()
+    // TODO: Use .collect() to gather into Vec<String>
+    todo!("use collect")
 }
 
 // Exercise: Complex data transformation
 fn count_valid_emails(emails: &[&str]) -> usize {
-    todo!("Filter emails that contain '@'");
-    todo!("Filter emails with length > 5");
-    todo!("Use .count() to get the final count");
+    // TODO: Filter emails that contain '@'
+    // TODO: Filter emails with length > 5
+    // TODO: Use .count() to get the final count
+    todo!("use count")
 }
 
 // Attempt 1: Mixing imperative and functional style
@@ -83,8 +87,8 @@ fn main() {
     dbg!(imperative_process(&demo_numbers));
     dbg!(functional_process(&demo_numbers));
 
-    todo!("Uncomment Attempt 1 to see the mixed style issue");
-    todo!("Uncomment Attempt 2 to see how verbose broken chains are");
+    // TODO: Uncomment Attempt 1 to see the mixed style issue
+    // TODO: Uncomment Attempt 2 to see how verbose broken chains are
 
     // Test process_ages
     let ages = vec![15, 18, 25, 17, 30];

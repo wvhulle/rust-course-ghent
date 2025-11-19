@@ -43,18 +43,26 @@ struct RotDecoder<R: Read> {
 
 // Helper function for ROT13
 fn rotate_byte(byte: u8, rot: u8) -> u8 {
-    todo!("Check if byte.is_ascii_alphabetic()");
-    todo!("Find the base: 'a' for lowercase, 'A' for uppercase");
-    todo!("Calculate: ((byte - base + rot) % 26) + base");
-    todo!("Return rotated byte, or original if not alphabetic");
+    // TODO: Check if byte.is_ascii_alphabetic()
+    todo!("check alpha");
+    // TODO: Find the base: 'a' for lowercase, 'A' for uppercase
+    todo!("iterate buf");
+    // TODO: Calculate: ((byte - base + rot) % 26) + base
+    todo!("rotate fn");
+    // TODO: Return rotated byte, or original if not alphabetic
+    todo!("use if");
 }
 
 // impl<R: Read> Read for RotDecoder<R> {
 //     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-//         todo!("Call self.input.read(buf)? to get bytes_read");
-//         todo!("Iterate through buf[..bytes_read]");
-//         todo!("Apply rotate_byte to each byte");
-//         todo!("Return Ok(bytes_read)");
+//         // TODO: Call self.input.read(buf)? to get bytes_read
+// todo!("call read")
+//         // TODO: Iterate through buf[..bytes_read]
+// todo!("rotate byte");
+//         // TODO: Apply rotate_byte to each byte
+// todo!("impl Read");
+//         // TODO: Return Ok(bytes_read)
+// todo!("handle Result");
 //     }
 // }
 
@@ -63,8 +71,10 @@ fn main() {
     demonstrate_uppercase();
 
     println!("\n=== Exercise: ROT13 Decoder ===");
-    todo!("Implement rotate_byte helper function");
-    todo!("Implement Read trait for RotDecoder");
+    // TODO: Implement rotate_byte helper function
+    todo!("implement");
+    // TODO: Implement Read trait for RotDecoder
+    todo!("implement");
 
     // Test with ROT13 joke
     // let mut rot = RotDecoder {
@@ -77,7 +87,8 @@ fn main() {
     // println!("Decoded: {}", result);
 
     println!("\n=== Challenge: Chaining ===");
-    todo!("What happens if you chain two RotDecoders together?");
+    // TODO: What happens if you chain two RotDecoders together?
+    todo!("return byte");
     // let encoded = "Uryyb, Jbeyq!";
     // let first = RotDecoder {
     //     input: encoded.as_bytes(),

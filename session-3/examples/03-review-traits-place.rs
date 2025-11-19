@@ -1,11 +1,8 @@
 //! Where to put trait bounds: struct vs impl
-//!
-//! Discover why bounds belong on impl blocks, not struct definitions
 
 use std::fmt::Debug;
 
-// Demonstration: putting bounds on the struct definition
-//
+// Attempt 1: Putting bounds on the struct definition
 // Uncomment to see the problem:
 //
 // struct Container<T: Clone + Debug> {
@@ -49,34 +46,35 @@ impl<T: Debug> Container<T> {
     }
 }
 
-// Exercise: Create a generic Cache struct
 struct Cache<T> {
-    // Add a field 'data' of type Option<T>
+    // TODO: Add a field 'data' of type Option<T>
 }
 
 impl<T> Cache<T> {
     fn new() -> Self {
-        todo!("Create Cache with data: None");
+        // TODO: Create Cache with data: None
+        todo!("handle Option")
     }
 
     fn set(&mut self, _value: T) {
-        todo!("Store _value in data as Some(_value)");
+        // TODO: Store _value in data as Some(_value)
+        todo!("handle Option")
     }
 }
 
-// Exercise: Add impl block that only works when T: Clone
 impl<T> Cache<T> {
     fn get_cloned(&self) -> Option<T> {
-        todo!("Add trait bound T: Clone to this impl block");
-        todo!("Clone the data if Some, return None if None");
+        // TODO: Add trait bound T: Clone to this impl block signature
+        // TODO: Clone the data if Some, return None if None
+        todo!("clone it")
     }
 }
 
-// Exercise: Add impl block that only works when T: Debug
 impl<T> Cache<T> {
     fn print_contents(&self) {
-        todo!("Add trait bound T: Debug to this impl block");
-        todo!("Print the data using Debug");
+        // TODO: Add trait bound T: Debug to this impl block signature
+        // TODO: Print the data using Debug
+        todo!("add Debug")
     }
 }
 
@@ -85,10 +83,12 @@ fn main() {
     dbg!(num_container.get_cloned());
     num_container.debug_print();
 
-    todo!("Uncomment Attempt 1 - notice you write bounds twice");
-    todo!("Try creating Container<NonCloneable> with bounded version");
+    // TODO: Uncomment Attempt 1 at the top
+    // TODO: Notice you write bounds twice (struct and impl)
 
-    todo!("Implement Cache struct and all impl blocks");
+    // TODO: Implement Cache struct with data field
+    // TODO: Implement all impl blocks with proper trait bounds
+    // TODO: Uncomment and test:
     // let mut cache = Cache::new();
     // cache.set(100);
     // dbg!(cache.get_cloned());

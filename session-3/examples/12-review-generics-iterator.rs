@@ -14,7 +14,8 @@ impl Iterator for CountDown {
     type Item = u32;
 
     fn next(&mut self) -> Option<Self::Item> {
-        todo!("Return Some(current) and decrement, or None when current is 0")
+        // TODO: Return Some(current) and decrement, or None when current is 0
+        todo!("handle Option")
     }
 }
 
@@ -25,7 +26,8 @@ struct Fibonacci {
 
 impl Fibonacci {
     fn new() -> Self {
-        todo!("Initialize with current=0 and next=1")
+        // TODO: Initialize with current=0 and next=1
+        todo!("set fields")
     }
 }
 
@@ -39,7 +41,10 @@ fn main() {
     let values: Vec<u32> = CountDown::new(3).collect();
     println!("{:?}", values);
 
-    todo!("Implement Iterator for Fibonacci with Item = u64 and a working next() method");
+    // TODO: Implement Iterator for Fibonacci
+    // TODO: Set Item = u64 and implement next() to generate sequence
+    // TODO: Use std::mem::replace to swap current and next
 
-    todo!("Create a Fibonacci and print first 10 numbers using .take(10)");
+    // TODO: Create Fibonacci::new() and print first 10 numbers
+    // TODO: Use .take(10) and a for loop or collect()
 }

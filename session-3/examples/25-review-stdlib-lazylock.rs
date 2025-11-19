@@ -25,7 +25,8 @@ fn get_version() -> &'static str {
 }
 
 fn format_banner() -> String {
-    todo!("Return 'MyApp vVERSION' using the VERSION const and format!")
+    // TODO: Return 'MyApp vVERSION' using the VERSION const and format!
+    todo!("use write!")
 }
 
 // Attempt 2: LazyLock for formatted banner
@@ -82,11 +83,13 @@ fn get_database_url() -> &'static str {
 
 // Exercise: Create LazyLock for log level
 // static LOG_LEVEL: LazyLock<String> = LazyLock::new(|| {
-//     todo!("Read LOG_LEVEL env var with std::env::var, default to 'info'");
+//     // TODO: Read LOG_LEVEL env var with std::env::var, default to 'info'
+//     todo!("impl")
 // });
 
 // fn get_log_level() -> &'static str {
-//     todo!("Return reference to LOG_LEVEL");
+//     // TODO: Return reference to LOG_LEVEL
+//     todo!("return value")
 // }
 
 fn demonstrate_runtime_config() {
@@ -94,7 +97,8 @@ fn demonstrate_runtime_config() {
     println!("Config path: {}", get_config_path());
     println!("Database URL: {}", get_database_url());
 
-    todo!("Uncomment get_log_level() call and implement LOG_LEVEL");
+    // TODO: Uncomment LOG_LEVEL static and get_log_level() function
+    // TODO: Implement with LazyLock reading LOG_LEVEL env var, default "info"
     // println!("Log level: {}", get_log_level());
 }
 
@@ -102,17 +106,16 @@ fn main() {
     println!("=== The LazyLock Trap ===");
     println!("Version: {}", get_version());
 
-    todo!("Implement format_banner() and print it");
+    // TODO: Implement format_banner() and print it
 
-    todo!("Uncomment Attempt 1 - LazyLock for version string");
-    todo!("Notice: LazyLock adds complexity for compile-time known values");
-    todo!("Compare with const VERSION - which is simpler?");
+    // TODO: Uncomment Attempt 1 - LazyLock for version string
+    // TODO: Compare with const VERSION - which is simpler?
 
-    todo!("Uncomment Attempt 2 - LazyLock for formatted banner");
-    todo!("Do you really need &'static str? Regular String from function works fine!");
+    // TODO: Uncomment Attempt 2 - LazyLock for formatted banner
+    // TODO: Do you need &'static str? Regular String works fine!
 
-    todo!("Uncomment Attempt 3 - try const fn with format!");
-    todo!("Realize: const fn is limited, but regular fn is perfectly fine");
+    // TODO: Uncomment Attempt 3 - try const fn with format!
+    // TODO: See that const fn can't use format! (but that's okay)
 
     println!("\n=== When LazyLock IS Actually Needed ===");
     demonstrate_runtime_config();

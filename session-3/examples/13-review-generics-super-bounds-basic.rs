@@ -69,7 +69,8 @@ where
     Self::Value: Clone,
 {
     fn duplicate(&self) -> Self::Value {
-        todo!("Step 1: Retrieve the value and clone it");
+        // TODO: Retrieve the value and clone it
+        todo!("clone it")
     }
 }
 
@@ -102,9 +103,9 @@ impl<T: Clone> CloneableStorage for Holder<T> {}
 fn main() {
     demonstrate_working();
 
-    todo!("Uncomment Attempt 1 - Can you call Display methods without bounds?");
-    todo!("Uncomment Attempt 2 - What happens with non-Display types?");
-    todo!("Uncomment Attempt 3 - Can you make non-Clone types cloneable?");
+    // TODO: Uncomment Attempt 1 - Can you call Display methods without bounds?
+    // TODO: Uncomment Attempt 2 - What happens with non-Display types?
+    // TODO: Uncomment Attempt 3 - Can you make non-Clone types cloneable?
 
     let mut holder = Holder {
         data: "Rust".to_string(),

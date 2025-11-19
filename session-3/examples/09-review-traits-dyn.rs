@@ -114,7 +114,7 @@ fn print_status(character: &dyn Character) {
 
 fn create_party() -> Vec<Box<dyn Character>> {
     // TODO: Create a Vec<Box<dyn Character>> with a warrior and mage
-    todo!()
+    todo!("create vec")
 }
 
 fn main() {

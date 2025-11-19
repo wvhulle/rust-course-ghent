@@ -55,7 +55,7 @@ where
 fn find_max<T>(_a: &T, _b: &T) -> T {
     // TODO: Add trait bounds using where: Clone + PartialOrd
     // TODO: Compare _a and _b, return clone of the larger one
-    todo!()
+    todo!("clone it")
 }
 
 // Attempt 3: Convert inline bounds to where clause
@@ -72,7 +72,7 @@ fn find_max<T>(_a: &T, _b: &T) -> T {
 fn sort_and_display<T>(_items: Vec<T>) -> Vec<T> {
     // TODO: Add where clause with: Ord + Debug + Clone
     // TODO: Make _items mutable, sort it, print each item, and return
-    todo!()
+    todo!("use FnMut")
 }
 
 fn main() {

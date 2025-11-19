@@ -91,15 +91,15 @@ fn explore_orphan_rule() {
 }
 
 fn test_orphan_combinations() {
-    todo!("Uncomment Attempt 1. Does it compile? Read the error carefully");
+    // TODO: Uncomment Attempt 1. Does it compile? Read the error carefully
 
-    todo!("Uncomment Attempt 2. Does it compile? What's the error?");
+    // TODO: Uncomment Attempt 2. Does it compile? What's the error?
 
-    todo!("Uncomment Attempt 3. Does it compile? Why or why not?");
+    // TODO: Uncomment Attempt 3. Does it compile? Why or why not?
 
-    todo!("Uncomment Attempt 4. Does it compile? Compare with Attempt 3");
+    // TODO: Uncomment Attempt 4. Does it compile? Compare with Attempt 3
 
-    todo!("Uncomment Attempt 5. Does it compile? What's different from Attempt 3?");
+    // TODO: Uncomment Attempt 5. Does it compile? What's different from Attempt 3?
 }
 
 fn summarize_orphan_rule() {

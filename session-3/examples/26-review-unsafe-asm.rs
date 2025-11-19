@@ -91,10 +91,11 @@ fn demonstrate_asm_negate(value: i64) -> i64 {
 //     result
 // }
 
-// Exercise 1: Double a number (add register to itself)
 #[cfg(target_arch = "x86_64")]
 fn asm_double(value: u64) -> u64 {
-    todo!("Pattern from demonstrate_asm_increment, but use 'add {{0}}, {{0}}'");
+    // TODO: Follow pattern from demonstrate_asm_increment
+    // TODO: Use instruction 'add {0}, {0}' to add register to itself
+    todo!("return self")
 }
 
 #[cfg(not(target_arch = "x86_64"))]
@@ -102,10 +103,11 @@ fn asm_double(value: u64) -> u64 {
     value * 2
 }
 
-// Exercise 2: Bitwise NOT (flip all bits)
 #[cfg(target_arch = "x86_64")]
 fn asm_not(value: u64) -> u64 {
-    todo!("Same pattern, use instruction 'not {{0}}'");
+    // TODO: Same pattern as asm_double
+    // TODO: Use instruction 'not {0}' to flip all bits
+    todo!("asm block")
 }
 
 #[cfg(not(target_arch = "x86_64"))]
@@ -113,30 +115,28 @@ fn asm_not(value: u64) -> u64 {
     !value
 }
 
-// Exercise 3: Add two numbers (use named operands like demonstrate_asm_negate)
 #[cfg(target_arch = "x86_64")]
 fn asm_add(a: u64, b: u64) -> u64 {
-    todo!("Two instructions: 'mov {{result}}, {{a}}' then 'add {{result}}, {{b}}'");
-    todo!("Use named operands: a = in(reg) a, b = in(reg) b, result = out(reg) result");
+    // TODO: Follow pattern from demonstrate_asm_negate with named operands
+    // TODO: Use 'mov {result}, {a}' then 'add {result}, {b}'
+    // TODO: Name operands: a = in(reg) a, b = in(reg) b, result = out(reg) result
+    todo!("handle Result")
 }
 
 fn main() {
-    // Working examples
     dbg!(demonstrate_asm_increment(42));
     dbg!(demonstrate_asm_negate(-100));
 
-    todo!("Uncomment broken_no_unsafe and read the compiler error");
-    todo!("Uncomment broken_immutable - what's different about this error?");
-    todo!("Uncomment broken_wrong_direction - compare with broken_immutable");
+    // TODO: Uncomment broken_no_unsafe and read the error
+    // TODO: Uncomment broken_immutable - compare the error
+    // TODO: Uncomment broken_wrong_direction - see the difference
 
-    todo!("Implement asm_double to double 21 -> expect 42");
+    // TODO: Implement asm_double to double 21 -> expect 42
     // dbg!(asm_double(21));
 
-    todo!("Implement asm_not to flip bits of 0xFFFF_FFFF_0000_0000");
+    // TODO: Implement asm_not to flip bits of 0xFFFF_FFFF_0000_0000
     // dbg!(asm_not(0xFFFF_FFFF_0000_0000));
 
-    todo!("Implement asm_add to compute 25 + 17");
+    // TODO: Implement asm_add to compute 25 + 17
     // dbg!(asm_add(25, 17));
-
-    // Pattern discovered: asm! must be unsafe, variables modified with inout must be mut
 }

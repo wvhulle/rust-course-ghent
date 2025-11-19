@@ -85,8 +85,9 @@ trait Labeled {
 
 impl<T> Labeled for T {
     fn with_label(&self, label: &str) -> String {
-        todo!("Add trait bound T: Display to the impl line above");
-        todo!("Use format! to return 'label: self'");
+        // TODO: Add trait bound T: Display to the impl line above
+        // TODO: Use format! to return 'label: self'
+        todo!("use write!")
     }
 }
 
@@ -97,8 +98,9 @@ trait Doubled {
 
 impl<T> Doubled for T {
     fn doubled_display(&self) -> String {
-        todo!("Add trait bound T: Display");
-        todo!("Return format!('{} {}', self, self)");
+        // TODO: Add trait bound T: Display
+        // TODO: Return format!('{} {}', self, self)
+        todo!("use write!")
     }
 }
 
@@ -109,8 +111,9 @@ trait BulletList {
 
 impl<T> BulletList for Vec<T> {
     fn print_bullets(&self) {
-        todo!("Add trait bound T: Display to impl");
-        todo!("Loop through self and println!('- {}', item) for each");
+        // TODO: Add trait bound T: Display to impl
+        // TODO: Loop through self and println!('- {}', item) for each
+        todo!("return self")
     }
 }
 
@@ -121,8 +124,9 @@ trait Inspectable {
 
 impl<T> Inspectable for T {
     fn inspect(&self) -> String {
-        todo!("Add where clause: T: Display + Clone");
-        todo!("Clone self, then return format!('Value: {}', cloned)");
+        // TODO: Add where clause: T: Display + Clone
+        // TODO: Clone self, then return format!('Value: {}', cloned)
+        todo!("use write!")
     }
 }
 
@@ -137,30 +141,30 @@ fn main() {
     dbg!("One impl, works for all Display types!");
 
     println!("\n=== Exercise: Labeled trait ===");
-    todo!("Implement blanket impl for Labeled");
+    // TODO: Implement blanket impl for Labeled
     // dbg!(42.with_label("Answer"));
     // dbg!("Rust".with_label("Language"));
     // dbg!(true.with_label("Flag"));
 
     println!("\n=== Exercise: Doubled trait ===");
-    todo!("Implement blanket impl for Doubled");
+    // TODO: Implement blanket impl for Doubled
     // dbg!(21.doubled_display());
     // dbg!("Echo".doubled_display());
 
     println!("\n=== Exercise: BulletList for Vec ===");
-    todo!("Implement blanket impl for BulletList");
+    // TODO: Implement blanket impl for BulletList
     // let languages = vec!["Rust", "Python", "Go"];
     // languages.print_bullets();
     // let numbers = vec![1, 2, 3, 4, 5];
     // numbers.print_bullets();
 
     println!("\n=== Exercise: Multiple bounds ===");
-    todo!("Implement blanket impl for Inspectable with where clause");
+    // TODO: Implement blanket impl for Inspectable with where clause
     // dbg!(100.inspect());
     // dbg!("test".inspect());
 
-    todo!("Uncomment the manual Repeated implementations above");
-    todo!("Compare the 3 manual impls vs the 1 blanket impl - how much code saved?");
+    // TODO: Uncomment the manual Repeated implementations above
+    // TODO: Compare the 3 manual impls vs the 1 blanket impl - how much code saved?
 
     dbg!("Blanket impls + extension traits = powerful pattern!");
 }

@@ -24,23 +24,25 @@ fn main() {
 
     let add_to_sum = |x: i32| {
         sum += x;
-        todo!("Return the new sum value")
+        // TODO: Return the new sum value
+        todo!("return value")
     };
 
     println!("{}", add_to_sum(5));
 
-    todo!("Call add_to_sum(3) and add_to_sum(10). You'll get a compile error - what's missing?");
+    // TODO: Call add_to_sum(3) and add_to_sum(10)
+    // TODO: You'll get a compile error - what's missing?
 
     let next_id = 0;
 
     let id_gen = || {
-        todo!(
-            "Increment next_id and return it. You'll need to fix compilation errors about \
-             mutability"
-        )
+        // TODO: Increment next_id and return it
+        // TODO: You'll need to fix compilation errors about mutability
+        todo!("handle Result")
     };
 
-    todo!("Call id_gen() three times and print each result. What do you need to mark as mut?");
+    // TODO: Call id_gen() three times and print each result
+    // TODO: What do you need to mark as mut?
 
-    todo!("Pass id_gen to apply_three_times. Does it compile?");
+    // TODO: Pass id_gen to apply_three_times. Does it compile?
 }
