@@ -20,7 +20,8 @@ fn main() {
 
     let offset = 10;
 
-    let add_offset = |_x| todo!("Add offset to x and return the result");
+    // TODO: Add offset to x and return the result
+    let add_offset = |_x| todo!("add offset");
 
     let result = apply_twice(add_offset);
     dbg!(result);
@@ -29,10 +30,12 @@ fn main() {
     let factor = 2;
 
     let complex = |x: i32| {
-        todo!("Use both base and factor in a calculation with x. For example: (x + base) * factor")
+        // TODO: Use both base and factor in a calculation with x
+        // TODO: For example: (x + base) * factor
+        todo!("use both")
     };
 
-    todo!("Call apply_twice with complex and print the result using dbg!");
+    // TODO: Call apply_twice with complex and print the result using dbg!
 
-    todo!("Print base and factor using dbg! to verify they are still accessible");
+    // TODO: Print base and factor using dbg! to verify they are still accessible
 }

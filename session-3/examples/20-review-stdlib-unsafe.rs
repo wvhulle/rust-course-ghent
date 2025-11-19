@@ -42,11 +42,11 @@ fn main() {
 
     println!("\n=== Your Turn ===\n");
 
-    todo!("Use compare_sizes! to check: &i32, Box<i32>, NonZeroU32");
+    // TODO: Use compare_sizes! to check: &i32, Box<i32>, NonZeroU32
+    todo!("compare values");
 
-    todo!(
-        "Create show_option_ref_bits similar to show_option_bool_bits to investigate Option<&i32>"
-    );
+    // TODO: Create show_option_ref_bits similar to show_option_bool_bits to investigate Option<&i32>
+    todo!("handle Option");
 
     println!("\n=== Challenge: Custom Niche Type ===\n");
 
@@ -68,5 +68,6 @@ fn main() {
     compare_sizes!(Option<bool>);
     compare_sizes!(Option<Option<bool>>);
 
-    todo!("Predict: what is size_of::<Option<Option<Option<bool>>>>()?");
+    // TODO: Predict: what is size_of::<Option<Option<Option<bool>>>>()?
+    todo!("handle Option");
 }

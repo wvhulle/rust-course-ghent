@@ -33,28 +33,34 @@ fn demonstrate_advanced() {
 
 // Basic exercises
 fn greet_user(name: Option<&str>) -> String {
-    todo!("Use map to create 'Hello, NAME!' or unwrap_or to return 'Hello, Guest!'")
+    // TODO: Use map to create 'Hello, NAME!' or unwrap_or to return 'Hello, Guest!'
+    todo!("use map");
 }
 
 fn apply_discount(price: Option<i32>) -> Option<i32> {
-    todo!("Use map to apply 10% discount (multiply by 0.9 as f64, then convert back)")
+    // TODO: Use map to apply 10% discount (multiply by 0.9 as f64, then convert back)
+    todo!("use map");
 }
 
 fn count_some_values(values: &[Option<i32>]) -> usize {
-    todo!("Count how many Some values are in the slice using iter() and filter()")
+    // TODO: Count how many Some values are in the slice using iter() and filter()
+    todo!("use filter");
 }
 
 // Advanced exercises
 fn safe_divide(numerator: i32, denominator: i32) -> Option<i32> {
-    todo!("Return Some(numerator / denominator) if denominator != 0, otherwise None")
+    // TODO: Return Some(numerator / denominator) if denominator != 0, otherwise None
+    todo!("handle Option");
 }
 
 fn chain_divide(start: i32, divisor1: i32, divisor2: i32) -> Option<i32> {
-    todo!("Use and_then to divide start by divisor1, then divide that result by divisor2")
+    // TODO: Use and_then to divide start by divisor1, then divide that result by divisor2
+    todo!("use and_then");
 }
 
 fn get_voting_age(age: Option<u32>) -> Option<u32> {
-    todo!("Use filter to return the age only if it's >= 18, otherwise None")
+    // TODO: Use filter to return the age only if it's >= 18, otherwise None
+    todo!("use filter");
 }
 
 fn get_config_or_default(config: Option<String>) -> String {
@@ -65,7 +71,8 @@ fn get_config_or_default(config: Option<String>) -> String {
 }
 
 fn sum_nested_options(values: Vec<Option<Option<i32>>>) -> i32 {
-    todo!("Use filter_map and flatten to extract all values and sum them")
+    // TODO: Use filter_map and flatten to extract all values and sum them
+    todo!("use map");
 }
 
 fn main() {
@@ -73,15 +80,18 @@ fn main() {
     demonstrate_basics();
 
     println!("\n=== Basic exercises ===");
-    todo!("Implement greet_user");
+    // TODO: Implement greet_user
+    todo!("implement");
     // dbg!(greet_user(Some("Alice")));
     // dbg!(greet_user(None));
 
-    todo!("Implement apply_discount");
+    // TODO: Implement apply_discount
+    todo!("implement");
     // dbg!(apply_discount(Some(100)));
     // dbg!(apply_discount(None));
 
-    todo!("Implement count_some_values");
+    // TODO: Implement count_some_values
+    todo!("handle Option");
     // let values = [Some(1), None, Some(3), None, Some(5)];
     // dbg!(count_some_values(&values));
 
@@ -89,24 +99,29 @@ fn main() {
     demonstrate_advanced();
 
     println!("\n=== Advanced exercises ===");
-    todo!("Implement safe_divide");
+    // TODO: Implement safe_divide
+    todo!("check divisor");
     // dbg!(safe_divide(10, 2));
     // dbg!(safe_divide(10, 0));
 
-    todo!("Implement chain_divide using and_then");
+    // TODO: Implement chain_divide using and_then
+    todo!("use and_then");
     // dbg!(chain_divide(100, 5, 2));
     // dbg!(chain_divide(100, 0, 2));
 
-    todo!("Implement get_voting_age using filter");
+    // TODO: Implement get_voting_age using filter
+    todo!("use filter");
     // dbg!(get_voting_age(Some(25)));
     // dbg!(get_voting_age(Some(16)));
     // dbg!(get_voting_age(None));
 
-    todo!("Implement get_config_or_default using or_else");
+    // TODO: Implement get_config_or_default using or_else
+    todo!("use or_else");
     // dbg!(get_config_or_default(Some("custom.toml".to_string())));
     // dbg!(get_config_or_default(None));
 
-    todo!("Implement sum_nested_options");
+    // TODO: Implement sum_nested_options
+    todo!("handle Option");
     // let nested = vec![Some(Some(1)), None, Some(None), Some(Some(3))];
     // dbg!(sum_nested_options(nested));
 

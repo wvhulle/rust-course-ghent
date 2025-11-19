@@ -45,31 +45,35 @@ impl Temperature {
 // Exercise: Implement Display for Temperature
 // impl fmt::Display for Temperature {
 //     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         todo!("Use write! macro to format as '23.5°C'");
-//         todo!("Handle the special case: 0.0 should display as '0°C' not '0.0°C'");
+//         // TODO: Use write! macro to format as '23.5°C'
+//         // TODO: Handle the special case: 0.0 should display as '0°C' not '0.0°C'
+//         todo!("use write!")
 //     }
 // }
 
 // Exercise: Implement PartialEq for Temperature
 // impl PartialEq for Temperature {
 //     fn eq(&self, other: &Self) -> bool {
-//         todo!("Compare celsius values");
-//         todo!("Think: should 20.0 == 20.00000001? Floating point equality is tricky!");
+//         // TODO: Compare celsius values
+//         // TODO: Think: should 20.0 == 20.00000001? Floating point equality is tricky!
+//         todo!("compare f64")
 //     }
 // }
 
 // Exercise: Implement PartialOrd for Temperature
 // impl PartialOrd for Temperature {
 //     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-//         todo!("Use self.celsius.partial_cmp(&other.celsius)");
-//         todo!("Why partial_cmp and not cmp? Because f64 has NaN!");
+//         // TODO: Use self.celsius.partial_cmp(&other.celsius)
+//         // TODO: Why partial_cmp and not cmp? Because f64 has NaN!
+//         todo!("use partial_cmp")
 //     }
 // }
 
 // Exercise: Implement From<f64> for Temperature
 // impl From<f64> for Temperature {
 //     fn from(celsius: f64) -> Self {
-//         todo!("Create Temperature from celsius value");
+//         // TODO: Create Temperature from celsius value
+//         todo!("create Temperature")
 //     }
 // }
 
@@ -83,16 +87,16 @@ fn main() {
     println!("=== Display Trait ===");
     demonstrate_display();
 
-    todo!("Uncomment Attempt 1 - try Display with println!");
-    todo!("Notice: Display must write to the Formatter, not stdout directly");
+    // TODO: Uncomment Attempt 1 - try Display with println!
+    // TODO: Notice: Display must write to the Formatter, not stdout directly
 
-    todo!("Implement Display for Temperature");
+    // TODO: Implement Display for Temperature
     // let temp = Temperature::new(23.5);
     // println!("Temperature: {}", temp);
     // dbg!(format!("{}", temp));
 
     println!("\n=== PartialEq Trait ===");
-    todo!("Implement PartialEq for Temperature");
+    // TODO: Implement PartialEq for Temperature
     // let temp1 = Temperature::new(20.0);
     // let temp2 = Temperature::new(20.0);
     // let temp3 = Temperature::new(25.0);
@@ -100,7 +104,7 @@ fn main() {
     // dbg!(temp1 != temp3);
 
     println!("\n=== PartialOrd Trait ===");
-    todo!("Implement PartialOrd for Temperature");
+    // TODO: Implement PartialOrd for Temperature
     // let cold = Temperature::new(10.0);
     // let warm = Temperature::new(25.0);
     // dbg!(cold < warm);
@@ -108,12 +112,12 @@ fn main() {
     // dbg!(cold <= Temperature::new(10.0));
 
     println!("\n=== From Trait ===");
-    todo!("Implement From<f64> for Temperature");
+    // TODO: Implement From<f64> for Temperature
     // let temp: Temperature = 20.0.into();
     // println!("Converted: {}", temp);
 
     println!("\n=== Combined: Using traits together ===");
-    todo!("After implementing all traits, uncomment this section");
+    // TODO: After implementing all traits, uncomment this section
     // let mut temps = vec![
     //     Temperature::from(30.0),
     //     Temperature::from(15.0),

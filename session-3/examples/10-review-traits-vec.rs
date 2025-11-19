@@ -98,24 +98,30 @@ fn load_animals_from_config(animal_type: &str, name: &str) -> Box<dyn Animal> {
 
 // Exercise: Build a zoo from runtime data
 fn build_zoo() -> Vec<Box<dyn Animal>> {
-    todo!("Step 1: Create an empty Vec<Box<dyn Animal>>");
-    todo!("Step 2: Use load_animals_from_config to add: dog 'Max', cat 'Luna', cow 'Daisy'");
-    todo!("Step 3: Return the vector");
+    // TODO: Step 1: Create an empty Vec<Box<dyn Animal>>
+    todo!("create vec");
+    // TODO: Step 2: Use load_animals_from_config to add: dog 'Max', cat 'Luna', cow 'Daisy'
+    todo!("convert type");
+    // TODO: Step 3: Return the vector
+    todo!("create vec");
 }
 
 // Exercise: Process all animals
 fn make_all_speak(_animals: &[Box<dyn Animal>]) {
-    todo!("Loop through animals and print each one's speak() result");
+    // TODO: Loop through animals and print each one's speak() result
+    todo!("handle Result");
 }
 
 // Exercise: Add new animal type
 // struct Bird {
-//     todo!("Add name field");
+//     // TODO: Add name field
+//     todo!("create vec");
 // }
 
 // impl Animal for Bird {
 //     fn speak(&self) -> String {
-//         todo!("Return '<name> says: Tweet!'");
+//         // TODO: Return '<name> says: Tweet!'
+//         todo!("return value");
 //     }
 // }
 
@@ -134,15 +140,19 @@ fn main() {
         println!("{}", animal.speak());
     }
 
-    todo!("Uncomment Attempt 1 - Vec can only hold one concrete type");
-    todo!("Uncomment Attempt 2 - Local variables don't live long enough");
+    // TODO: Uncomment Attempt 1 - Vec can only hold one concrete type
+    todo!("call fn");
+    // TODO: Uncomment Attempt 2 - Local variables don't live long enough
+    todo!("loop speak");
 
     println!("\n=== Exercise: Build zoo ===");
-    todo!("Implement build_zoo() function");
+    // TODO: Implement build_zoo() function
+    todo!("implement");
     // let zoo = build_zoo();
     // make_all_speak(&zoo);
 
-    todo!("Uncomment Bird struct and impl, then add birds to the zoo");
+    // TODO: Uncomment Bird struct and impl, then add birds to the zoo
+    todo!("uncomment");
     // let bird = Box::new(Bird { name: "Tweety".to_string() });
 
     dbg!(

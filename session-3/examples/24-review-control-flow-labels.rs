@@ -72,10 +72,14 @@ fn skip_negative_groups(groups: &[Vec<i32>]) -> i32 {
 
 /// Exercise: Find first pair of numbers that sum to target
 fn find_pair_sum(_numbers: &[i32], _target: i32) -> Option<(i32, i32)> {
-    todo!("Use nested loops with 'outer: label to search pairs");
-    todo!("Outer loop: enumerate through numbers");
-    todo!("Inner loop: iterate from index+1 to avoid duplicates");
-    todo!("When sum equals target, break 'outer and return the pair");
+    // TODO: Use nested loops with 'outer: label to search pairs
+    todo!("use break");
+    // TODO: Outer loop: enumerate through numbers
+    todo!("use break");
+    // TODO: Inner loop: iterate from index+1 to avoid duplicates
+    todo!("convert type");
+    // TODO: When sum equals target, break 'outer and return the pair
+    todo!("use break");
 }
 
 fn main() {
@@ -94,12 +98,15 @@ fn main() {
     let groups = vec![vec![1, 2, 3], vec![], vec![4, -1, 5], vec![6, 7]];
     dbg!(skip_negative_groups(&groups));
 
-    todo!("Uncomment Attempt 1 - try to break outer loop without label");
-    todo!("Notice: break only exits the inner loop, outer loop continues!");
+    // TODO: Uncomment Attempt 1 - try to break outer loop without label
+    todo!("use break");
+    // TODO: Notice: break only exits the inner loop, outer loop continues!
+    todo!("use break");
 
     println!("\n=== Exercise: Two Sum Problem ===");
     let numbers = vec![2, 7, 11, 15];
-    todo!("Implement find_pair_sum using labeled break");
+    // TODO: Implement find_pair_sum using labeled break
+    todo!("use break");
     // dbg!(find_pair_sum(&numbers, 9));   // Should find (2, 7)
     // dbg!(find_pair_sum(&numbers, 18));  // Should find (7, 11)
     // dbg!(find_pair_sum(&numbers, 100)); // Should find None

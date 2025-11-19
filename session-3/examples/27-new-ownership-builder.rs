@@ -1,6 +1,4 @@
 //! Builder Pattern Exercise
-//!
-//! Implement a builder pattern for constructing Package structs
 
 #[derive(Debug)]
 enum Language {
@@ -26,7 +24,8 @@ struct Package {
 
 impl Package {
     fn as_dependency(&self) -> Dependency {
-        todo!("Return a Dependency with this package's name and version")
+        // TODO: Return a Dependency with this package's name and version
+        todo!("return value")
     }
 }
 
@@ -34,10 +33,9 @@ struct PackageBuilder(Package);
 
 impl PackageBuilder {
     fn new(_name: impl Into<String>) -> Self {
-        todo!(
-            "Create a PackageBuilder with the given name, empty version, empty authors, empty \
-             dependencies, and None for language"
-        )
+        // TODO: Create a PackageBuilder wrapping a Package
+        // TODO: Set name from parameter, empty version, empty vecs, None language
+        todo!("convert type")
     }
 
     fn version(mut self, version: impl Into<String>) -> Self {
@@ -46,15 +44,18 @@ impl PackageBuilder {
     }
 
     fn authors(mut self, _authors: Vec<String>) -> Self {
-        todo!("Set the authors field and return self")
+        // TODO: Set the authors field and return self
+        todo!("return self")
     }
 
     fn dependency(mut self, _dependency: Dependency) -> Self {
-        todo!("Add the dependency to the dependencies Vec and return self")
+        // TODO: Push the dependency to dependencies Vec and return self
+        todo!("push item")
     }
 
     fn language(mut self, _language: Language) -> Self {
-        todo!("Set the language to Some(language) and return self")
+        // TODO: Set language to Some(_language) and return self
+        todo!("handle Option")
     }
 
     fn build(self) -> Package {

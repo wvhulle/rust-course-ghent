@@ -47,13 +47,15 @@ trait Doubled {
 
 impl Doubled for i32 {
     fn doubled(&self) -> Self {
-        todo!("Return self * 2")
+        // TODO: Return self * 2
+        todo!("return self")
     }
 }
 
 impl Doubled for f64 {
     fn doubled(&self) -> Self {
-        todo!("Return self * 2.0")
+        // TODO: Return self * 2.0
+        todo!("return self")
     }
 }
 
@@ -62,7 +64,7 @@ fn main() {
     demonstrate_extension();
 
     println!("\n=== Exercise: Doubled trait ===");
-    todo!("Implement doubled() for i32 and f64");
+    // TODO: Implement doubled() for i32 and f64
     // let num = 21;
     // let pi = 3.14;
     // dbg!(num.doubled());
@@ -71,5 +73,5 @@ fn main() {
     // In effect, your new trait "extends" the foreign data type.
     // That is why it is called an *extension trait*
 
-    todo!("Implement BoxedDisplay for f64 and bool to make them compile");
+    // TODO: Implement BoxedDisplay for f64 and bool to make them compile
 }

@@ -67,5 +67,5 @@ fn main() {
     persist_item(&config, "/tmp/config.txt").unwrap();
 
     // Create a Product and persist it
-    todo!();
+    todo!("deref");
 }
