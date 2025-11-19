@@ -1,19 +1,4 @@
-//! Rust doesn't have class inheritance like Python or Java.
-//! This exercise shows the Rust way: composition and traits.
-
-// In Python, you might use inheritance:
-//
-// class Character:
-//     def __init__(self, name, health):
-//         self.name = name
-//         self.health = health
-//
-// class Warrior(Character):
-//     def __init__(self, name, health, strength):
-//         super().__init__(name, health)
-//         self.strength = strength
-
-// In Rust, we use composition instead
+//! How can you store different types that implement the same trait in a Vec?
 
 #[derive(Debug)]
 struct Warrior {
@@ -32,7 +17,9 @@ struct Mage {
 trait Character {
     fn name(&self) -> &str;
     fn health(&self) -> i32;
-    fn take_damage(&mut self, damage: i32);
+    fn is_alive(&self) -> bool {
+        self.health() > 0
+    }
 }
 
 impl Character for Warrior {
@@ -42,10 +29,6 @@ impl Character for Warrior {
 
     fn health(&self) -> i32 {
         self.health
-    }
-
-    fn take_damage(&mut self, damage: i32) {
-        self.health -= damage;
     }
 }
 
@@ -57,47 +40,61 @@ impl Character for Mage {
     fn health(&self) -> i32 {
         self.health
     }
-
-    fn take_damage(&mut self, damage: i32) {
-        self.health -= damage;
-    }
 }
 
 impl Warrior {
     fn attack(&self) -> i32 {
-        todo!("Return damage based on strength")
+        self.strength * 2
     }
 }
 
 impl Mage {
     fn cast_spell(&mut self) -> i32 {
-        todo!("Consume mana and return damage")
+        if self.mana >= 10 {
+            self.mana -= 10;
+            30
+        } else {
+            0
+        }
     }
 }
 
-struct Stats {
-    name: String,
-    health: i32,
+fn print_status(character: &dyn Character) {
+    let status = if character.is_alive() {
+        "alive"
+    } else {
+        "dead"
+    };
+    println!(
+        "{} has {} HP and is {}",
+        character.name(),
+        character.health(),
+        status
+    );
 }
 
-fn print_status(_character: &dyn Character) {
-    todo!("Print character name and health")
-}
-
-fn store_characters() {
-    todo!("Create a Vec<Box<dyn Character>> and store warrior and mage");
-    todo!("Loop through and call print_status on each");
-}
-
-// Try using dyn with Clone
-// Uncomment to see why this fails:
+// Attempt 1: Try storing different types in a Vec
+// Uncomment to see what happens:
 //
-// fn clone_character(_character: &dyn Character) -> Box<dyn Character> {
-//     Box::new(_character.clone())
+// fn create_party_attempt1() {
+//     let warrior = Warrior {
+//         name: "Conan".to_string(),
+//         health: 100,
+//         strength: 50,
+//     };
+//
+//     let mage = Mage {
+//         name: "Gandalf".to_string(),
+//         health: 60,
+//         mana: 100,
+//     };
+//
+//     let party = vec![warrior, mage];
+//     dbg!(party.len());
 // }
 
-// Try returning dyn without Box
-// Uncomment to see the error:
+// Attempt 2: Try returning dyn without Box
+// Uncomment to discover the Sized requirement:
 //
 // fn get_character() -> dyn Character {
 //     Warrior {
@@ -107,81 +104,53 @@ fn store_characters() {
 //     }
 // }
 
-// Attempt 3: Try using dyn in a struct field
+// Attempt 3: Try using dyn directly in a Vec
 // Uncomment to see the size issue:
 //
-// struct Party {
-//     members: Vec<dyn Character>,
+// fn create_party_attempt3() {
+//     let party: Vec<dyn Character> = Vec::new();
+//     dbg!(party.len());
 // }
 
-// The limitations of dyn:
-// 1. No Clone - trait objects can't be cloned automatically
-// 2. No Sized - must use Box, &, or other pointer types
-// 3. Runtime cost - dynamic dispatch is slower than static dispatch
-// 4. Lost concrete type - can't access warrior.strength through &dyn Character
+fn create_party() -> Vec<Box<dyn Character>> {
+    // TODO: Create a Vec<Box<dyn Character>> with a warrior and mage
+    todo!()
+}
 
-fn demonstrate_limitations() {
+fn main() {
     let warrior = Warrior {
         name: "Conan".to_string(),
         health: 100,
         strength: 50,
     };
 
-    let character: &dyn Character = &warrior;
-
-    // This works - trait method
-    dbg!(character.name());
-
-    // Uncomment to see the error - lost access to concrete type methods:
-    // dbg!(character.strength);
-    // dbg!(character.attack());
-
-    todo!("Notice: through &dyn Character, we can't access warrior-specific fields");
-}
-
-fn main() {
-    let mut warrior = Warrior {
-        name: "Conan".to_string(),
-        health: 100,
-        strength: 50,
-    };
-
-    let mut mage = Mage {
+    let mage = Mage {
         name: "Gandalf".to_string(),
         health: 60,
         mana: 100,
     };
 
-    println!("{} has {} health", warrior.name(), warrior.health());
-    warrior.take_damage(20);
-    println!(
-        "{} takes damage! Health: {}",
-        warrior.name(),
-        warrior.health()
-    );
+    // TODO: Call print_status with &warrior and &mage
 
-    println!("{} has {} health", mage.name(), mage.health());
-    mage.take_damage(15);
-    println!("{} takes damage! Health: {}", mage.name(), mage.health());
+    // TODO: Uncomment Attempt 1. Read the error about mismatched types
+    // TODO: Uncomment Attempt 2. See why dyn is not Sized
+    // TODO: Uncomment Attempt 3. See why Vec needs Sized types
 
-    todo!("Call warrior.attack() and print the damage");
+    // TODO: Implement create_party() using Box<dyn Character>
+    // TODO: Loop through the party and call print_status on each member
 
-    todo!("Call mage.cast_spell() and print the damage");
+    let warrior2 = Warrior {
+        name: "Beowulf".to_string(),
+        health: 120,
+        strength: 60,
+    };
 
-    todo!("Use print_status() with both warrior and mage");
+    let character_ref: &dyn Character = &warrior2;
 
-    todo!("Uncomment Attempt 1 - Character is not Clone");
-    todo!("Uncomment Attempt 2 - dyn is not Sized");
-    todo!("Uncomment Attempt 3 - Vec needs Sized types");
+    dbg!(character_ref.name());
 
-    todo!("Run demonstrate_limitations() to see lost type information");
+    // TODO: Try to access character_ref.strength
+    // TODO: Try to call character_ref.attack()
 
-    todo!("Implement store_characters() to see when Box<dyn Trait> is useful");
-
-    todo!(
-        "Refactor Warrior and Mage to use Stats struct instead of duplicating name and health \
-         fields"
-    );
-
-    dbg!("Conclusion: dyn gives flexibility but loses type information and performance");
+    // Pattern: dyn gives flexibility but loses concrete type information
 }
