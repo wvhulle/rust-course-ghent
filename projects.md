@@ -19,3 +19,11 @@ checking whether the transformer can learn to predict the next term.
 
 The goal is not performance, but a clear implementation that helps understand
 how transformers process sequential numerical data.
+
+# Artefact website
+
+Proposal by: Eoghan
+
+I propose to build a small website for storing museum artefact information (location, date, type etc.)
+I will research leptos, sqlx, and serde frameworks/libraries for implementation.
+This will be a full stack web development project
