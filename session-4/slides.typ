@@ -18,9 +18,25 @@
 
 #title-slide()
 
-= Smart pointers (practice)
+== Educational videos
 
-== Recap
+For the people who are interested in `dyn`, `dyn` is an example of a dynamically-sized-type or `unsized` / `!Sized` type. Read more about such types in https://github.com/pretzelhammer/rust-blog/blob/master/posts/sizedness-in-rust.md
+
+#warning[If forgot to mention that `dyn` trait objects are a kind of type erasure. They erase size, alignment and other compile-time properties of the concrete types.]
+
+
+Youtubers that makes good videos about Rust:
+- Jon Gjengset: https://www.youtube.com/c/JonGjengset
+- Tris https://www.youtube.com/@NoBoilerplate
+
+#focus-slide[
+  #image("images/jon.jpg")
+]
+
+
+= Smart pointers
+
+== Review test
 
 #qa[What is a smart pointer?][A pointer with ownership.]
 
@@ -40,22 +56,36 @@ pub trait Deref {
 #qa[Which types implement `Deref` but are NOT smart pointers?][
   References (`&T`, `&mut T`) are primitive pointers without ownership. `Cell<T>` and `MaybeUninit<T>` don't implement `Deref`.
 ]
-#pagebreak()
 
-A smart pointer is a reference / pointer that also owns the data it points to:
 
-#fletcher-diagram(
-  node((0, 0), name: <data>, shape: shapes.circle, stroke: black, [Data]),
-  node((0, 1), name: <owner>, [Smart pointer \ (owner)], stroke: black),
+== Visualisation
 
-  node((-1, 0), name: <left>),
-  node((1, 0), name: <right>),
-  edge(<owner>, <left>, bend: 45deg, "-->"),
-  edge(<owner>, <right>, bend: -45deg, "-->"),
-  edge(<owner>, <data>, "->"),
-)
+#slide[
+  #set align(center + horizon)
+
+  #fletcher-diagram(
+    node((0, 0), name: <data>, shape: shapes.circle, stroke: black, [Data]),
+    node((0, 1), name: <owner>, [Smart pointer \ (owner)], stroke: black),
+
+    node((-1, 0), name: <left>),
+    node((1, 0), name: <right>),
+    edge(<owner>, <left>, bend: 45deg, "-->"),
+    edge(<owner>, <right>, bend: -45deg, "-->"),
+    edge(<owner>, <data>, "->"),
+  )
+]
+
+== Exercises
+
 
 Solve the exercises in `session-4/examples/` (if you haven't already) in 30 minutes.
+
+Are you done or bored? Implement your own smart pointer. It should own its data and provide shared access to it (single threaded):
+
+- Use `dealloc` and `alloc` for unsafe memory management
+- Use `AtomicUsize` for reference counting
+
+Solution in `main.rs` (don't read before trying)
 
 = Lifetimes (new)
 
@@ -138,7 +168,13 @@ fn main() {
 
 #qa[Which argument is borrowed?][Both `a` and `b` are borrowed for the lifetime of `r`. Compiler looks only at signature.]
 
+#focus-slide[
+  #image("images/cheat.jpg")
+]
+
 == Borrow One
+
+It is possible to borrow from only one argument by introducing a second lifetime. (Even why they are both references)
 
 Open example file for demonstration: `find-nearest.rs`
 
@@ -173,7 +209,13 @@ Open example file for demonstration: `find-nearest.rs`
   - If there is only *one argument lifetime*, it is given to all un-annotated return values.
   - If there are *multiple argument lifetimes*, but the *first one is for self*, that lifetime is given to all un-annotated return values.
 
-  #qa[Try to complete the missing lifetimes manually in the example code.][See example file `lifetime-elision.rs`]
+  #pause
+  #warning[Lifetime elision rules are tricky and very important! Learn them by hard!]
+
+  #pause
+
+  Complete elided lifetimes in the example code in example file `lifetime-elision.rs`.
+
 ]
 
 
@@ -217,10 +259,12 @@ Open example file for demonstration: `find-nearest.rs`
   - allocation-free parsers
 - When possible, make data structures own their data directly.
 
+#focus-slide[
+  #image("images/attach.jpg")
+]
 
-#pause
 
-Exercises:
+== Exercises:
 
 - introductory exercises in Rustlings chapter 16: Lifetimes (clone the Rustlings repo)
 - advanced exercise in example file `protobuf-parsing.rs`. (in this session's examples folder)
@@ -230,13 +274,232 @@ Exercises:
 
 For those interested: read this #link("https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md#10-closures-follow-the-same-lifetime-elision-rules-as-functions")[Blog post by PretzelHamer titled "Common Rust Lifetime Misconceptions"]
 
-Examples of misconceptions (*wrong*):
 
-- T only contains owned types
-- if `T: 'static` then T must be valid for the entire program
-- `&'a T` and `T: 'a` are the same thing
-- my code isn't generic and doesn't have lifetimes
-- if it compiles then my lifetime annotations are correct
+== Quiz
+
+
+
+
+
+
+#qa[
+  If it compiles then my lifetime annotations are correct. True or false?
+][
+  Not necessarily. The compiler checks for safety, but does not know your intentions.
+]
+
+#qa[
+  It is possible to write large Rust programs without ever using lifetimes. True or false?
+][
+  Not quite true. Lifetimes are almost always omitted because of lifetime elision rules. You need them for implementing iterators.
+
+]
+
+
+== Demonstration
+
+#slide[
+  #set text(size: 0.8em)
+
+  ```rs
+  struct ByteIter<'a> {
+      remainder: &'a [u8]
+  }
+
+  impl<'a> ByteIter<'a> {
+      fn next(&mut self) -> Option<&u8> {
+          if self.remainder.is_empty() {
+              None
+          } else {
+              let byte = &self.remainder[0];
+              self.remainder = &self.remainder[1..];
+              Some(byte)
+          }
+      }
+  }
+
+  fn main() {
+      let mut bytes = ByteIter { remainder: b"1" };
+      assert_eq!(Some(&b'1'), bytes.next());
+      assert_eq!(None, bytes.next());
+  }
+  ```
+]
+
+
+
+#slide[
+  #set text(size: 0.8em)
+  ```rs
+  fn main() {
+      let mut bytes = ByteIter { remainder: b"1123" };
+      let byte_1 = bytes.next();
+      let byte_2 = bytes.next();
+      if byte_1 == byte_2
+          // do something
+      }
+  }
+  ```
+  #qa[Will it compile?][No.]
+  ```
+  error[E0499]: cannot borrow `bytes` as mutable more than once at a time
+    --> src/main.rs:20:18
+     |
+  19 |     let byte_1 = bytes.next();
+     |                  ----- first mutable borrow occurs here
+  20 |     let byte_2 = bytes.next();
+     |                  ^^^^^ second mutable borrow occurs here
+  21 |     if byte_1 == byte_2 {
+     |        ------ first borrow later used here
+  ```]
+
+#slide[
+  Fill in missing lifetimes and name them properly
+
+  #codly(
+    highlights: (
+      (line: 6, start: 55, end: 64, fill: red),
+    ),
+  )
+  ```rs
+  struct ByteIter<'remainder> {
+      remainder: &'remainder [u8]
+  }
+
+  impl<'remainder> ByteIter<'remainder> {
+      fn next<'mut_self>(&'mut_self mut self) -> Option<&'mut_self u8> {
+          if self.remainder.is_empty() {
+              None
+          } else {
+              let byte = &self.remainder[0];
+              self.remainder = &self.remainder[1..];
+              Some(byte)
+          }
+      }
+  }
+  ```
+]
+
+== Lifetime bounds
+
+
+#slide[
+
+  ```rs
+  struct Wrapper<T> {
+      value: T,
+  }
+  ```
+
+  #qa[Wherever the type generic `T` appears only owned types may be used. True or false?][False. `T` may contain references too.]
+
+
+  #pause
+  #fletcher-diagram(
+    node((0, 0), [Outer world]),
+
+
+    node(
+      enclose: (<var>, <ref>),
+      name: <scope>,
+      stroke: red,
+      inset: 1em,
+    ),
+
+    node(
+      (0, 2),
+      [Generic type `T`],
+      name: <generic>,
+    ),
+    edge(<generic>, <scope>, "-->"),
+    node((2, 1), [Variable `c`], name: <var-out>, stroke: blue),
+
+    pause,
+    node((-1, 1), [Variable `a`], name: <var>, stroke: green),
+
+    node((1, 1), [Reference `b = &c`], name: <ref>, stroke: blue),
+
+    edge(<ref>, <var-out>, "->"),
+
+    pause,
+    node((1, 2), [`T` contains lifetime \ (to the outside)], name: <lifetime>),
+    edge(<lifetime>, <ref>, "-->"),
+  )
+
+  In this situation: `T: 'out` where `'out` is the lifetime of `b` (may be implicit in `T`)
+]
+
+#slide[
+  Type compatibility for generic type parameters:
+  #table(
+    columns: 4,
+    stroke: 0.5pt,
+    [*Type Variable*], [`T`], [`&T`], [`&mut T`],
+    [*Examples*],
+    [`i32`, `&i32`, `&mut i32`, `&&i32`, ...],
+    [`&i32`, `&&i32`, `&&mut i32`, ...],
+    [`&mut i32`, `&mut &mut i32`, `&mut &i32`, ...],
+  )
+
+
+
+  ```rust
+  trait Trait {}
+  impl<T> Trait for T {}
+  impl<T> Trait for &T {} // ❌
+  impl<T> Trait for &mut T {} // ❌
+  ```
+
+  #qa[Why do the last two impls not compile?][The compiler doesn't allow us to define an implementation of `Trait` for `&T` and `&mut T` since it would conflict with the implementation of `Trait` for `T` which already includes all of `&T` and `&mut T`]
+]
+
+
+
+== `'static` lifetime
+
+The `'static` is a special lifetime (not to be confused with the `'static` keyword for variables). It stands for the longest / maximum lifetime.
+
+#qa[
+  If `T: 'static` then T must be valid for the entire program. True or false?
+
+][
+  False. `T: 'static` means that `T` does *not contain any non-'static references*. It may only contain `'static` references or no references at all.
+]
+#pause
+
+Examples: primitive types: `i32`, `f64`, `bool`, `char`.
+
+Conclusion:
+
+- `T: 'static` should be read as _"`T` can live at least as long as a `'static` lifetime"_ #pause
+- if `T: 'static` then `T` can be a borrowed type with a `'static` lifetime _or_ an owned type #pause
+- since `T: 'static` includes owned types that means `T`
+  - can be dynamically allocated at run-time
+  - does not have to be valid for the entire program
+  - can be safely and freely mutated
+  - can be dynamically dropped at run-time
+  - can have lifetimes of different durations
+
+
+
+#focus-slide[
+  #image("images/house.jpg")
+]
+
+== Recent change in compiler
+
+Since 2025 (Rust edition 2024), `impl` blocks in the return type position now capture lifetimes in argument position automatically.
+
+```rs
+fn multiply_adapter(
+    iter: impl Iterator<Item = i32>,
+    factor: &Wrapper,
+) -> impl Iterator<Item = i32> {
+    iter.map(move |x| x * factor.factor)
+}
+```
+
+See example `impl-return.rs` for demonstration.
 
 = Iterators
 
@@ -255,6 +518,8 @@ for (int i = 0; i < array_len; i += 1) {
 }
 ```
 
+#pause
+
 #qa[What is the closest C equivalent of this to Rust?][It uses a pointer that is incremented instead of an index.]
 
 ```c
@@ -266,9 +531,8 @@ for (int *ptr = array; ptr < array + len; ptr += 1) {
 == Iterator trait
 
 #slide[
-  #set text(size: 0.6em)
+  #set text(size: 0.7em)
 
-  The Iterator trait defines how an object can be used to *produce a sequence of values*. For example,
 
   ```rs
   struct SliceIter<'s> {
@@ -290,7 +554,14 @@ for (int *ptr = array; ptr < array + len; ptr += 1) {
       }
   }
 
-  fn main() {
+
+  ```
+][
+  #set align(horizon)
+
+  The Iterator trait defines how an object can be used to *produce a sequence of values*.
+  ```rs
+     fn main() {
       let slice = &[2, 4, 6, 8];
       let iter = SliceIter { slice, i: 0 };
       for elem in iter {
@@ -301,17 +572,50 @@ for (int *ptr = array; ptr < array + len; ptr += 1) {
 ]
 
 
-== Questions
+#pagebreak()
 
 #qa[Why are Rust iterators lazy?][You can call `next()` to get the next element only when you need it.]
 
+#qa[What happens when you call `next()` after the iterator returned `None`][We don't know. Only fused iterators guarantee `None` forever after.]
 
-#qa[Give an example of an infinite iterator.][`std::iter::repeat(value)` produces an infinite sequence of `value`.]
+```rs
+fn main() {
+    let mut iter = SliceIter { slice: &[1, 2], i: 0 };
+    assert_eq!(Some(&1), iter.next());
+    assert_eq!(Some(&2), iter.next());
+    assert_eq!(None, iter.next());
+    assert_eq!(??? , iter.next()); // What happens here?
+}
+```
+
+
+
+
+== Generators
+
+
+#qa[Give an example of an infinite iterator.][The range `0..` is an infinite iterator of integers starting from 0.]
+
+Iterators can also be generated with coroutines (called generators in Rust):
+
+```rs
+fn counter() -> impl Iterator<Item = i32> {
+    gen {
+        let mut count = 0;
+        loop {
+            yield count;
+            count += 1;
+        }
+    }
+}
+```
+(Also an infinite iterator)
+
 
 
 == Helpers
 
-the Iterator trait provides helper methods that can be used to build customized iterators:
+the Iterator trait provides *helper methods* that can be used to transform iterators:
 
 ```rs
 fn main() {
@@ -324,6 +628,219 @@ fn main() {
 }
 ```
 
-#qa[What is another name for iterator helpers?][Adapters.]
+
+#qa[What is another name for iterator helpers?][Adapters (or operators or combinators).]
 
 #qa[How many adapters are there in the standard library?][Approximately 40.]
+
+
+== Collect
+
+Build collections from iterators:
+
+```rust
+fn main() {
+    let primes = vec![2, 3, 5, 7];
+    let prime_squares = primes.into_iter().map(|p| p * p).collect::<Vec<_>>();
+    println!("prime_squares: {prime_squares:?}");
+}
+```
+
+#qa[What are the collections that we can collect into?][Vectors, HashMaps, HashSets, BtreeMap, BtreeSet, VecDeque, ... (your own collections too!)]
+
+Target collection type is either implicit or specified with:
+
+#pause
+
+- Turbofishing: `collect::<Vec<_>>()`
+- Type annotation: `let v: Vec<_> = iterator.collect();`
+
+== Consuming adapters
+
+Consume the iterator and produce a final value:
+
+```rs
+let nums = vec![1, 2, 3, 4, 5];
+nums.iter().collect::<Vec<_>>();  // collect into collection
+nums.iter().sum::<i32>();          // reduce to single value
+nums.iter().count();               // count elements
+nums.iter().fold(0, |acc, x| acc + x); // general reduction
+nums.iter().for_each(|x| println!("{}", x)); // side effects
+```
+
+Other examples: `max`, `min`, `find`, `any`, `all`, `partition`, `reduce`.
+
+#qa[Why are they called "consuming"?][They call `next()` until `None`.]
+
+== Nonconsuming adapters
+
+Transform an iterator into another iterator (lazy):
+
+```rs
+let nums = vec![1, 2, 3, 4, 5];
+nums.iter().map(|x| x * 2);        // transform elements
+nums.iter().filter(|x| *x % 2 == 0); // keep matching elements
+nums.iter().take(3);               // limit to first N
+nums.iter().skip(2);               // skip first N
+nums.iter().enumerate();           // add indices
+nums.iter().chain([6, 7].iter());  // concatenate
+nums.iter().zip(['a', 'b'].iter()); // pair up
+```
+
+Other examples: `flatten`, `flat_map`, `peekable`, `rev`, `cycle`, `cloned`.
+
+#qa[Why are they called "nonconsuming"?][They don't run until a consuming adapter is called.]
+
+== Overhead
+
+#qa[What is the cost of using lots of iterator adapters?][There is no runtime overhead because most adapters work by reference and can be inlined or optimized by the compiler.]
+
+Exercises: Rustlings, chapter 18: Iterators
+
+== `AsyncIterator` adapters
+
+#slide[
+  #set text(size: 0.9em)
+
+  Fragment from #link("https://github.com/wvhulle/streams-eurorust-2025")[my EuroRust 2025 talk on functional async programming in Rust (github.com/wvhulle/streams-eurorust-2025/)]:
+
+  #grid(
+    columns: (1fr, 0.4fr),
+    column-gutter: 1em,
+    ```rust
+    let results: Vec<String> = tcp_stream
+        .filter_map(|conn| ready(conn.ok()))
+        .filter(|stream| ready(should_process(stream)))
+        .then(|stream| process_stream(stream))
+        .filter_map(|result| ready(result.ok()))
+        .filter(|msg| ready(msg.len() > 10))
+        .take(5)
+        .collect()
+        .await;
+    ```,
+    align(horizon)[
+      *Benefits:*
+      - Each operation is isolated
+      - Testable
+      - Reusable
+    ],
+  )
+
+
+]
+
+
+== IntoIterator
+
+IntoIterator defines how to create an iterator for a type:
+
+```rs
+struct Grid {
+    x_coords: Vec<u32>,
+    y_coords: Vec<u32>,
+}
+
+impl IntoIterator for Grid {
+    type Item = (u32, u32);
+    type IntoIter = GridIter;
+    fn into_iter(self) -> GridIter {
+        GridIter { grid: self, i: 0, j: 0 }
+    }
+}
+```
+
+
+== The "actual" / physical iterator
+
+#slide[
+  #set text(size: 0.8em)
+  ```rs
+  struct GridIter {
+      grid: Grid,
+      i: usize,
+      j: usize,
+  }
+
+  impl Iterator for GridIter {
+      type Item = (u32, u32);
+
+      fn next(&mut self) -> Option<(u32, u32)> {
+          if self.i >= self.grid.x_coords.len() {
+              self.i = 0;
+              self.j += 1;
+              if self.j >= self.grid.y_coords.len() {
+                  return None;
+              }
+          }
+          let res = Some((self.grid.x_coords[self.i], self.grid.y_coords[self.j]));
+          self.i += 1;
+          res
+      }
+  }
+  ```
+]
+== Different `IntoIterator` implementations
+
+Iterating over a vector like this will consume it:
+
+```rs
+let v = vec![1, 2, 3];
+for elem in v {
+    dbg!(elem);
+}
+// v is no longer usable here
+```
+
+Iterating over a reference to a vector will not consume it:
+
+```rs
+let v = vec![1, 2, 3];
+for elem in &v {
+    dbg!(elem);
+}
+// v is still usable here
+```
+
+== Iterate over Grid by reference
+
+#slide[
+  #set text(size: 0.8em)
+  You might have multiple ways to create an iterator for a type.
+
+  Usually, by value (consuming) or by reference (non-consuming):
+
+  ```rs
+  impl<'a> IntoIterator for &'a Grid {
+      type Item = (u32, u32);
+      type IntoIter = GridRefIter<'a>;
+      fn into_iter(self) -> GridRefIter<'a> {
+          GridRefIter { grid: self, i: 0, j: 0 }
+      }
+  }
+  ```
+  From a mutable reference (non-consuming + mutable):
+
+  ```rs
+  impl<'a> IntoIterator for &'a mut Grid {
+      type Item = (u32, u32);
+      type IntoIter = GridMutRefIter<'a>;
+      fn into_iter(self) -> GridMutRefIter<'a> {
+          GridMutRefIter { grid: self, i: 0, j: 0 }
+      }
+  }
+  ```
+
+  See example file `into-iterator-ref.rs`.
+]
+
+
+== Exercises
+
+Solve the exercise in `tests/iterator-method-chaining.rs`
+
+
+Create your own iterator by implementing `Iterator` and `IntoIterator` in `examples/custom-iterator.rs`
+
+
+Build your own `Iterator` adapters in `examples/iterator-adapters.rs`
+
