@@ -106,15 +106,19 @@ For the in-person sessions:
 
 ## Session 4
 
+[Slides](./session-4/slides.pdf)
+
 **Planned for in-session:**
 
-- Lifetimes: *65 min*
-- Iterators: *55 min*
+- Smart-pointers recap: 15 min. exercises
+- Lifetimes: *60 min* theory and exercises
+- Iterators: *45 min* theory
 
 **Homework:**
 
-- Testing: *45 min*
-- Modules: *45 min*
+- Iterators: 30 min exercises
+- Testing: *45 min* theory and exercises
+- Modules: *45 min* theory and exercises
 
 ---
 
