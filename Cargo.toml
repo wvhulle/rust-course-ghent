@@ -1,7 +1,7 @@
 [workspace]
 resolver = "2"
 
-members = ["session-1", "session-2", "session-3", "session-4"]
+members = ["session-1", "session-2", "session-3", "session-4", "session-5"]
 
 [workspace.lints.clippy]
 dead_code = "allow"

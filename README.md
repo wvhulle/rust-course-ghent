@@ -116,9 +116,23 @@ For the in-person sessions:
 
 **Homework:**
 
-- Iterators: 30 min exercises
-- Testing: *45 min* theory and exercises
-- Modules: *45 min* theory and exercises
+- Lifetimes:
+  - Read <https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html>
+  - Read <https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html>
+  - Exercise session-4/tests/protobuf-parsing.rs
+  - Exercises Rustlings, ch. 16 lifetimes
+- Iterators:
+  - Exercise session-4/tests/iterator-method-chaining.rs
+  - <https://doc.rust-lang.org/book/ch13-00-functional-features.html>
+  - Exercise Rustlings, ch. 18 iterators
+  - Extra exercise: make your own iterator and adapter
+- Modules: *45 min*
+  - Read <https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html>
+  - Read <https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html>
+  - Exercise: Rustlings, ch. 10 modules
+- Testing: *45 min*
+  - Read <https://doc.rust-lang.org/book/ch11-00-testing.html>
+  - Exercise: Rustlings, ch. 17 tests
 
 ---
 
@@ -126,13 +140,19 @@ For the in-person sessions:
 
 **Planned for in-session:**
 
+- Review testing and modules: *30 min*
+  - session-5/tests/luhn.rs
 - Error handling: *55 min*
-- Threads: *30 min*
-- Channels: *20 min*
+  - Rustlings, chapter 13: Error handling
+  - session-5/tests/result.rs
+- Unsafe rust: *20 min*
 
 **Homework:**
 
-- Unsafe rust: *75 min*
+- Review error handling:
+  - Read <https://doc.rust-lang.org/book/ch09-00-error-handling.html>
+- Unsafe Rust: *30 min*
+  - Read <https://google.github.io/comprehensive-rust/bare-metal/>
 
 ---
 
@@ -140,9 +160,10 @@ For the in-person sessions:
 
 **Planned for in-session:**
 
+- Threads: *30 min*
+- Channels: *20 min*
 - Send and Sync: *15 min*
 - Shared state: *30 min*
-- Project work (find a partner): *65 min*
 
 **Homework:**
 

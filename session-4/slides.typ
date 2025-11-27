@@ -30,7 +30,8 @@ Youtubers that makes good videos about Rust:
 - Tris https://www.youtube.com/@NoBoilerplate
 
 #focus-slide[
-  #image("images/jon.jpg")
+  Jon Gjengset makes Youtube videos
+  #image("images/jon.jpg", height: 70%)
 ]
 
 
@@ -169,7 +170,14 @@ fn main() {
 #qa[Which argument is borrowed?][Both `a` and `b` are borrowed for the lifetime of `r`. Compiler looks only at signature.]
 
 #focus-slide[
-  #image("images/cheat.jpg")
+  Don't borrow from independent owners
+  #box[
+
+    #image("images/cheat.jpg", height: 6em)
+    #set text(fill: green.darken(40%))
+    #place(dx: 1em, dy: -1em)[`'a`]
+    #place(dx: 6em, dy: -4em)[`'b`]
+  ]
 ]
 
 == Borrow One
@@ -210,7 +218,7 @@ Open example file for demonstration: `find-nearest.rs`
   - If there are *multiple argument lifetimes*, but the *first one is for self*, that lifetime is given to all un-annotated return values.
 
   #pause
-  #warning[Lifetime elision rules are tricky and very important! Learn them by hard!]
+  #warning[Lifetime elision rules are tricky and very important! Learn them by heart!]
 
   #pause
 
@@ -260,7 +268,8 @@ Open example file for demonstration: `find-nearest.rs`
 - When possible, make data structures own their data directly.
 
 #focus-slide[
-  #image("images/attach.jpg")
+  Don't develop attachment issues with lifetimes
+  #image("images/attach.jpg", height: 70%)
 ]
 
 
@@ -282,11 +291,6 @@ For those interested: read this #link("https://github.com/pretzelhammer/rust-blo
 
 
 
-#qa[
-  If it compiles then my lifetime annotations are correct. True or false?
-][
-  Not necessarily. The compiler checks for safety, but does not know your intentions.
-]
 
 #qa[
   It is possible to write large Rust programs without ever using lifetimes. True or false?
@@ -483,7 +487,19 @@ Conclusion:
 
 
 #focus-slide[
-  #image("images/house.jpg")
+  `T: 'static` and `impl Trait + 'static`
+  #image("images/house.jpg", height: 70%)
+]
+
+#focus-slide[
+  `const INFO: &'static str = "I live for the entire program!"`;
+  #image("../session-3/images/drill.png", height: 70%)
+]
+
+#focus-slide[
+  `static ARRAY: [i32; 3] = [1, 2, 3];`
+  #image("../session-3/images/foundation.jpg", height: 70%)
+
 ]
 
 == Recent change in compiler
