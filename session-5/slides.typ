@@ -24,10 +24,16 @@
   Scripting with Nu Shell:
 
   - Target audience: DevOps, sysadmins, backend developers
-  - Date: tomorrow, Wednesday December 3, 2025
+  - Date: *tomorrow*, Wednesday December 3, 2025
   - Time: 19:00 - 20:00
   - Location: Kammerstraat 10, 9000 Gent
   - Registration: https://www.meetup.com/sysghent/events/311799711
+
+  ```bash
+  ps | where name == Notepad2.exe | get pid.0 | kill $in
+  ```
+
+  #pause
 
   WebAssembly for secure systems and services:
 
@@ -80,6 +86,10 @@ fn main() {
 ```
 
 #warning[Panics are for unrecoverable and unexpected errors.]
+
+#pause
+
+
 
 #pagebreak()
 
@@ -140,10 +150,17 @@ fn main() {
   ]]
 
 
+#focus-slide[
+  #box[
+    #image("images/reality.jpg")
+    #place(center + horizon, dx: 5cm, dy: 0cm)[
+      #text(size: 1.5em, weight: "bold")[Bye-bye \ debug mode]
+    ]
+  ]
 
-#pagebreak()
+]
 
-== Panics only in debug mode (silent in release)
+== Panics silent in release
 
 
 #slide[
@@ -153,7 +170,7 @@ fn main() {
 
   #qa[Why does release mode have fewer panics?][Release mode removes some runtime checks to optimize speed.]
 
-  #qa[Name 3 debug-only panics related to arithmetic overflow/underflow.][
+  #qa[Name 3 debug-only panics related to arithmetic.][
     1. Integer overflow (wraps silently in release)
     2. Integer underflow (wraps silently in release)
     3. Multiplication overflow (e.g., large `i32 * i32`)
@@ -254,11 +271,71 @@ int main() { read_file(); }
     ]
     #pause
     #place(center + horizon, dx: 6cm, dy: 3cm)[
-      #text(fill: red, size: 1.5em, weight: "bold")[`Err()`]
+      #text(fill: red, stroke: white, size: 1.5em, weight: "bold")[`Err()`]
+
+
+    ]
+    #pause
+
+    #place(center + horizon, dx: 14cm)[
+      #text(weight: "bold")[ `Err()`ors \ are a \ fact of life]
     ]
   ]
 
 ]
+
+== Exercises
+
+Rustlings, chapter 13 (`error_handling`): ex. 1, 2, 4, 6
+
+
+== To `unwrap` or not to `unwrap`
+
+The `Result` type has a conventience method:
+
+```rs
+let file = File::open("diary.txt").unwrap();
+```
+
+#qa[When is it appropriate to use `unwrap()`?][When you are sure the `Result` is `Ok`, such as in tests or examples.]
+
+#qa[When should never use `unwrap()`?][In production code where the `Result` could be `Err`, as it can cause panics.]
+
+But what if we add a reason like this?
+
+```rs
+let file = File::open("diary.txt").expect("Diary must exist");
+```
+
+#qa[Why is this a bad idea?][You are essential writing a string comment that refers to an anonymous variable. ]
+
+== Implementing your own Error types
+
+Instead using `panic!()` or `expect()`, define your own error types.
+
+```rs
+#[derive(Debug)]
+enum MathError {
+    DivisionByZero,
+    NegativeLogarithm,
+}
+
+impl Error for MathError {}
+```
+
+Whenever you unwrap a `Result::Err<_, MathError>` and get a panic, the Rust binary prints the `MathError` value:
+
+```
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: DivisionByZero', src/main.rs:10:34
+```
+
+#warning[Add error metadata to the error enum variants!]
+
+== Exercise
+
+Complete example `examples/custom-error.rs`.
+
+
 
 == `Try` operator
 
@@ -277,9 +354,18 @@ match some_expression {
 
 Into: #pause `some_expression?`.
 
-#pause
+#focus-slide[
+  #image("images/short-circuit.webp", width: 100%)
+]
 
-*Exercise*:
+
+== Exercise
+
+Rustlings:
+
+- Ch 13, ex.3, 5
+
+Google:
 
 - Rewrite `examples/short-circuit.rs` to use the `?` operator.
 - Fix `tests/error-handling.rs`.
@@ -334,13 +420,8 @@ Allocated time: 30 min
 
 == `Unsafe`
 
-The Rust language has two parts:
-
-- Safe Rust: memory safe, no undefined behavior possible.
-- Unsafe Rust: can trigger undefined behavior if preconditions are violated.
-
-
 Unsafe Rust gives you access to five new capabilities:
+
 
 - Dereference raw pointers.
 - Access or modify mutable static variables.
@@ -349,10 +430,19 @@ Unsafe Rust gives you access to five new capabilities:
 - Implement unsafe traits.
 
 
-
-
 Unsafe code is usually small and isolated, and its correctness should be carefully documented. It is usually wrapped in a safe abstraction layer.
 
+#qa[What is undefined behaviour (UB) in Rust?][
+  When the compiler assumes certain invariants hold, but they are violated at runtime, leading to unpredictable behavior.
+]
+
+#qa[What is the relationship between unsafe code and undefined behaviour?][
+  Unsafe code likely leads to undefined behavior.
+]
+
+#focus-slide[
+  #image("images/stroustrup.jpg")
+]
 
 == Safety comments
 
@@ -395,6 +485,12 @@ fn main() {
 }
 ```
 
+== Exercise: Unsafe Pointer Dereferencing
+
+Complete `examples/unsafe-pointers.rs`
+
+Run tests: `cargo test --example unsafe-pointers`
+
 == Mutable Static Variables
 
 It is safe to read an immutable static variable:
@@ -428,27 +524,36 @@ fn main() {
 ```
 May cause race-conditions if multiple threads access the static simultaneously.
 
+#focus-slide[
+  #image("images/pico.jpg", width: 100%)
+]
+
 == Unsafe in `no_std` environments
 
+#qa[What does `no_std` mean?][
+  A Rust environment without the standard library and optional heap allocator.
+]
+
+Remember: `std` > `alloc` > `core`
+
+
+== Unsafe in embedded
 
 ```rs
 #![no_std]
-#![no_main]
 // Raw pointer to memory-mapped I/O register
 static GPIO_OUTPUT: *mut u32 = 0x4000_5000 as *mut u32;
 
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
+fn set_pin_high(pin: u8) {
     // SAFETY: GPIO_OUTPUT points to a valid memory-mapped register
     // and we have exclusive access during startup.
     unsafe {
-        GPIO_OUTPUT.write_volatile(1 << 5);  // Set pin 5 high
+        GPIO_OUTPUT.write_volatile(1 << pin);
     }
-    loop {}
 }
-#[panic_handler]
-fn panic(_info: &PanicInfo) -> ! { loop {} }
 ```
+
+#info[A lot of `unsafe` in embedded code is abstracted away in Hardware Abstraction Layer (HAL) crates.]
 
 #pagebreak()
 
@@ -457,8 +562,29 @@ fn panic(_info: &PanicInfo) -> ! { loop {} }
 ]
 
 #qa[Which validity guarantees do references require that can't be verified for hardware addresses?][
-  References must be non-null, properly aligned, and point to initialized memory. For hardware addresses like memory-mapped I/O registers, the compiler cannot verify these properties, so raw pointers are used instead.
+  References must be non-null, properly aligned, and point to initialized memory. For hardware addresses, the compiler cannot verify these properties, so raw pointers are used instead.
 ]
+
+== Exercise
+
+
+Try to flash a simple blink program using the HAL crate one of the supported boards.
+
+Ask for boards and help if needed.
+
+
+=== Raspberry Pi Pico
+
+For example, you could flash a Raspberry Pi Pico with https://github.com/rp-rs/rp-hal.
+
+You can find example programs on https://github.com/rp-rs/rp-hal/tree/main/rp2040-hal-examples/src/bin
+
+=== ESP32
+
+Have a look at https://github.com/esp-rs/esp-hal
+
+
+
 
 == Unions
 
@@ -498,16 +624,14 @@ If you just want to reinterpret bytes as a different type, you probably want `st
 *Final reminder for student projects*:
 
 - Only Rust code, no markdown files
-- *No AI*-generated code or text
-- No AI-assistance during writing
-- Open a PR and add me as reviewer
+- *No AI*
 - *Deadline: this Thursday, Dec. 4*
 
-My e-mail is #link("willemvanhulle@protonmail.com") and GitHub ID is "wvhulle"
+Please open a PR and add me as reviewer. My e-mail is #link("willemvanhulle@protonmail.com") and GitHub ID is "wvhulle"
 
 #pause
 
 Review:
 
-- error handling:  https://doc.rust-lang.org/book/ch09-00-error-handling.html
+- Error handling:  https://doc.rust-lang.org/book/ch09-00-error-handling.html
 - Unsafe Rust:  https://google.github.io/comprehensive-rust/bare-metal/
