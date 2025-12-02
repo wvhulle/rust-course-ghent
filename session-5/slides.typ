@@ -414,6 +414,10 @@ fn main() {
 }
 ```
 
+#focus-slide[
+  #image("images/ariadne.png")
+]
+
 = Unsafe Rust
 
 Allocated time: 30 min
@@ -570,8 +574,11 @@ fn set_pin_high(pin: u8) {
 
 Try to flash a simple blink program using the HAL crate one of the supported boards.
 
+#warning[Only use the processor or HAL crate for the exercises, no high-level frameworks like Embassy!]
+
 Ask for boards and help if needed.
 
+See also my SysGhent workshop for building a smart plant pot with embedded Rust: https://github.com/sysghent/plant-pot
 
 === Raspberry Pi Pico
 
@@ -619,7 +626,7 @@ If you just want to reinterpret bytes as a different type, you probably want `st
 
 == Homework
 
-
+=== Projects
 
 *Final reminder for student projects*:
 
@@ -631,7 +638,15 @@ Please open a PR and add me as reviewer. My e-mail is #link("willemvanhulle@prot
 
 #pause
 
+=== Reading
+
 Review:
 
-- Error handling:  https://doc.rust-lang.org/book/ch09-00-error-handling.html
-- Unsafe Rust:  https://google.github.io/comprehensive-rust/bare-metal/
+- Error handling: https://doc.rust-lang.org/book/ch09-00-error-handling.html
+- Unsafe Rust:
+  - Very good read:  last chapter in "Programming Rust" by Blandy
+  - Unfinished chapters in https://google.github.io/comprehensive-rust/bare-metal/
+
+
+Prepare for next session about parallel programming, *it will be mind-blowing*!
+
