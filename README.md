@@ -138,6 +138,8 @@ For the in-person sessions:
 
 ## Session 5
 
+[slides](./session-5/slides.pdf)
+
 **Planned for in-session:**
 
 - Review testing and modules: *30 min*
