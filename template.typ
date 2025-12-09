@@ -5,7 +5,7 @@
   touying-slides, uncover, utils,
 )
 #import "@preview/codly:1.3.0": codly-init
-
+#import "@preview/theorion:0.3.2": *
 // Import all theme components
 #import "theme/colors.typ": primary-color, secondary-color, tertiary-color, text-color
 #import "theme/slides.typ": new-section-slide, slide
@@ -45,7 +45,7 @@
 
   show: codly-init.with()
   init-code-fragments()
-
+  show: show-theorion
 
   show raw.where(block: true): it => {
     if enable-qr-codes {
@@ -67,6 +67,7 @@
     config-common(
       slide-fn: slide,
       new-section-slide-fn: new-section-slide,
+      frozen-counters: (theorem-counter,),
     ),
     config-methods(
       init: (self: none, body) => {

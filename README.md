@@ -160,6 +160,8 @@ For the in-person sessions:
 
 ## Session 6
 
+([Slides](./session-6/slides.pdf))
+
 **Planned for in-session:**
 
 - Threads: *30 min*

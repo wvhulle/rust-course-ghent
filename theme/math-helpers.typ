@@ -35,21 +35,21 @@
   ),
 )
 
-#let definition(of-thing, content) = {
-  showybox(
-    frame: showybox-frame-style + (border-color: primary-color),
-    title-style: (
-      boxed-style: (
-        anchor: (y: horizon, x: center),
-      ),
-    ),
-    title: of-thing.replace(regex("^\w"), m => upper(m.text)),
-    {
-      show of-thing: v => underline[*#v*]
-      content
-    },
-  )
-}
+// #let definition(of-thing, content) = {
+//   showybox(
+//     frame: showybox-frame-style + (border-color: primary-color),
+//     title-style: (
+//       boxed-style: (
+//         anchor: (y: horizon, x: center),
+//       ),
+//     ),
+//     title: of-thing.replace(regex("^\w"), m => upper(m.text)),
+//     {
+//       show of-thing: v => underline[*#v*]
+//       content
+//     },
+//   )
+// }
 
 // Inference rule styling
 #let inf-style(body) = {
