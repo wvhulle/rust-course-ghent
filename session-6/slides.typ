@@ -189,17 +189,24 @@ fn main() {
   spacing: (3em, 1.2em),
   node-stroke: 0.5pt,
 
+  // Main thread timeline (always visible)
   node((-1, 0), [main:], stroke: none),
   node((0, 0), name: <spawn>, [`spawn()`], shape: shapes.rect),
+  node((3, 0), name: <drop>, [`data` dropped], shape: shapes.rect),
+  edge(<spawn>, <drop>, "->", bend: -30deg),
+
+  pause,
+
+  // Uncertain timing of join
   node((1, 0), name: <work>, [...], shape: shapes.rect, stroke: gray),
   node((2, 0), name: <join>, [`join()?`], shape: shapes.rect, stroke: gray),
-  node((3, 0), name: <drop>, [`data` dropped], shape: shapes.rect),
-
   edge(<spawn>, <work>, "->"),
   edge(<work>, <join>, "-->", stroke: gray),
   edge(<join>, <drop>, "-->", stroke: gray),
-  edge(<work>, <drop>, "->", bend: -30deg),
 
+  pause,
+
+  // Spawned thread timeline
   node((-1, 1.5), [spawned:], stroke: none),
   node((0.3, 1.5), name: <start1>, [start?], shape: shapes.pill, stroke: gray),
   node((1.5, 1.5), name: <run1>, [running], shape: shapes.pill),
@@ -210,6 +217,8 @@ fn main() {
   edge(<run1>, <end1>, "-->", stroke: gray, label: [sometime]),
 
   pause,
+
+  // Problem explanation
   node(
     (4, 0.8),
     name: <problem>,
@@ -468,6 +477,8 @@ This channel provides an additional method `try_send()` that returns immediately
   edge(<mystruct>, <field1>, "->", label: [contains]),
   edge(<mystruct>, <field2>, "->", label: [contains]),
 
+  pause,
+
   node((2, 0), name: <auto>, [`Copy`? No], shape: shapes.pill, stroke: red),
   edge(<field1>, <auto>, "->", label: [`!Copy`]),
   edge(<field2>, <auto>, "->", stroke: green, label: [`Copy`]),
@@ -480,6 +491,9 @@ This channel provides an additional method `try_send()` that returns immediately
 
   edge(<mystruct2>, <field3>, "->"),
   edge(<mystruct2>, <field4>, "->"),
+
+
+  pause,
   edge(<field3>, <yesauto>, "->"),
   edge(<field4>, <yesauto>, "->", label: [all `Copy`]),
 )
@@ -732,13 +746,19 @@ fn increment() {
   spacing: (7em, 1.5em),
   node-stroke: 0.5pt,
 
-  node((0, 0), name: <stack1>, [Stack (Thread 1)], shape: shapes.rect),
-  node((1, 0), name: <stack2>, [Stack (Thread 2)], shape: shapes.rect),
   node((0.5, 1), name: <static>, [`static mut COUNTER`], shape: shapes.rect, stroke: red),
-
+  pause,
+  node((0, 0), name: <stack1>, [Stack (Thread 1)], shape: shapes.rect),
   edge(<stack1>, <static>, "->", stroke: red, label: [unsafe]),
-  edge(<stack2>, <static>, "->", stroke: red, label: [unsafe]),
 
+
+  pause,
+  node((1, 0), name: <stack2>, [Stack (Thread 2)], shape: shapes.rect),
+
+
+  edge(<stack2>, <static>, "->", stroke: red, label: [unsafe]),
+  pause,
+  pause,
   node((2, 1), name: <note>, [Shared memory,\ no synchronization!], stroke: red),
 )
 
@@ -929,85 +949,87 @@ Types with interior mutability:
 
 == Deadlocks
 
-The `Arc<Mutex<T>>` pattern is common but has drawbacks: forgetting to drop the guard before blocking operations
+#slide[
+  The `Arc<Mutex<T>>` pattern is common but has drawbacks: forgetting to drop the guard before blocking operations
 
-#cetz-canvas(length: 1cm, {
-  import draw: *
+  #set text(size: 1.2em)
+  #cetz-canvas(length: 1cm, {
+    import draw: *
 
-  // Timeline labels
-  content((0, 0), [Thread 1])
-  content((4, 0), [Thread 2])
-  content((8, 0), [Time])
+    // Timeline labels
+    content((0, 0), [Thread 1])
+    content((4, 0), [Thread 2])
+    content((8, 0), text(fill: gray)[Time])
 
-  // Vertical lifelines
-  line((0, -0.5), (0, -8), stroke: gray)
-  line((4, -0.5), (4, -8), stroke: gray)
+    // Vertical lifelines
+    line((0, -0.5), (0, -8), stroke: gray)
+    line((4, -0.5), (4, -8), stroke: gray)
 
-  // Time arrow
-  line((7, -0.5), (7, -8), stroke: gray, mark: (end: ">"))
+    // Time arrow
+    line((7, -0.5), (7, -8), stroke: (dash: "dashed", paint: gray), mark: (end: ">"))
 
-  (pause,)
-  // Thread 1 actions
-  content((-1.5, -1.5), text(size: 0.8em)[`lock(A)`], anchor: "east")
+    (pause,)
+    // Thread 1 actions
+    content((-1.5, -1.5), text(size: 0.8em)[`lock(A)`], anchor: "east")
 
-  (pause,)
+    (pause,)
 
-  rect((-0.3, -1.2), (0.3, -1.8), fill: green.lighten(70%), stroke: green)
-  content((-1.5, -3), text(size: 0.8em)[holds A], anchor: "east")
-  line((0, -1.8), (0, -5), stroke: green + 2pt)
-
-
-  (pause,)
-
-
-  // Thread 2 actions
-  content((5.5, -2.5), text(size: 0.8em)[`lock(B)`], anchor: "west")
-
-  (pause,)
-  rect((-0.3, -5.2), (0.3, -5.8), fill: red.lighten(70%), stroke: red)
-  content((5.5, -4), text(size: 0.8em)[holds B], anchor: "west")
-  line((4, -2.8), (4, -6), stroke: green + 2pt)
-  rect((3.7, -2.2), (4.3, -2.8), fill: green.lighten(70%), stroke: green)
+    rect((-0.3, -1.2), (0.3, -1.8), fill: green.lighten(70%), stroke: green)
+    content((-1.5, -3), text(size: 0.8em)[holds A], anchor: "east")
+    line((0, -1.8), (0, -5), stroke: green + 2pt)
 
 
-  (pause,)
+    (pause,)
 
 
-  content((-1.5, -5.5), text(size: 0.8em)[`lock(B)`], anchor: "east")
+    // Thread 2 actions
+    content((5.5, -2.5), text(size: 0.8em)[`lock(B)`], anchor: "west")
+
+    (pause,)
+    rect((-0.3, -5.2), (0.3, -5.8), fill: red.lighten(70%), stroke: red)
+    content((5.5, -4), text(size: 0.8em)[holds B], anchor: "west")
+    line((4, -2.8), (4, -6), stroke: green + 2pt)
+    rect((3.7, -2.2), (4.3, -2.8), fill: green.lighten(70%), stroke: green)
 
 
-  (pause,)
+    (pause,)
 
 
-  content((-1.5, -7), text(size: 0.8em)[blocked!], anchor: "east")
-  line((0, -5.8), (0, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
+    content((-1.5, -5.5), text(size: 0.8em)[`lock(B)`], anchor: "east")
 
-  (pause,)
 
-  content((5.5, -6.5), text(size: 0.8em)[`lock(A)`], anchor: "west")
+    (pause,)
 
-  (pause,)
-  rect((3.7, -6.2), (4.3, -6.8), fill: red.lighten(70%), stroke: red)
-  line((4, -6.8), (4, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
 
-  (pause,)
+    content((-1.5, -7), text(size: 0.8em)[blocked!], anchor: "east")
+    line((0, -5.8), (0, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
 
-  content((5.5, -7.5), text(size: 0.8em)[blocked!], anchor: "west")
+    (pause,)
 
-  (pause,)
-  // Deadlock annotation
-  rect((1.2, -7.3), (2.8, -7.9), fill: red.lighten(90%), stroke: red)
-  content((2, -7.6), text(size: 0.8em, fill: red)[Deadlock])
-})
+    content((5.5, -6.5), text(size: 0.8em)[`lock(A)`], anchor: "west")
 
-#pause
+    (pause,)
+    rect((3.7, -6.2), (4.3, -6.8), fill: red.lighten(70%), stroke: red)
+    line((4, -6.8), (4, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
 
-Exercise:
+    (pause,)
 
-- examples/philosophers.rs
+    content((5.5, -7.5), text(size: 0.8em)[blocked!], anchor: "west")
 
-Solutions are provided as `*-solution.rs` files.
+    (pause,)
+    // Deadlock annotation
+    rect((1.2, -7.3), (2.8, -7.9), fill: red.lighten(90%), stroke: red)
+    content((2, -7.6), text(size: 0.8em, fill: red)[Deadlock])
+  })
 
+  #pause
+
+  Exercise:
+
+  - examples/philosophers.rs
+
+  Solutions are provided as `*-solution.rs` files.
+]
 == Best practices for Mutexes
 
 Structure code to minimize shared mutable state in mutexes.
