@@ -1,242 +1,33 @@
 # DevLab Rust 2025
 
-Evening lectures on Rust in Ghent Nov - Dec 2025 for experienced developers. Registration is possible [on pretix.eu](https://pretix.eu/devlab/rust-course/).
+Evening lectures on Rust in Ghent Nov - Dec 2025 for experienced developers.
+
+Registration is possible for the whole series or individual sessions that interest you: [on pretix.eu](https://pretix.eu/devlab/rust-course/). Do this several days in advance as the ticket shop closes.
+
+View the topics covered: [course plan](./PLAN.md).
 
 ## Guidelines
 
-The day after each session I will send an e-mail with the chapters we covered and what you can do to prepare for the next session.
+Before the first class:
 
-Please **spend at least 60 min. a week at home reading the chapters** mentioned in the e-mail in the [freely available official Rust book](https://doc.rust-lang.org) or making exercises.
+- Install Rust as explained in [rustup.rs/](https://rustup.rs/).
+  - For Windows users: don't use `winget` or `chocolatey`
+  - For Nix users: use fenix overlay and dev shell in [`flake.nix`](./flake.nix)
+- Install any editor that supports `rust-analyzer` and compile a very simple "hello world" program to setup your system
 
-For the in-person sessions:
+Before every class:
 
-- Take a **laptop** to solve exercises during the session.
-- Do not spend time cloning, pulling or installing during the session.
-- Download the PDF of the slides which contain links to the playground. Click the links during the session if needed.
-- Turn of your AI editor extensions (you can do it for Rust only).
+- Avoid spending time setting up your network, cloning, pulling or installing during the session. The **time in sessions is very limited** and should be spent on Rust.
+- Read the relevant chapters in the official Rust book about the previous and upcoming session.
+- Finish important exercises and prepare questions. Feel free to ask for PR reviews.
 
-## Session 1
+During in-person sessions:
 
-[Slides](./session-1/slides.pdf)
+- Follow along with the presentation when new material arrives and ask questions
+- Open the exercise files located in the `examples` or `tests` folder of session X.
+- Turn of AI tools and read the assignment, try to solve, *ask for help anytime*
 
-**Covered in class:**
+Test your (partial) solution:
 
-- Welcome: *5 min*
-- Hello, world: *15 min*
-- Types and values: *40 min*
-- Control flow basics: *45 min*
-- Tuples and arrays: *35 min*
-- References: *55 min* (partially)
-
-**Not covered in session 1:**
-
-- User-defined types: *60 min*
-- Pattern matching: *50 min*
-
-**Homework:**
-
-- User defined types
-  - [Structs](https://doc.rust-lang.org/book/ch05-00-structs.html)
-  - [Enums](https://doc.rust-lang.org/book/ch06-00-enums.html)
-- Pattern matching (if needed)
-  - [Enums and Pattern Matching](https://doc.rust-lang.org/book/ch06-00-enums.html)
-  - [Advanced Patterns](https://doc.rust-lang.org/book/ch19-00-patterns.html)
-
----
-
-## Session 2
-
-[Slides](./session-2/slides.pdf)
-
-**Covered in class:**
-
-- Methods and traits: *45 min*
-  - [Traits](https://doc.rust-lang.org/book/ch10-02-traits.html)
-- Generics: *50 min*
-  - [Generic Types, Traits, and Lifetimes](https://doc.rust-lang.org/book/ch10-01-syntax.html)
-  - [Advanced Traits](https://doc.rust-lang.org/book/ch20-02-advanced-traits.html)
-- Closures: *30 min* (see homework)
-- Standard library types: *15 min* (partially)
-
-**Not covered in session 2** *(see homework)*:
-
-- Standard library types: *15 min* (partially)
-- Standard library traits: *60 min*
-
-**Homework:**
-
-- Review closures:
-  - [How Functions Work](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
-  - [Closures: Anonymous Functions that Capture Their Environment](https://doc.rust-lang.org/book/ch13-01-closures.html)
-  - [Advanced Functions and Closures](https://doc.rust-lang.org/book/ch20-04-advanced-functions-and-closures.html)
-- Standard library types
-  - [Common Collections](https://doc.rust-lang.org/book/ch08-00-common-collections.html)
-  - [Advanced Types](https://doc.rust-lang.org/book/ch20-03-advanced-types.html)
-- Standard library traits
-  - [Functional Language Features: Iterators and Closures](https://doc.rust-lang.org/book/ch13-00-functional-features.html)
-- Read the chapter about ownership to prepare for session 3:
-  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
-  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
-
----
-
-## Session 3
-
-[Slides](./session-3/slides.pdf)
-
-**Planned for in-session:**
-
-- Mid-series exercise session (see subfolder `examples`): *60 min.*
-  - Replace `todo!` macro calls by real code
-  - Use `cargo run --example` to test your solutions
-- Standard library traits: 15 min. (depending on students)
-  - <https://doc.rust-lang.org/book/appendix-03-derivable-traits.html>
-- Memory Management: *30 min*
-  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
-
-**Homework:**
-
-- Review the chapter about ownership:
-  - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
-  - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
-- Borrowing: *45 min*
-- Prepare lifetimes for next session: *65 min*
-
----
-
-## Session 4
-
-[Slides](./session-4/slides.pdf)
-
-**Planned for in-session:**
-
-- Smart-pointers recap: 15 min. exercises
-- Lifetimes: *60 min* theory and exercises
-- Iterators: *45 min* theory
-
-**Homework:**
-
-- Lifetimes:
-  - Read <https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html>
-  - Read <https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html>
-  - Exercise session-4/tests/protobuf-parsing.rs
-  - Exercises Rustlings, ch. 16 lifetimes
-- Iterators:
-  - Exercise session-4/tests/iterator-method-chaining.rs
-  - <https://doc.rust-lang.org/book/ch13-00-functional-features.html>
-  - Exercise Rustlings, ch. 18 iterators
-  - Extra exercise: make your own iterator and adapter
-- Modules: *45 min*
-  - Read <https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html>
-  - Read <https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html>
-  - Exercise: Rustlings, ch. 10 modules
-- Testing: *45 min*
-  - Read <https://doc.rust-lang.org/book/ch11-00-testing.html>
-  - Exercise: Rustlings, ch. 17 tests
-
----
-
-## Session 5
-
-[slides](./session-5/slides.pdf)
-
-**Planned for in-session:**
-
-- Review testing and modules: *30 min*
-  - session-5/tests/luhn.rs
-- Error handling: *55 min*
-  - Rustlings, chapter 13: Error handling
-  - session-5/tests/result.rs
-- Unsafe rust: *20 min*
-
-**Homework:**
-
-- Review error handling:
-  - Read <https://doc.rust-lang.org/book/ch09-00-error-handling.html>
-- Unsafe Rust: *30 min*
-  - Read <https://google.github.io/comprehensive-rust/bare-metal/>
-
----
-
-## Session 6
-
-([Slides](./session-6/slides.pdf))
-
-**Planned for in-session:**
-
-- Threads: *30 min*
-- Channels: *20 min*
-- Send and Sync: *15 min*
-- Shared state: *30 min*
-
-**Homework:**
-
-- Project work (find a partner)
-- Exercises concurrency: *70 min*
-
----
-
-## Session 7
-
-**Planned for in-session:**
-
-- Async basics: *40 min*
-- Channels and control flow: *20 min*
-- Project presentation: *60 min*
-
-**Homework:**
-
-- Blocking the Executor: *10 min*
-- Pin: 20 min
-- Async traits: 5 min
-- Cancellation: 20 min
-- Exercises: *70 min*
-
-## Lecture material
-
-### Exercises
-
-Install Rust as explained in [rustup.rs/](https://rustup.rs/). (For Windows users: don't use `winget` or `chocolatey`)
-
-Exercise statements for session X can be found in the `examples` or `tests` folder of session X. The name of the exercise file you need will be referenced at the end of each chapter in the slides.
-
-Test your solution to a particular exercise (from any subdirectory) with a command like this (for session 1, exercise 1):
-
-```bash
-cargo run --example s1e1-fibonacci # For binary examples
-cargo run --test s1e1-fibonacci # For test examples
-```
-
-(Please **avoid searching for existing solutions** or using AI unless you tried at least a few times.)
-
-### Project
-
-You will have select a topic to work on and finish a larger task (in group or alone). Add your ideas to [./projects.md](./projects.md).
-
-### Theory
-
-For this course, I combined material from Google's "Comprehensive Rust" and the "Programming Rust" book by Jim Blandy.
-
-To compile the slides of a single session (install Typst first):
-
-```bash
-cd sessions
-typst compile --root . session-1/slides.typ
-xdg-open session-1/slides.pdf
-```
-
-If you don't want the slides to be cut into subslides with partial reveals, you can compile a PDF for handouts by adjusting the [`Touying`](https://typst.app/universe/package/touying/) configuration in the source code.
-
-```typ
-config-common(handout: true)
-```
-
-## Contributing
-
-The slides are written in [Typst](https://typst.app/). There is a [`template.typ`](./template.typ) and a few accompanying custom layout functions in the [`theme`](./theme/) folder.
-
-Please refer to the manual of each package for external packages.
-
-- Touying (for slides): <https://touying-typ.github.io/>
-- Tiaoma (for QR-codes): typst.app/universe/package/tiaoma/
-- Fletcher (for node-based diagrams): <https://typst.app/universe/package/fletcher>
+- For examples with `main` in `examples/`: `cargo run --example fibonacci`
+- For examples with `#[cfg(test)]` in `examples/`: `cargo test --example fibonacci`

@@ -1,4 +1,3 @@
-
 #import "../template.typ": *
 #import "@preview/cetz:0.4.2"
 
@@ -15,43 +14,7 @@
   diagram-enabled: true,
   enable-qr-codes: false,
 )
-
-
-
-= Remarks previous sessions
-
-
-== Rust tooling
-
-Open the standard library docs:
-
-```bash
-rustup doc --std
-```
-
-#pause
-
-Pinning Rust version in `rust-toolchain.toml`:
-
-```toml
-[toolchain]
-channel = "nightly-2025-12-08"
-components = ["rustfmt", "clippy", "rust-analyzer"]
-```
-
-#pause
-
-Installing nightly Rust binaries from crates.io:
-
-```bash
-rustup update nightly
-rustup toolchain install nightly --component rustc-dev rust-src llvm-tools
-cargo +nightly install ferrous-owl
-```
-
-Add `~/.cargo/bin` to your `PATH` if not already done.
-
-Upgrading: `cargo +nightly install ferrous-owl`.
+#pagebreak()
 
 == Important exercises
 
@@ -135,6 +98,16 @@ fn main() {
 
 == Handling thread panics
 
+If we don't join, we never see the panic.
+
+#pause
+
+If we don't handle the `Result` from `join()`, the panic is also ignored.
+
+#pause
+
+We need to check the `Result` from `join()` to see if the thread panicked:
+
 ```rust
 fn main() {
     let handle = thread::spawn(|| {
@@ -148,45 +121,114 @@ fn main() {
 }
 ```
 
+#warning[You are responsible for handling panics in spawned threads! Rust will not do this for you.]
+
 Exercise:
 
-- examples/threads1.rs
-- examples/threads2.rs
+- examples/join-handle.rs
 
-== Borrowing and threads
+== Sending references to threads
 
-Sending references to threads:
+Not all references can be sent to threads.
 
 ```rust
 fn main() {
     let data = vec![1, 2, 3];
     let handle = thread::spawn(|| {
-        println!("Data: {:?}", data);
+        let sum: i32 = data.iter().sum();
+        println!("Sum: {sum}");
     });
-}
-```
-#qa[What happens if you want a thread to borrow data from the main thread?][Compilation error: data may not live long enough. Use `move` keyword to transfer ownership.]
-
-#pause
-```rust
-fn main() {
-    let data = vec![1, 2, 3];
-    let handle = thread::spawn(|| {
-        println!("Data: {:?}", data);
-    });
+    data.push(4); // modify while thread may be reading
     handle.join().unwrap();
 }
 ```
+#qa[What happens if a thread borrows data from the main thread?][Compilation error: closure may outlive the current function, but it borrows `data`.]
 
-#qa[What happens if you add a join?][Same error. Rust cannot verify `join` is called before `data` goes out of scope (at compile time).]
+#fletcher-diagram(
+  spacing: (3em, 2em),
+  node-stroke: 0.5pt,
+  node((0, 0), name: <main>, [`main` thread], shape: shapes.pill),
+  node((2, 0), name: <spawned>, [spawned thread], shape: shapes.pill),
 
-== Scoped threads
+  node((0, 1), name: <data>, [`data: Vec`], shape: shapes.rect),
+  node((0, 2), name: <drop>, [`data` dropped], shape: shapes.rect, stroke: red),
+
+  edge(<main>, <data>, "->", label: [owns]),
+  edge(<spawned>, <data>, "-->", stroke: red, label: [borrows?]),
+  edge(<data>, <drop>, "->"),
+
+  pause,
+  node((2, 2), name: <access>, [accesses `data`], shape: shapes.rect, stroke: red),
+  edge(<spawned>, <access>, "->"),
+  edge(<access>, <drop>, "<-->", stroke: red, label: [race!], label-side: right),
+)
+
+
+== Borrowing and threads (continued)
+
+First attempt: ensure the thread finishes before `main` exits.
 
 ```rust
 fn main() {
     let data = vec![1, 2, 3];
     let handle = thread::spawn(|| {
-        println!("Data: {:?}", data);
+        let sum: i32 = data.iter().sum();
+        println!("Sum: {sum}");
+    });
+    handle.join().unwrap();
+    println!("Original: {:?}", data); // try to use after thread
+}
+```
+
+#qa[Does adding `join()` fix the borrow error?][No. Rust cannot verify at compile time that `join` is called before `data` goes out of scope.]
+
+#fletcher-diagram(
+  spacing: (3em, 1.2em),
+  node-stroke: 0.5pt,
+
+  node((-1, 0), [main:], stroke: none),
+  node((0, 0), name: <spawn>, [`spawn()`], shape: shapes.rect),
+  node((1, 0), name: <work>, [...], shape: shapes.rect, stroke: gray),
+  node((2, 0), name: <join>, [`join()?`], shape: shapes.rect, stroke: gray),
+  node((3, 0), name: <drop>, [`data` dropped], shape: shapes.rect),
+
+  edge(<spawn>, <work>, "->"),
+  edge(<work>, <join>, "-->", stroke: gray),
+  edge(<join>, <drop>, "-->", stroke: gray),
+  edge(<work>, <drop>, "->", bend: -30deg),
+
+  node((-1, 1.5), [spawned:], stroke: none),
+  node((0.3, 1.5), name: <start1>, [start?], shape: shapes.pill, stroke: gray),
+  node((1.5, 1.5), name: <run1>, [running], shape: shapes.pill),
+  node((2.7, 1.5), name: <end1>, [end?], shape: shapes.pill, stroke: gray),
+
+  edge(<spawn>, <start1>, "-->", stroke: gray, label: [sometime]),
+  edge(<start1>, <run1>, "-->", stroke: gray),
+  edge(<run1>, <end1>, "-->", stroke: gray, label: [sometime]),
+
+  pause,
+  node(
+    (4, 0.8),
+    name: <problem>,
+    [References are *compile-time* constructs.\ Thread timing is *runtime* behavior.],
+    stroke: red,
+  ),
+  edge(<end1>, <problem>, "-->", stroke: red),
+  edge(<start1>, <problem>, "-->", stroke: red, bend: -20deg),
+)
+
+
+
+
+== Scoped threads
+
+The problem: `thread::spawn` requires `'static` because the thread may outlive the caller.
+
+```rust
+fn main() {
+    let data = vec![1, 2, 3];
+    let handle = thread::spawn(|| {
+        println!("Data: {:?}", data); // error: `data` does not live long enough
     });
     handle.join().unwrap();
 }
@@ -200,91 +242,158 @@ Solution: `thread::scope` guarantees all spawned threads complete before the sco
 fn main() {
     let data = vec![1, 2, 3];
     thread::scope(|s| {
-        s.spawn(|| {
-            println!("Data: {:?}", data);
-        });
-    });
+        s.spawn(|| println!("Data: {:?}", data)); // borrowing works!
+    }); // all threads joined here automatically
+    println!("Back in main: {:?}", data);
 }
 ```
 
-#qa[Why can scoped threads borrow data?][The scope blocks until all threads finish, so the compiler knows `data` outlives the threads.]
+== Multiple scoped threads
+
+```rust
+fn main() {
+    let mut data = vec![1, 2, 3];
+
+    thread::scope(|s| {
+        s.spawn(|| println!("Thread 1: {:?}", data)); // shared borrow
+        s.spawn(|| println!("Thread 2: {:?}", data)); // shared borrow
+    });
+
+    data.push(4); // mutable access after scope ends
+}
+```
+
+
+#fletcher-diagram(
+  spacing: (5em, 1.5em),
+  node-stroke: 0.5pt,
+
+  node((0, 0), name: <before>, [main before scope], shape: shapes.rect),
+  node((1, 0), name: <scope>, [`thread::scope`], shape: shapes.rect, stroke: blue),
+  node((3, 0), name: <end>, [scope ends], shape: shapes.rect, stroke: blue),
+  node((4, 0), name: <after>, [main continues], shape: shapes.rect),
+
+  edge(<before>, <scope>, "->"),
+  edge(<end>, <after>, "->"),
+
+  node((1.5, 1), name: <t1>, [thread 1], shape: shapes.pill),
+  node((1.5, -1), name: <t2>, [thread 2], shape: shapes.pill),
+
+  edge(<scope>, <t1>, "->"),
+  edge(<scope>, <t2>, "->"),
+  edge(<t1>, <end>, "->"),
+  edge(<t2>, <end>, "->"),
+
+  pause,
+  node((2, 0), name: <barrier>, [barrier], shape: shapes.rect, stroke: blue, fill: blue.lighten(80%)),
+  edge(<t1>, <barrier>, "->"),
+  edge(<t2>, <barrier>, "->"),
+  edge(<barrier>, <end>, "->", label: [all joined]),
+)
 
 == Moving to threads
 
-You can also send input to spawned threads.
+In practice, scoped threads are not used very often.
 
-- using a channel sender (see next section)
-- using the `move` keyword to transfer ownership at spawn time
 
-Since spawn time means *at runtime*, non-`'static` references cannot be moved to threads.
+The most common use case is to move ownership of data to the thread using the `move` keyword to transfer ownership at spawn time
 
-```rs
-fn spawn<F, T>(f: F) -> JoinHandle<T>
-where
-    F: FnOnce() -> T + Send + 'static,
-    T: Send + 'static
-```
-
-#pause
-
-#codly(
-  annotations: (
-    (start: 3, end: 5, content: [closure `f` must be `'static`]),
-  ),
-)
 ```rs
 fn main() {
     let data = String::from("hello");
     let handle = thread::spawn(move || {
         println!("Data: {data}"); // `data` moved into closure, now owned by thread
     });
-    // println!("{data}"); // Error: value moved
     handle.join().unwrap();
 }
 ```
 
-#qa[Why does `thread::spawn` require `'static`?][The spawned thread may outlive the caller. Without `'static`, the closure could hold dangling references.]
+Move can also be used for blocks (not closures):
+
+
+
+
+
+== Review: what is `'static`?
+
+In the past sessions we have seen that `T: 'static` means:
+
+#definition[A type `T` is `'static` if it contains no non-`'static` references.]
+
+Things that are `'static`:
+
+- Owned data: `String`, `Vec<T>`, `Box<T>`, etc.
+- `'static` references: `&'static str`, `&'static T`
+
+Things that are not `'static`:
+
+- References with shorter lifetimes: `&T`, `&'a T` where `'a` is not `'static`
+- Types with non-`'static` fields: `&T`, `&'a T`, `Vec<&T>`, etc.
+
+#pause
+
+Strings are owned and without references, so they are `'static` and can be moved
+
+#pause
+
+=== Spawn function
+
+The standard library spawn function looks like this (simplified):
+
+```rs
+fn spawn<F, T>(f: F) -> JoinHandle<T>
+where
+    F: FnOnce() -> T + 'static,
+    T: 'static
+```
+
+(Similar for asynchronous spawns like `tokio::spawn`, see next session.)
+
+
+= Channels
 
 
 
 = Channels
 
-== Senders and Receivers
+== What is a channel?
 
-#qa[What does `mpsc` stand for?][Multiple Producer, Single Consumer.]
+A channel is a communication primitive for passing messages between threads.
 
+Under the hood: a thread-safe buffer (queue) in shared memory with:
+- *Sender* (`tx`): pushes messages into the buffer
+- *Receiver* (`rx`): pulls messages from the buffer
+
+#fletcher-diagram(
+  spacing: (6em, 2em),
+  node-stroke: 0.5pt,
+  node((0, 0), name: <t1>, [Thread 1], shape: shapes.pill),
+  node((3, 0), name: <t2>, [Thread 2], shape: shapes.pill),
+
+  node((1, 0), name: <tx>, [`tx`], shape: shapes.rect),
+  node((1.5, 0), name: <buf>, [buffer], shape: shapes.rect, width: 4em),
+  node((2, 0), name: <rx>, [`rx`], shape: shapes.rect),
+
+  edge(<t1>, <tx>, "->", label: [send]),
+  edge(<tx>, <buf>, "->"),
+  edge(<buf>, <rx>, "->"),
+  edge(<rx>, <t2>, "->", label: [recv]),
+)
+
+#pause
+
+Key properties:
+- *Decouples* sender and receiver (no shared mutable state)
+- *Asynchronous*: sender doesn't wait for receiver (unless bounded)
+- *Ownership transfer*: messages are moved, not shared
+
+
+
+== N-to-1 Channels
 
 ```rs
 fn main() {
     let (tx, rx) = std::sync::mpsc::channel();
-
-    tx.send(10).unwrap();
-    tx.send(20).unwrap();
-
-    println!("Received: {:?}", rx.recv());
-    println!("Received: {:?}", rx.recv());
-
-    let tx2 = tx.clone();
-    tx2.send(30).unwrap();
-    println!("Received: {:?}", rx.recv());
-}
-```
-
-#qa[What happens when you call send and all receivers have been dropped?][`send()` returns an error (channel is "closed").]
-
-
-
-
-== Unbounded Channels
-
-#qa[What happens when you call send and no receivers are listening?][Message is queued until a receiver is available.]
-
-
-
-```rs
-fn main() {
-    let (tx, rx) = std::sync::mpsc::channel();
-
     std::thread::spawn(move || {
         let thread_id = std::thread::current().id();
         for i in 0..10 {
@@ -301,13 +410,20 @@ fn main() {
 }
 ```
 
+In an unbounded channel:
+
+- `send()` never blocks (a kind of "asynchronous" behavior)
+- returns a `Result::Err` when all receivers have been dropped
+
+#definition[A channel is "closed" when all receivers have been dropped.]
+
 == Bounded channels
 
-```rs
-use std::sync::mpsc;
-use std::thread;
-use std::time::Duration;
+If you don't want the channel buffer to grow indefinitely and cause memory overflow, you can use a bounded channel:
 
+#pause
+
+```rs
 fn main() {
     let (tx, rx) = mpsc::sync_channel(3);
 
@@ -326,13 +442,56 @@ fn main() {
     }
 }
 ```
+This channel provides an additional method `try_send()` that returns immediately with an error if the buffer is full.
 
 == Exercises
 
-- examples/threads3.rs
+- `examples/channel.rs`
 
 = Send and Sync
 == Marker Traits
+
+#qa[What are auto traits?][The compiler will automatically derive them for your types as long as they only contain types that implement the auto trait.]
+
+#fletcher-diagram(
+  spacing: (3em, 2em),
+  node-stroke: 0.5pt,
+
+  node((0, 0), name: <mystruct>, [`MyStruct`], shape: shapes.rect),
+  node((1, -0.5), name: <field1>, [`field1: String`], shape: shapes.rect, stroke: green),
+  node((1, 0.5), name: <field2>, [`field2: i32`], shape: shapes.rect, stroke: green),
+
+  edge(<mystruct>, <field1>, "->", label: [contains]),
+  edge(<mystruct>, <field2>, "->", label: [contains]),
+
+  node((2, 0), name: <auto>, [`Copy`? No], shape: shapes.pill, stroke: red),
+  edge(<field1>, <auto>, "->", label: [`!Copy`]),
+  edge(<field2>, <auto>, "->", stroke: green, label: [`Copy`]),
+
+  pause,
+  node((0, 1.5), name: <mystruct2>, [`Point`], shape: shapes.rect),
+  node((1, 1.2), name: <field3>, [`x: i32`], shape: shapes.rect, stroke: green),
+  node((1, 1.8), name: <field4>, [`y: i32`], shape: shapes.rect, stroke: green),
+  node((2, 1.5), name: <yesauto>, [`Copy`], shape: shapes.pill, stroke: green),
+
+  edge(<mystruct2>, <field3>, "->"),
+  edge(<mystruct2>, <field4>, "->"),
+  edge(<field3>, <yesauto>, "->"),
+  edge(<field4>, <yesauto>, "->", label: [all `Copy`]),
+)
+
+
+
+
+#qa[What are `unsafe` traits?][Traits that have safety invariants that the compiler cannot verify automatically. Implementing them incorrectly can lead to undefined behavior.]
+
+You can implement `unsafe` traits manually when you know it is valid.
+
+#pause
+
+#warning[Implementing `unsafe` traits requires `unsafe` blocks. Using them as constraints does not.]
+
+== Traits for thread safety
 
 How does Rust know to forbid shared access across threads?
 
@@ -346,15 +505,7 @@ How does Rust know to forbid shared access across threads?
 
 #info[Send and Sync are unsafe auto traits.]
 
-#qa[What are auto traits?][The compiler will automatically derive them for your types as long as they only contain types that implement the auto trait.]
 
-#qa[What are `unsafe` traits?][Traits that have safety invariants that the compiler cannot verify automatically. Implementing them incorrectly can lead to undefined behavior.]
-
-You can implement `unsafe` traits manually when you know it is valid.
-
-#pause
-
-#warning[Implementing `unsafe` traits requires `unsafe` blocks. Using them as constraints does not.]
 
 == Send
 
@@ -576,9 +727,15 @@ fn main() {
 }
 ```
 
-#qa[The `lock()` returns a `Result<MutexGuard<T>, PoisonError>`. What is a `PoisonError`? ][It indicates that another thread panicked while holding the lock, potentially leaving the data in an inconsistent state.]
+
+#pause
+
+Exercise: `examples/arc-mutex.rs`
 
 #pagebreak()
+
+#qa[The `lock()` returns a `Result<MutexGuard<T>, PoisonError>`. What is a `PoisonError`? ][Another thread panicked while holding the lock]
+
 
 #qa[Why is `Mutex<T>: Sync` when `T: Send` (not `T: Sync`)?][The mutex ensures exclusive access - only one thread touches `T` at a time, so `T` doesn't need to support concurrent sharing.]
 
@@ -616,10 +773,6 @@ Types with interior mutability:
 
 == Example
 
-Open `examples/demo.rs`
-
-#pause
-
 
 Typically Rust beginners will:
 
@@ -641,7 +794,6 @@ There are some problems with this approach:
 My advice:
 
 - Minimise or remove usage of `Arc<Mutex<T>>`.
-- Use at most one `Arc<Mutex<T>>` per program.
 - Use `RwLock<T>` when possible.
 - Use `Atomic` types for simple shared counters/flags.
 
