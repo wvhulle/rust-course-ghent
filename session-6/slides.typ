@@ -14,9 +14,12 @@
   diagram-enabled: true,
   enable-qr-codes: false,
 )
-#pagebreak()
 
-== Important exercises
+
+
+#title-slide()
+
+
 
 Make sure you have already finished:
 
@@ -352,10 +355,6 @@ where
 
 = Channels
 
-
-
-= Channels
-
 == What is a channel?
 
 A channel is a communication primitive for passing messages between threads.
@@ -370,14 +369,19 @@ Under the hood: a thread-safe buffer (queue) in shared memory with:
   node((0, 0), name: <t1>, [Thread 1], shape: shapes.pill),
   node((3, 0), name: <t2>, [Thread 2], shape: shapes.pill),
 
-  node((1, 0), name: <tx>, [`tx`], shape: shapes.rect),
-  node((1.5, 0), name: <buf>, [buffer], shape: shapes.rect, width: 4em),
-  node((2, 0), name: <rx>, [`rx`], shape: shapes.rect),
+  node((1, 0), name: <tx>, [`tx`], shape: shapes.rect, stroke: gray),
 
+  node((2, 0), name: <rx>, [`rx`], shape: shapes.rect, stroke: gray),
   edge(<t1>, <tx>, "->", label: [send]),
   edge(<tx>, <buf>, "->"),
   edge(<buf>, <rx>, "->"),
   edge(<rx>, <t2>, "->", label: [recv]),
+
+
+  pause,
+  node(enclose: (<tx>, <buf>, <rx>), name: <channel>, stroke: blue),
+
+  node((1.5, 0), name: <buf>, [buffer], shape: shapes.rect, width: 4em),
 )
 
 #pause
@@ -491,77 +495,45 @@ You can implement `unsafe` traits manually when you know it is valid.
 
 #warning[Implementing `unsafe` traits requires `unsafe` blocks. Using them as constraints does not.]
 
-== Traits for thread safety
+== Send and Sync
 
-How does Rust know to forbid shared access across threads?
+#definition[
+  - `Send`: safe to *move* `T` to another thread
+  - `Sync`: safe to *share* `&T` across threads (i.e., `&T: Send`)
+]
 
-#pause
+#fletcher-diagram(
+  spacing: (6em, 2em),
+  node-stroke: 0.5pt,
+
+  node((0, 0.5), name: <t>, [`T`], shape: shapes.rect),
 
 
-- `Send`: a type T is Send if it is safe to move a T across a thread boundary. #pause
-- `Sync`: a type T is Sync if it is safe to move a &T across a thread boundary.
+  node((2, 0.5), name: <thread2>, [Spawned thread], shape: shapes.pill),
 
-#pause
+  edge(<t>, <thread2>, "->", label: [`T: Send`], label-side: left),
+
+  pause,
+  node((0, 2), name: <reft>, [`&T`], shape: shapes.rect),
+  node((1, 1.5), name: <thread1>, [Thread 1], shape: shapes.pill),
+  node((1, 2.5), name: <thread2b>, [Thread 2], shape: shapes.pill),
+  node((1, 3.5), name: <thread3>, [Thread 3], shape: shapes.pill),
+
+  edge(<reft>, <thread1>, "->"),
+  edge(<reft>, <thread2b>, "->", label: [`&T: Send`]),
+  edge(<reft>, <thread3>, "->"),
+
+  node((2, 2.5), name: <sync>, [`T: Sync`], shape: shapes.pill, stroke: blue),
+  edge(<thread1>, <sync>, "->", stroke: blue),
+  edge(<thread2b>, <sync>, "<=>", stroke: blue),
+  edge(<thread3>, <sync>, "->", stroke: blue),
+)
 
 #info[Send and Sync are unsafe auto traits.]
 
 
 
-== Send
-
-A type T is `Send` if it is *safe to move a T value to another thread*.
-
-#pause
-
-Moving ownership entails:
-
-- running destructor in the other thread
-- accessing the value in the other thread
-- taking mutable references to the value in the other thread
-
-#pause
-
-
-```rust
-use std::thread;
-
-fn main() {
-    let data = vec![1, 2, 3]; // Vec<i32> is Send
-
-    let handle = thread::spawn(move || {
-        println!("Data in thread: {:?}", data);
-        data.iter().sum::<i32>()
-    });
-
-    let result = handle.join().unwrap();
-    println!("Sum: {}", result);
-}
-```
-
-This compiles because `Vec<i32>` implements `Send`.
-
-== Sync
-
-A value of type `T` is `Sync` if and only if an immutable reference to `T` (`&T`) is `Send`.
-
-In practice this means that it is safe to *access immutably from several threads in parallel*.
-
-
-#corollary[A consequence of this is that if `T: !Sync` then `&T: !Send`.]
-#pause
-#proof[
-
-  $
-         #raw("&T") & <=> #raw("&&T") \
-    T: #raw("Sync") & <=> #raw("&T"): #raw("Send")
-  $
-]
-
-
-
-== Examples
-
-=== Send + Sync
+== Send + Sync
 
 
 Most types you come across are Send + Sync:
@@ -575,7 +547,104 @@ Most types you come across are Send + Sync:
 
 #qa[When are the generic types such as `Vec<T>` Send + Sync][When the type parameters `T` are Send + Sync.]
 
-=== Send + !Sync
+== Atomics
+
+Atomics are low-level types for lock-free concurrent programming.
+
+#pause
+
+Two problems with normal memory operations:
+- Compilers and CPUs may *reorder* instructions for optimization
+- Read-modify-write (e.g., `x += 1`) is *not atomic* (multiple CPU instructions)
+
+#pause
+
+```rust
+static mut DATA: u32 = 0;
+static mut READY: bool = false;
+
+fn thread1() { unsafe { DATA = 42; READY = true; } }
+fn thread2() { unsafe { while !READY {} println!("{}", DATA); } } // might print 0!
+```
+
+CPU might execute `READY = true` before `DATA = 42`.
+
+
+== Atomics (continued)
+
+Solution: atomic operations with memory ordering guarantees.
+
+```rust
+use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+
+static DATA: AtomicU32 = AtomicU32::new(0);
+static READY: AtomicBool = AtomicBool::new(false);
+
+fn thread1() {
+    DATA.store(42, Ordering::Release);
+    READY.store(true, Ordering::Release);
+}
+fn thread2() {
+    while !READY.load(Ordering::Acquire) {}
+    println!("{}", DATA.load(Ordering::Acquire)); // guaranteed 42
+}
+```
+
+#fletcher-diagram(
+  spacing: (6em, 1.5em),
+  node-stroke: 0.5pt,
+
+  node((-0.7, 0), [Thread 1:], stroke: none),
+  node((0, 0), name: <store1>, [`DATA.store(42, Release)`], shape: shapes.rect),
+  node((1, 0), name: <store2>, [`READY.store(true, Release)`], shape: shapes.rect),
+  edge(<store1>, <store2>, "->"),
+
+  node((-0.7, 1), [Thread 2:], stroke: none),
+  node((0, 1), name: <spin>, [spinning...], shape: shapes.rect, stroke: gray),
+  node((1, 1), name: <load1>, [`READY.load(Acquire)` → true], shape: shapes.rect),
+  node((2, 1), name: <load2>, [`DATA.load(Acquire)` → 42], shape: shapes.rect),
+  edge(<spin>, <load1>, "->", stroke: gray),
+  edge(<load1>, <load2>, "->"),
+
+  edge(<store2>, <load1>, "-->", stroke: blue, label: [happens-before]),
+)
+
+The happens-before edge is on `READY` (same atomic, Release-store → Acquire-load).
+
+This transitively makes `DATA.store` visible to `DATA.load`.
+
+== Atomics: hardware support
+
+Not all CPUs support all atomic operations natively.
+
+#pause
+
+- *Always supported*: `AtomicBool`, `AtomicU8`, `AtomicU16`, `AtomicU32`, `AtomicUsize`
+- *64-bit only*: `AtomicU64` (not available on 32-bit targets)
+- *Rare*: `AtomicU128` (only some x86-64 CPUs)
+
+#pause
+
+Check at compile time:
+
+```rust
+#[cfg(target_has_atomic = "64")]
+use std::sync::atomic::AtomicU64;
+```
+
+#pause
+
+If hardware doesn't support an atomic size, Rust either:
+- Won't compile (type not available)
+- Falls back to a lock-based implementation (slower)
+
+#info[On modern x86-64 and ARM64, all common atomics are hardware-supported.]
+
+#focus-slide[
+  #image("images/locks.jpg")
+]
+
+== Send + !Sync
 
 These types can be moved to other threads, but cannot be shared via `&T`:
 
@@ -585,10 +654,9 @@ These types can be moved to other threads, but cannot be shared via `&T`:
   - Allow mutation through `&T` without synchronization
   - Safe to own exclusively on one thread, unsafe to share references
 
-#pagebreak()
 
 
-=== !Send + Sync
+== !Send + Sync
 
 These types are safe to access (via shared references) from multiple threads, but cannot be moved to another thread:
 
@@ -596,30 +664,9 @@ These types are safe to access (via shared references) from multiple threads, bu
   - Must be unlocked on the thread that acquired the lock (POSIX requirement)
 
 #proposition[`MutexGuard<T: Sync>: !Send + Sync`]
-#pause
-#proof[
-  *Part 1:* `MutexGuard<T: Sync>: !Send`
 
-  $
-             #raw("drop(MutexGuard)") & => #raw("Mutex::unlock()") \
-              #raw("Mutex::unlock()") & => "must run on locking thread" \
-    #raw("MutexGuard") : #raw("Send") & => #raw("drop") "can run on any thread" \
-         therefore #raw("MutexGuard") & : !#raw("Send")
-  $
 
-  *Part 2:* `MutexGuard<T: Sync>: Sync`
-
-  $
-         #raw("MutexGuard<T>") & : #raw("Sync") \
-    <=> #raw("&MutexGuard<T>") & : #raw("Send") \
-                <=> #raw("&T") & : #raw("Send") quad "(deref coercion)" \
-                         <=> T & : #raw("Sync") quad checkmark
-  $
-]
-
-#pagebreak()
-
-=== !Send + !Sync
+== !Send + !Sync
 
 These types are not thread-safe and cannot be moved to other threads:
 
@@ -667,81 +714,190 @@ These types are not thread-safe and cannot be moved to other threads:
 
 = Shared state
 
-== Arc
+== Sharing data
+
+The unsafe way to share data between threads is to use `static mut`:
 
 ```rs
-use std::sync::Arc; use std::thread;
-#[derive(Debug)]
-struct WhereDropped(Vec<i32>); /// A struct that prints which thread drops it.
-impl Drop for WhereDropped {
-    fn drop(&mut self) { println!("Dropped by {:?}",  thread::current().id()) }
-}
-fn main() {
-    let v = Arc::new(WhereDropped(vec![10, 20, 30]));
-    let mut handles = Vec::new();
-    for i in 0..5 {
-        let v = Arc::clone(&v);
-        handles.push(thread::spawn(move || {
-            // Sleep for 0-500ms.
-            std::thread::sleep(std::time::Duration::from_millis(500 - i * 100));
-            let thread_id = thread::current().id();
-            println!("{thread_id:?}: {v:?}");
-        }));
+static mut COUNTER: u32 = 0;
+fn increment() {
+    unsafe {
+        COUNTER += 1;
     }
-    drop(v); // Now only the spawned threads will hold clones of `v`.
-    // When the last spawned thread finishes, it will drop `v`'s contents.
-    handles.into_iter().for_each(|h| h.join().unwrap());
 }
 ```
+#pause
+
+#fletcher-diagram(
+  spacing: (7em, 1.5em),
+  node-stroke: 0.5pt,
+
+  node((0, 0), name: <stack1>, [Stack (Thread 1)], shape: shapes.rect),
+  node((1, 0), name: <stack2>, [Stack (Thread 2)], shape: shapes.rect),
+  node((0.5, 1), name: <static>, [`static mut COUNTER`], shape: shapes.rect, stroke: red),
+
+  edge(<stack1>, <static>, "->", stroke: red, label: [unsafe]),
+  edge(<stack2>, <static>, "->", stroke: red, label: [unsafe]),
+
+  node((2, 1), name: <note>, [Shared memory,\ no synchronization!], stroke: red),
+)
+
+Disadvantages:
+
+- Unsafe: requires `unsafe` blocks to access
+- Needs to be initialized for the entire program lifetime
+
+
+#pause
+
+Solution:
+
+1. Use reference counted variable (next slides) #pause
+2. Use a lock to ensure exclusive access (later)
+
+#pause
+
+_(Notice that in this simple case we could just use an `AtomicU32` instead. This is just an example.)_
+
+== Concept
+
+#definition[`Arc<T>` = *Atomic Reference Counted* pointer for shared ownership across threads.]
+
+#fletcher-diagram(
+  spacing: (5em, 2em),
+  node-stroke: 0.5pt,
+
+  node((1, 0), name: <data>, [`T` (heap)], shape: shapes.rect, stroke: blue),
+  node((1, -0.5), name: <count>, [count: 3], shape: shapes.rect, stroke: blue, fill: blue.lighten(90%)),
+
+  node((0, 1), name: <t1>, [Thread 1], shape: shapes.pill),
+  node((1, 1), name: <t2>, [Thread 2], shape: shapes.pill),
+  node((2, 1), name: <t3>, [Thread 3], shape: shapes.pill),
+
+  edge(<t1>, <data>, "->", label: [`Arc`]),
+  edge(<t2>, <data>, "->", label: [`Arc`]),
+  edge(<t3>, <data>, "->", label: [`Arc`]),
+)
+
+Key properties:
+
+- `Arc::clone(&v)` increments ref count (atomic operation)
+- When count reaches 0, data is dropped
+- `Arc<T>: Send + Sync` when `T: Send + Sync`
 
 #pagebreak()
 
-#qa[What does `Arc<T>` stand for? ][Atomic Reference Counted.]
+=== Arc example
 
-Atomic refers to the fact that the *reference count is updated using atomic operations*, making atomics (`AtomicUsize`) and `Arc<T>` safe to share between threads.
+```rs
+use std::sync::Arc;
+use std::thread;
 
-#qa[When does `Arc<T>` implement `Clone`? ][Always. Cloning an `Arc` only increments the reference count.]
+fn main() {
+    let data = Arc::new(vec![1, 2, 3]);
 
-#qa[When does `Arc<T>` implement `Send` and `Sync`? ][When `T` implements `Send` and `Sync`.]
+    let handles: Vec<_> = (0..3).map(|i| {
+        let data = Arc::clone(&data);
+        thread::spawn(move || {
+            println!("Thread {i}: {:?}", data);
+        })
+    }).collect();
+
+    for h in handles { h.join().unwrap(); }
+}
+```
+
+#pause
+
+#qa[Who drops the data?][The last thread to finish (last `Arc` clone to go out of scope).]
+
+#qa[Can we mutate `T` through `Arc<T>`?][No, `Arc` only provides shared access. Use `Arc<Mutex<T>>` for mutation.]
+
+= Mutexes
 
 == Mutex
 
 
-Mutex<T> allows mutable access to T behind a read-only interface:
 
-Get `&mut T` from an `&Mutex<T>` by taking the lock.
+Prevents race conditions on complex shared data using synchronisation.
+
+#qa[How are you used to do data synchronisation in your favourite language?][...]
+
+#definition[`Mutex<T>` = *Mutual Exclusion* lock for exclusive access to `T` across threads.]
+
+#fletcher-diagram(
+  spacing: (5em, 1.5em),
+  node-stroke: 0.5pt,
+
+  node((1, 0), name: <data>, [`T`], shape: shapes.rect, stroke: blue),
+  node((1, -0.5), name: <lock>, [lock], shape: shapes.rect, stroke: blue, fill: blue.lighten(90%)),
+
+  node((0, 1), name: <t1>, [Thread 1], shape: shapes.pill, stroke: green),
+  node((1, 1), name: <t2>, [Thread 2], shape: shapes.pill, stroke: gray),
+  node((2, 1), name: <t3>, [Thread 3], shape: shapes.pill, stroke: gray),
+
+  edge(<t1>, <data>, "->", stroke: green, label: [holds lock]),
+  edge(<t2>, <data>, "-->", stroke: gray, label: [waiting]),
+  edge(<t3>, <data>, "-->", stroke: gray, label: [waiting]),
+)
+
+Key operations:
+
+- `lock()` → blocks until lock acquired, returns `MutexGuard<T>`
+- `MutexGuard` auto-releases lock when dropped (RAII)
+- `Mutex<T>: Sync` when `T: Send`
+
+#pagebreak()
+
+=== Mutex example
 
 ```rs
 use std::sync::Mutex;
 
 fn main() {
-    let v = Mutex::new(vec![10, 20, 30]);
-    println!("v: {:?}", v.lock().unwrap());
+    let counter = Mutex::new(0);
 
     {
-        let mut guard = v.lock().unwrap();
-        guard.push(40);
-    }
+        let mut guard = counter.lock().unwrap();
+        *guard += 1;
+    } // lock released here
 
-    println!("v: {:?}", v.lock().unwrap());
+    println!("Counter: {:?}", counter.lock().unwrap());
 }
 ```
 
-
 #pause
 
-Exercise: `examples/arc-mutex.rs`
+#qa[What is a `PoisonError`?][Another thread panicked while holding the lock. The data may be in an inconsistent state.]
+
+#qa[Why does `Mutex<T>` require `T: Send` but not `T: Sync`?][The mutex guarantees only one thread accesses `T` at a time, so `T` doesn't need to support concurrent access.]
 
 #pagebreak()
 
-#qa[The `lock()` returns a `Result<MutexGuard<T>, PoisonError>`. What is a `PoisonError`? ][Another thread panicked while holding the lock]
-
-
-#qa[Why is `Mutex<T>: Sync` when `T: Send` (not `T: Sync`)?][The mutex ensures exclusive access - only one thread touches `T` at a time, so `T` doesn't need to support concurrent sharing.]
+=== Arc + Mutex: shared mutable state
 
 ```rs
-unsafe impl<T: ?Sized + Send> Sync for Mutex<T> {}
+use std::sync::{Arc, Mutex};
+use std::thread;
+
+fn main() {
+    let counter = Arc::new(Mutex::new(0));
+
+    let handles: Vec<_> = (0..4).map(|_| {
+        let counter = Arc::clone(&counter);
+        thread::spawn(move || {
+            let mut guard = counter.lock().unwrap();
+            *guard += 1;
+        })
+    }).collect();
+
+    for h in handles { h.join().unwrap(); }
+    println!("Counter: {}", counter.lock().unwrap()); // 4
+}
 ```
+
+- `Arc` provides shared ownership across threads
+- `Mutex` provides exclusive mutable access
 
 
 
@@ -771,38 +927,104 @@ Types with interior mutability:
 
 
 
-== Example
+== Deadlocks
+
+The `Arc<Mutex<T>>` pattern is common but has drawbacks: forgetting to drop the guard before blocking operations
+
+#cetz-canvas(length: 1cm, {
+  import draw: *
+
+  // Timeline labels
+  content((0, 0), [Thread 1])
+  content((4, 0), [Thread 2])
+  content((8, 0), [Time])
+
+  // Vertical lifelines
+  line((0, -0.5), (0, -8), stroke: gray)
+  line((4, -0.5), (4, -8), stroke: gray)
+
+  // Time arrow
+  line((7, -0.5), (7, -8), stroke: gray, mark: (end: ">"))
+
+  (pause,)
+  // Thread 1 actions
+  content((-1.5, -1.5), text(size: 0.8em)[`lock(A)`], anchor: "east")
+
+  (pause,)
+
+  rect((-0.3, -1.2), (0.3, -1.8), fill: green.lighten(70%), stroke: green)
+  content((-1.5, -3), text(size: 0.8em)[holds A], anchor: "east")
+  line((0, -1.8), (0, -5), stroke: green + 2pt)
 
 
-Typically Rust beginners will:
+  (pause,)
 
-1. Wrap `T` in `Mutex::new(Arc::new(T))`
-2. Clone the `Arc` to share ownership across threads
-3. Lock the `Mutex` to get mutable access to `T` in each thread
 
-There are some problems with this approach:
+  // Thread 2 actions
+  content((5.5, -2.5), text(size: 0.8em)[`lock(B)`], anchor: "west")
+
+  (pause,)
+  rect((-0.3, -5.2), (0.3, -5.8), fill: red.lighten(70%), stroke: red)
+  content((5.5, -4), text(size: 0.8em)[holds B], anchor: "west")
+  line((4, -2.8), (4, -6), stroke: green + 2pt)
+  rect((3.7, -2.2), (4.3, -2.8), fill: green.lighten(70%), stroke: green)
+
+
+  (pause,)
+
+
+  content((-1.5, -5.5), text(size: 0.8em)[`lock(B)`], anchor: "east")
+
+
+  (pause,)
+
+
+  content((-1.5, -7), text(size: 0.8em)[blocked!], anchor: "east")
+  line((0, -5.8), (0, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
+
+  (pause,)
+
+  content((5.5, -6.5), text(size: 0.8em)[`lock(A)`], anchor: "west")
+
+  (pause,)
+  rect((3.7, -6.2), (4.3, -6.8), fill: red.lighten(70%), stroke: red)
+  line((4, -6.8), (4, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
+
+  (pause,)
+
+  content((5.5, -7.5), text(size: 0.8em)[blocked!], anchor: "west")
+
+  (pause,)
+  // Deadlock annotation
+  rect((1.2, -7.3), (2.8, -7.9), fill: red.lighten(90%), stroke: red)
+  content((2, -7.6), text(size: 0.8em, fill: red)[Deadlock])
+})
 
 #pause
 
-- *Deadlocks*: the guard returned by `.lock()` must be dropped and a costly operation (like I/O) performed while holding the lock. #pause
-- *Coarse locking*: the whole data structure is locked, even when only a small part needs to be mutated. #pause
-- *Global mutability*: all threads can mutate the data, making reasoning about the program harder.
-
-
-#pause
-
-My advice:
-
-- Minimise or remove usage of `Arc<Mutex<T>>`.
-- Use `RwLock<T>` when possible.
-- Use `Atomic` types for simple shared counters/flags.
-
-
-
-= Exercises
-
-
-From Google:
+Exercise:
 
 - examples/philosophers.rs
-- examples/link.rs
+
+Solutions are provided as `*-solution.rs` files.
+
+== Best practices for Mutexes
+
+Structure code to minimize shared mutable state in mutexes.
+
+Alternatives:
+
+- Use `RwLock<T>` for many readers, few writers
+- Use `Atomic*` types for simple counters/flags
+
+
+If really necessary:
+
+- Use channels for *one-directional flow* (but they are also hard to maintain)
+
+One more exercise:
+
+- `examples/link.rs` (you need to have openssl installed, use the `flake.nix` or your package manager)
+
+
+Solutions are provided as `*-solution.rs` files.
