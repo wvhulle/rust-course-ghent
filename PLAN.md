@@ -2,7 +2,7 @@
 
 ## Session 1
 
-[Slides](./session-1/slides.pdf)
+[Slides](./session1/slides.pdf)
 
 **Covered in class:**
 
@@ -31,7 +31,7 @@
 
 ## Session 2
 
-[Slides](./session-2/slides.pdf)
+[Slides](./session2/slides.pdf)
 
 **Covered in class:**
 
@@ -67,7 +67,7 @@
 
 ## Session 3
 
-[Slides](./session-3/slides.pdf)
+[Slides](./session3/slides.pdf)
 
 **Planned for in-session:**
 
@@ -91,7 +91,7 @@
 
 ## Session 4
 
-[Slides](./session-4/slides.pdf)
+[Slides](./session4/slides.pdf)
 
 **Planned for in-session:**
 
@@ -104,10 +104,10 @@
 - Lifetimes:
   - Read <https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html>
   - Read <https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html>
-  - Exercise session-4/tests/protobuf-parsing.rs
+  - Exercise session4/tests/protobuf-parsing.rs
   - Exercises Rustlings, ch. 16 lifetimes
 - Iterators:
-  - Exercise session-4/tests/iterator-method-chaining.rs
+  - Exercise session4/tests/iterator-method-chaining.rs
   - <https://doc.rust-lang.org/book/ch13-00-functional-features.html>
   - Exercise Rustlings, ch. 18 iterators
   - Extra exercise: make your own iterator and adapter
@@ -123,15 +123,15 @@
 
 ## Session 5
 
-[slides](./session-5/slides.pdf)
+[slides](./session5/slides.pdf)
 
 **Planned for in-session:**
 
 - Review testing and modules: *30 min*
-  - session-5/tests/luhn.rs
+  - session5/tests/luhn.rs
 - Error handling: *55 min*
   - Rustlings, chapter 13: Error handling
-  - session-5/tests/result.rs
+  - session5/tests/result.rs
 - Unsafe rust: *20 min*
 
 **Homework:**
@@ -145,7 +145,7 @@
 
 ## Session 6
 
-([Slides](./session-6/slides.pdf))
+([Slides](./session6/slides.pdf))
 
 **Planned for in-session:**
 

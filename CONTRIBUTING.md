@@ -10,11 +10,11 @@ To compile the slides of a single session (install Typst first):
 
 ```bash
 cd sessions
-typst compile --root . session-1/slides.typ
-xdg-open session-1/slides.pdf
+typst compile --root . session1/slides.typ
+xdg-open session1/slides.pdf
 ```
 
-The slides are written in [Typst](https://typst.app/). There is a [`template.typ`](./template.typ) and a few accompanying custom layout functions in the [`theme`](./theme/) folder. Please refer to the manual of each Typst package for external packages:
+The slides are written in [Typst](https://typst.app/). There is a [`template/lib.typ`](./template/lib.typ) and accompanying custom layout functions in the [`template`](./template/) folder. Please refer to the manual of each Typst package for external packages:
 
 - Touying (for slides): <https://touying-typ.github.io/>
 - Tiaoma (for QR-codes): typst.app/universe/package/tiaoma/

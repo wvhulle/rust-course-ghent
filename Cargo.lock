@@ -1369,15 +1369,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "session-1"
+name = "session1"
 version = "0.1.0"
 
 [[package]]
-name = "session-2"
+name = "session2"
 version = "0.1.0"
 
 [[package]]
-name = "session-3"
+name = "session3"
 version = "0.1.0"
 dependencies = [
  "regex",
@@ -1385,15 +1385,15 @@ dependencies = [
 ]
 
 [[package]]
-name = "session-4"
+name = "session4"
 version = "0.1.0"
 
 [[package]]
-name = "session-5"
+name = "session5"
 version = "0.1.0"
 
 [[package]]
-name = "session-6"
+name = "session6"
 version = "0.1.0"
 dependencies = [
  "reqwest",
