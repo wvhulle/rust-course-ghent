@@ -1154,13 +1154,12 @@ Rules:
 
 #grid(columns: (1fr, 1fr), column-gutter: 1em)[
 
-  #set text(size: 0.7em)
   #fletcher-diagram(
-    spacing: (3em, 3em),
+    spacing: (2em, 2em),
     node-stroke: 0.5pt,
 
     // Slide 1: Initial philosophers and chopsticks (P0, C0)
-    node((0, 2.5), name: <p0>, [Philosopher 0], shape: shapes.circle),
+    node((0, 2.5), name: <p0>, [Socrates], shape: shapes.circle),
     node(
       (2.2, 1.2),
       name: <c0>,
@@ -1172,7 +1171,7 @@ Rules:
     pause,
 
     // Slide 2: Add remaining philosophers and chopsticks
-    node((2.2, -1.2), name: <p1>, [Philosopher 1], shape: shapes.circle),
+    node((2.2, -1.2), name: <p1>, [Plato], shape: shapes.circle),
     node(
       (0, -2.5),
       name: <c1>,
@@ -1180,7 +1179,7 @@ Rules:
       shape: shapes.rect,
       stroke: gray,
     ),
-    node((-2.2, -1.2), name: <p2>, [Philosopher 2], shape: shapes.circle),
+    node((-2.2, -1.2), name: <p2>, [Aristotle], shape: shapes.circle),
     node(
       (-2.2, 1.2),
       name: <c2>,
@@ -1216,7 +1215,7 @@ Rules:
       node(
         (0, 2.5),
         name: <p0eat>,
-        [P0 eating],
+        [Socrates eating],
         shape: shapes.circle,
         stroke: blue,
         fill: blue.lighten(85%),
@@ -1286,7 +1285,7 @@ Rules:
       5,
       edge(
         <p0>,
-        <c0>,
+        <c2>,
         "->",
         label: [grabs left],
         stroke: (paint: black, thickness: 1.5pt),
@@ -1296,7 +1295,7 @@ Rules:
       ),
       edge(
         <p1>,
-        <c1>,
+        <c0>,
         "->",
         label: [grabs left],
         stroke: (paint: black, thickness: 1.5pt),
@@ -1306,7 +1305,7 @@ Rules:
       ),
       edge(
         <p2>,
-        <c2>,
+        <c1>,
         "->",
         label: [grabs left],
         stroke: (paint: black, thickness: 1.5pt),
@@ -1323,21 +1322,21 @@ Rules:
       10,
       edge(
         <p0>,
-        <c0>,
+        <c2>,
         "->",
         stroke: (paint: green, thickness: 2pt),
         bend: -20deg,
       ),
       edge(
         <p1>,
-        <c1>,
+        <c0>,
         "->",
         stroke: (paint: green, thickness: 2pt),
         bend: -20deg,
       ),
       edge(
         <p2>,
-        <c2>,
+        <c1>,
         "->",
         stroke: (paint: green, thickness: 2pt),
         bend: -20deg,
@@ -1373,9 +1372,9 @@ Rules:
     // Slide 7+: P0 wants right chopstick
     ..between(7, 10, edge(
       <p0>,
-      <c2>,
+      <c0>,
       "-->",
-      label: [wants right],
+      label: [wants C0],
       stroke: red,
       bend: 35deg,
       label-pos: 0.3,
@@ -1386,9 +1385,9 @@ Rules:
     // Slide 8+: P1 wants right chopstick
     ..between(8, 10, edge(
       <p1>,
-      <c0>,
+      <c1>,
       "-->",
-      label: [wants right],
+      label: [wants C1],
       stroke: red,
       bend: 35deg,
       label-pos: 0.3,
@@ -1399,9 +1398,9 @@ Rules:
     // Slide 9+: P2 wants right chopstick
     ..between(9, 10, edge(
       <p2>,
-      <c1>,
+      <c2>,
       "-->",
-      label: [wants right],
+      label: [wants C2],
       stroke: red,
       bend: 35deg,
       label-pos: 0.3,
@@ -1409,36 +1408,46 @@ Rules:
 
     pause,
 
-    // Slide 10: Show circular dependency (blocking reasons)
+    // Slide 10: Focus on Socrates' deadlock situation
+    node(
+      (0, 2.5),
+      name: <p0-blocked>,
+      [Socrates blocked!],
+      shape: shapes.circle,
+      stroke: red,
+      fill: red.lighten(85%),
+    ),
+    // Highlight Socrates' green arrow to C2 (holds)
     edge(
+      <p0-blocked>,
       <c2>,
-      <p2>,
-      "<-",
-      label: [C2 held by P2!],
-      stroke: (paint: red, dash: "dotted", thickness: 2pt),
-      bend: -35deg,
+      "->",
+      label: [holds],
+      stroke: (paint: green, thickness: 2pt),
+      bend: -20deg,
       label-pos: 0.5,
     ),
+    // Highlight Socrates' red arrow to C0 (wants)
     edge(
+      <p0-blocked>,
       <c0>,
-      <p0>,
-      "<-",
-      label: [C0 held by P0!],
-      stroke: (paint: red, dash: "dotted", thickness: 1pt),
-      bend: -35deg,
-      label-pos: 0.5,
+      "-->",
+      label: [wants],
+      stroke: (paint: red, thickness: 2pt),
+      bend: 35deg,
+      label-pos: 0.3,
     ),
+    // Show Plato holding C0 (blocking Socrates)
     edge(
-      <c1>,
       <p1>,
-      "<-",
-      label: [C1 held by P1!],
-      stroke: (paint: red, dash: "dotted", thickness: 2pt),
-      bend: -35deg,
+      <c0>,
+      "->",
+      label: [held by Plato],
+      stroke: (paint: green, thickness: 2pt),
+      bend: -20deg,
       label-pos: 0.5,
     ),
   )][
-  #set text(size: 0.75em)
 
   *Legend:*
 
@@ -1459,24 +1468,22 @@ Rules:
       thickness: 1.5pt,
     ))],
     [Wants but blocked],
-
-    [#line(length: 2em, stroke: (paint: red, dash: "dotted", thickness: 2pt))],
-    [Blocking reason],
   )
 
   #pause
 
-  Deadlock! All four Coffman conditions met:
-  - Mutual exclusion: each chopstick held by exactly one philosopher
-  - Hold and wait: each philosopher holds left chopstick, waits for right
-  - No preemption: philosophers cannot take chopsticks from each other
-  - Circular wait: P0 needs C2 (held by P2) → P2 needs C1 (held by P1) → P1 needs C0 (held by P0)
+  *Socrates' perspective:*
+  - Holds C2 (green)
+  - Wants C0 (red dashed)
+  - But C0 is held by Plato!
 
   #pause
 
-  #qa[Which Coffman condition should we break to solve this?][Circular wait is easiest: change the lock acquisition order for some philosophers.]
+  Same for Plato and Aristotle → circular wait → *Deadlock!*
 
-  #qa[How can we break the symmetry?][Make at least one philosopher acquire chopsticks in a different order than the others.]
+  #pause
+
+  #qa[Which Coffman condition should we break?][Circular wait: change lock order for one philosopher.]
 ]
 #pagebreak()
 
