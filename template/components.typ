@@ -1,6 +1,8 @@
 // UI components and helpers
 
-#import "colors.typ": accent, colors, node-radius, stroke-width as default-stroke-width
+#import "colors.typ": (
+  accent, colors, node-radius, stroke-width as default-stroke-width,
+)
 #import "dependencies.typ": pause
 
 // Shared implementation for titled boxes (warning, error, etc.)
@@ -13,8 +15,12 @@
   radius: node-radius,
   content,
 ) = context {
-  let show-title = if title == auto { true } else if title == false { false } else { true }
-  let title-text = if title == auto { default-title } else if title == false { none } else { title }
+  let show-title = if title == auto { true } else if title == false {
+    false
+  } else { true }
+  let title-text = if title == auto { default-title } else if title == false {
+    none
+  } else { title }
   v(0.5em)
   if show-title and title-text != none {
     align(center, block(
@@ -58,8 +64,18 @@
 }
 
 #let qa(question, answer) = {
-  let q-box = rect(radius: 0.5em, inset: 0.5em, outset: 0em, fill: yellow.lighten(70%))[#question]
-  let a-box = rect(radius: 0.5em, inset: 0.5em, outset: 0em, fill: green.lighten(70%))[#answer]
+  let q-box = rect(
+    radius: 0.5em,
+    inset: 0.5em,
+    outset: 0em,
+    fill: yellow.lighten(70%),
+  )[#question]
+  let a-box = rect(
+    radius: 0.5em,
+    inset: 0.5em,
+    outset: 0em,
+    fill: green.lighten(70%),
+  )[#answer]
   let curved-arrow = curve(
     stroke: green,
     curve.move((0em, 0em)),

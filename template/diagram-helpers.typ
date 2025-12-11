@@ -1,16 +1,24 @@
 // Diagram helpers using Fletcher and CeTZ
 
 #import "dependencies.typ": (
-  at, between, canvas, diagram, draw, edge, fletcher, hide, node, shapes, touying-reducer, until,
+  at, between, canvas, diagram, draw, edge, fletcher, hide, node, shapes,
+  touying-reducer, until,
 )
 #import "colors.typ": (
-  accent, arrow-width as default-arrow-width, colors, node-outset as default-node-outset,
-  node-radius as default-node-radius, stroke-width as default-stroke-width,
+  accent, arrow-width as default-arrow-width, colors,
+  node-outset as default-node-outset, node-radius as default-node-radius,
+  stroke-width as default-stroke-width,
 )
 
 // Touying bindings for CeTZ and Fletcher
-#let cetz-canvas = touying-reducer.with(reduce: canvas, cover: draw.hide.with(bounds: true))
-#let fletcher-diagram = touying-reducer.with(reduce: diagram, cover: hide.with(bounds: true))
+#let cetz-canvas = touying-reducer.with(
+  reduce: canvas,
+  cover: draw.hide.with(bounds: true),
+)
+#let fletcher-diagram = touying-reducer.with(
+  reduce: diagram,
+  cover: hide.with(bounds: true),
+)
 
 // Helper to cover entire diagram area with white background
 // Use this to implement "until(n)" pattern by covering all previous content
@@ -75,7 +83,14 @@
   stroke-width: default-stroke-width,
   outset: default-node-outset,
   body,
-) = accented-node(pos, color: color, name: name, stroke-width: stroke-width, outset: outset, body)
+) = accented-node(
+  pos,
+  color: color,
+  name: name,
+  stroke-width: stroke-width,
+  outset: outset,
+  body,
+)
 
 #let emoji-node(
   pos,
@@ -117,7 +132,14 @@
   stroke-width: default-stroke-width,
   outset: default-node-outset,
   content,
-) = accented-node(pos, color: color, name: name, stroke-width: stroke-width, outset: outset, content)
+) = accented-node(
+  pos,
+  color: color,
+  name: name,
+  stroke-width: stroke-width,
+  outset: outset,
+  content,
+)
 
 #let result-node(
   pos,
@@ -126,7 +148,14 @@
   stroke-width: default-stroke-width,
   outset: default-node-outset,
   content,
-) = accented-node(pos, color: color, name: name, stroke-width: stroke-width, outset: outset, content)
+) = accented-node(
+  pos,
+  color: color,
+  name: name,
+  stroke-width: stroke-width,
+  outset: outset,
+  content,
+)
 
 #let state-node(
   pos,
@@ -252,14 +281,18 @@
   let positional-args = args.pos()
   let named-args = args.named()
 
-  let mark = if positional-args.len() > 0 { positional-args.at(0) } else { "->" }
+  let mark = if positional-args.len() > 0 { positional-args.at(0) } else {
+    "->"
+  }
 
   edge(
     from,
     to,
     if label != none { text(size: label-size)[#label] },
     mark,
-    stroke: if color != none { accent(color) + default-arrow-width } else { stroke-width },
+    stroke: if color != none { accent(color) + default-arrow-width } else {
+      stroke-width
+    },
     ..named-args,
   )
 }
@@ -345,7 +378,11 @@
   if content != none {
     let center-x = (p1.at(0) + p2.at(0) + p3.at(0)) / 3
     let center-y = (p1.at(1) + p2.at(1) + p3.at(1)) / 3
-    draw.content((center-x, center-y), text(size: label-size)[#content], anchor: "center")
+    draw.content(
+      (center-x, center-y),
+      text(size: label-size)[#content],
+      anchor: "center",
+    )
   }
 }
 
@@ -436,12 +473,24 @@
     draw.line(start, end, stroke: stroke-color + stroke-width)
   }
   if label != none {
-    draw.content((center.at(0), center.at(1) + radius + 0.05), text[#label], anchor: "center")
+    draw.content(
+      (center.at(0), center.at(1) + radius + 0.05),
+      text[#label],
+      anchor: "center",
+    )
   }
 }
 
 // Timeline entry drawing helper for history slides
-#let draw-timeline-entry(y, year, event, description, reference, ref-url, color) = {
+#let draw-timeline-entry(
+  y,
+  year,
+  event,
+  description,
+  reference,
+  ref-url,
+  color,
+) = {
   import draw: *
   rect(
     (1, y - 0.3),
@@ -452,11 +501,20 @@
   )
   content((2, y), text(size: 0.7em, weight: "bold", year), anchor: "center")
 
-  content((3.5, y + 0.2), text(size: 0.8em, weight: "bold", event), anchor: "west")
+  content(
+    (3.5, y + 0.2),
+    text(size: 0.8em, weight: "bold", event),
+    anchor: "west",
+  )
   content((3.5, y - 0.03), text(size: 0.6em, description), anchor: "west")
   content(
     (3.5, y - 0.24),
-    link(ref-url, text(size: 0.6em, style: "italic", fill: accent(colors.stream), reference)),
+    link(ref-url, text(
+      size: 0.6em,
+      style: "italic",
+      fill: accent(colors.stream),
+      reference,
+    )),
     anchor: "west",
   )
 
@@ -473,11 +531,17 @@
         line((-0.8, 0), (0.6, 0), stroke: accent(color) + arrow-width)
         line((0.8, -0.3), (0.8, 0.3), stroke: accent(color) + (arrow-width))
       } else {
-        line((-0.8, 0), (0.8, 0), stroke: accent(color) + arrow-width, mark: (end: "barbed"))
+        line((-0.8, 0), (0.8, 0), stroke: accent(color) + arrow-width, mark: (
+          end: "barbed",
+        ))
       }
       for i in range(if fused { 4 } else { 3 }) {
         let dash-x = -0.6 + i * 0.4
-        line((dash-x, -0.15), (dash-x, 0.15), stroke: accent(color) + (arrow-width))
+        line(
+          (dash-x, -0.15),
+          (dash-x, 0.15),
+          stroke: accent(color) + (arrow-width),
+        )
       }
     } else {
       line((-0.8, 0), (0.3, 0), stroke: accent(color) + arrow-width)
@@ -486,7 +550,9 @@
         line((0.3, 0), (0.6, 0), stroke: accent(color) + arrow-width)
         line((0.8, -0.3), (0.8, 0.3), stroke: accent(color) + (arrow-width))
       } else {
-        line((0.3, 0), (0.8, 0), stroke: accent(color) + arrow-width, mark: (end: "barbed"))
+        line((0.3, 0), (0.8, 0), stroke: accent(color) + arrow-width, mark: (
+          end: "barbed",
+        ))
       }
     }
   })

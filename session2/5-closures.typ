@@ -371,11 +371,26 @@ fn main() {
   #set align(center)
   #fletcher-diagram(
     spacing: (4em, 2em),
-    node((0, -1), [`let x = String::from("data");`], name: <var>, fill: green.lighten(90%)),
-    node((0, 0), [`let f = move || { x.clone() };`], name: <closure>, fill: blue.lighten(70%)),
+    node(
+      (0, -1),
+      [`let x = String::from("data");`],
+      name: <var>,
+      fill: green.lighten(90%),
+    ),
+    node(
+      (0, 0),
+      [`let f = move || { x.clone() };`],
+      name: <closure>,
+      fill: blue.lighten(70%),
+    ),
     edge(<var>, <closure>, "->", label: [captures]),
     pause,
-    node((0, 1), [`f` implements `Clone`], name: <clone-impl>, fill: orange.lighten(70%)),
+    node(
+      (0, 1),
+      [`f` implements `Clone`],
+      name: <clone-impl>,
+      fill: orange.lighten(70%),
+    ),
     edge(<closure>, <clone-impl>, "->", label: [auto-trait]),
     pause,
     node((0, 2), [Can be cloned: `let g = f.clone();`], name: <usage>),

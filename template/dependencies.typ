@@ -5,12 +5,15 @@
 
 // Presentation framework
 #import "@local/touying:0.6.1": (
-  at, between, components, config-colors, config-common, config-info, config-methods, config-page, config-store,
-  meanwhile, only, touying-reducer, touying-slide, touying-slide-wrapper, touying-slides, uncover, until, utils,
+  at, between, components, config-colors, config-common, config-info,
+  config-methods, config-page, config-store, meanwhile, only, touying-reducer,
+  touying-slide, touying-slide-wrapper, touying-slides, uncover, until, utils,
 )
 
 // Code syntax highlighting and formatting
-#import "@preview/codly:1.3.0": codly, codly-disable, codly-init, codly-reset, no-codly
+#import "@preview/codly:1.3.0": (
+  codly, codly-disable, codly-init, codly-reset, no-codly,
+)
 
 // QR code generation
 #import "@preview/tiaoma:0.3.0": *
@@ -32,5 +35,11 @@
 #let fletcher = fletcher
 
 // Touying bindings for CeTZ and Fletcher diagrams
-#let cetz-canvas = touying-reducer.with(reduce: canvas, cover: draw.hide.with(bounds: true))
-#let fletcher-diagram = touying-reducer.with(reduce: diagram, cover: hide.with(bounds: true))
+#let cetz-canvas = touying-reducer.with(
+  reduce: canvas,
+  cover: draw.hide.with(bounds: true),
+)
+#let fletcher-diagram = touying-reducer.with(
+  reduce: diagram,
+  cover: hide.with(bounds: true),
+)

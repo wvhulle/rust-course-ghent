@@ -2,12 +2,13 @@
 
 // Import all dependencies from centralized file
 #import "dependencies.typ": (
-  codly-init, config-colors, config-common, config-info, config-methods, config-page, config-store, meanwhile, only,
-  pause, show-theorion, theorem-counter, touying-slides, uncover, utils,
+  codly-init, config-colors, config-common, config-info, config-methods,
+  config-page, config-store, meanwhile, only, pause, show-theorion,
+  theorem-counter, touying-slides, uncover, utils,
 )
 // Import all template components
 #import "colors.typ": primary-color, secondary-color, tertiary-color, text-color
-#import "slides.typ": new-section-slide, slide
+#import "slides.typ": slide
 #import "components.typ": qa
 #import "code-fragments.typ": embed-qr-code, embed-url-code, init-code-fragments
 #import "math-helpers.typ": *
@@ -64,7 +65,6 @@
     ),
     config-common(
       slide-fn: slide,
-      new-section-slide-fn: new-section-slide,
       frozen-counters: (theorem-counter,),
     ),
     config-methods(
@@ -99,9 +99,12 @@
 }
 
 // Re-export commonly used functions for convenience
-#import "slides.typ": focus-slide, matrix-slide, new-section-slide, slide, title-slide
+#import "slides.typ": focus-slide, matrix-slide, slide, title-slide
 #import "components.typ": definition, error, info, proposition, qa, warning
 #import "dependencies.typ": (
-  at, between, cetz-canvas, codly, diagram, draw, edge, fletcher, fletcher-diagram, hide, node, shapes, until,
+  at, between, cetz-canvas, codly, diagram, draw, edge, fletcher,
+  fletcher-diagram, hide, node, shapes, until,
 )
-#import "colors.typ": accent, arrow-width, colors, node-outset, node-radius, stroke-width
+#import "colors.typ": (
+  accent, arrow-width, colors, node-outset, node-radius, stroke-width,
+)

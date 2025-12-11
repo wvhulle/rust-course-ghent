@@ -1447,9 +1447,11 @@ Rules:
     stroke: none,
     inset: 6pt,
     align: (left, left),
-    [#line(length: 2em, stroke: (paint: black, thickness: 1.5pt))], [Trying to grab],
+    [#line(length: 2em, stroke: (paint: black, thickness: 1.5pt))],
+    [Trying to grab],
 
-    [#line(length: 2em, stroke: (paint: green, thickness: 2pt))], [Holding successfully],
+    [#line(length: 2em, stroke: (paint: green, thickness: 2pt))],
+    [Holding successfully],
 
     [#line(length: 2em, stroke: (
       paint: red,
@@ -1458,7 +1460,8 @@ Rules:
     ))],
     [Wants but blocked],
 
-    [#line(length: 2em, stroke: (paint: red, dash: "dotted", thickness: 2pt))], [Blocking reason],
+    [#line(length: 2em, stroke: (paint: red, dash: "dotted", thickness: 2pt))],
+    [Blocking reason],
   )
 
   #pause

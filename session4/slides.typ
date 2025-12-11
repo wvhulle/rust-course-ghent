@@ -254,7 +254,7 @@ Open example file for demonstration: `find-nearest.rs`
   }
   ```
 
-  #qa[What does the lifetime `'document` represent?][The lifetime of the slice refering to `doc` String in `main()` needs to exceed any instance of `Highlight` (that contains that slice).]
+  #qa[What does the lifetime `'document` represent?][The lifetime of the slice referring to `doc` String in `main()` needs to exceed any instance of `Highlight` (that contains that slice).]
 
 ]
 
@@ -281,7 +281,7 @@ Open example file for demonstration: `find-nearest.rs`
 
 == More reading material
 
-For those interested: read this #link("https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md#10-closures-follow-the-same-lifetime-elision-rules-as-functions")[Blog post by PretzelHamer titled "Common Rust Lifetime Misconceptions"]
+For those interested: read this #link("https://github.com/pretzelhammer/rust-blog/blob/master/posts/common-rust-lifetime-misconceptions.md#10-closures-follow-the-same-lifetime-elision-rules-as-functions")[Blog post by PretzelHammer titled "Common Rust Lifetime Misconceptions"]
 
 
 == Quiz
@@ -454,7 +454,7 @@ For those interested: read this #link("https://github.com/pretzelhammer/rust-blo
   impl<T> Trait for &mut T {} // ❌
   ```
 
-  #qa[Why do the last two impls not compile?][The compiler doesn't allow us to define an implementation of `Trait` for `&T` and `&mut T` since it would conflict with the implementation of `Trait` for `T` which already includes all of `&T` and `&mut T`]
+  #qa[Why do the last two `impl` blocks not compile?][The compiler doesn't allow us to define an implementation of `Trait` for `&T` and `&mut T` since it would conflict with the implementation of `Trait` for `T` which already includes all of `&T` and `&mut T`]
 ]
 
 

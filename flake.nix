@@ -1,11 +1,21 @@
 {
-  description = "A very basic flake";
+  description = "Rust course - Ghent";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
     fenix = {
       url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -15,35 +25,95 @@
       self,
       nixpkgs,
       fenix,
+      git-hooks,
+      treefmt-nix,
     }:
-    {
+    let
+      system = "x86_64-linux";
+      pkgs = nixpkgs.legacyPackages.${system};
+      rustToolchain = fenix.packages.${system}.fromToolchainFile {
+        file = ./rust-toolchain.toml;
+        sha256 = "sha256-SDu4snEWjuZU475PERvu+iO50Mi39KVjqCeJeNvpguU=";
+      };
 
-      packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
+      treefmtEval = treefmt-nix.lib.evalModule pkgs {
+        projectRootFile = "flake.nix";
 
-      packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-      devShells.x86_64-linux.default =
-        let
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
-          rustToolchain = fenix.packages.x86_64-linux.fromToolchainFile {
-            file = ./rust-toolchain.toml;
-            sha256 = "sha256-SDu4snEWjuZU475PERvu+iO50Mi39KVjqCeJeNvpguU=";
+        programs = {
+          nixfmt.enable = true;
+          prettier = {
+            enable = true;
+            includes = [ "*.md" ];
           };
-        in
-        pkgs.mkShell {
-          nativeBuildInputs = [
-            pkgs.pkg-config
-            rustToolchain
-          ];
-
-          buildInputs = [
-            pkgs.openssl
-          ];
-
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
-
-          shellHook = ''
-            echo "Welcome to the Rust course!"
-          '';
+          typstyle.enable = true;
+          rustfmt = {
+            enable = true;
+            package = rustToolchain;
+          };
         };
+
+        settings.global.excludes = [
+          "target/*"
+          "*.lock"
+          ".direnv/*"
+        ];
+      };
+
+      pre-commit-check = git-hooks.lib.${system}.run {
+        src = ./.;
+        hooks = {
+          cspell = {
+            enable = false;
+            name = "cspell";
+            description = "Check spelling with cspell";
+            entry = "${pkgs.cspell}/bin/cspell lint --no-progress --no-summary";
+            types = [ "text" ];
+          };
+          typos = {
+            enable = true;
+          };
+          typstyle = {
+            enable = true;
+          };
+          rustfmt = {
+            enable = true;
+            packageOverrides.rustfmt = rustToolchain;
+            packageOverrides.cargo = rustToolchain;
+          };
+          clippy = {
+            enable = true;
+            packageOverrides.clippy = rustToolchain;
+            packageOverrides.cargo = rustToolchain;
+            settings.allFeatures = true;
+          };
+          nixfmt = {
+            enable = true;
+          };
+        };
+      };
+    in
+    {
+      formatter.${system} = treefmtEval.config.build.wrapper;
+
+      checks.${system} = {
+        inherit pre-commit-check;
+        formatting = treefmtEval.config.build.check self;
+      };
+
+      devShells.${system}.default = pkgs.mkShell {
+        inherit (pre-commit-check) shellHook;
+
+        nativeBuildInputs = [
+          pkgs.pkg-config
+          rustToolchain
+        ]
+        ++ pre-commit-check.enabledPackages;
+
+        buildInputs = [
+          pkgs.openssl
+        ];
+
+        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
+      };
     };
 }

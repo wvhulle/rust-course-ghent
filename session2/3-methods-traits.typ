@@ -367,7 +367,9 @@
 
   #pause
 
-  #info(title: [Advanced])[... at least as long as you don't constrain *associated types* of super traits in subtraits ]
+  #info(
+    title: [Advanced],
+  )[... at least as long as you don't constrain *associated types* of super traits in subtraits ]
 
 ]
 
@@ -456,17 +458,32 @@
     spacing: (8em, 4em),
     node-shape: shapes.circle,
 
-    node((0, 0 + 2), [Type \ (Host)], fill: blue.lighten(50%), name: <protocol>),
+    node(
+      (0, 0 + 2),
+      [Type \ (Host)],
+      fill: blue.lighten(50%),
+      name: <protocol>,
+    ),
 
     pause,
 
 
-    node((0, 0), [Trait \ (Protocol)], stroke: blue.lighten(50%), name: <trait>),
+    node(
+      (0, 0),
+      [Trait \ (Protocol)],
+      stroke: blue.lighten(50%),
+      name: <trait>,
+    ),
 
     pause,
     node((0.5, 0.5), [Generic A], stroke: red.lighten(50%), name: <assoc-A>),
     node((0.7, 0), [Generic B], stroke: green.lighten(50%), name: <assoc-B>),
-    node((0.9, -0.5), [Generic C], stroke: orange.lighten(50%), name: <assoc-C>),
+    node(
+      (0.9, -0.5),
+      [Generic C],
+      stroke: orange.lighten(50%),
+      name: <assoc-C>,
+    ),
     edge(<trait>, <assoc-A>, "-->"),
     edge(<trait>, <assoc-B>, "-->"),
     edge(<trait>, <assoc-C>, "-->", label: [Associated]),

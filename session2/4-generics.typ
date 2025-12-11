@@ -107,10 +107,21 @@ fn compare_and_print<T: PartialOrd + Display>(a: T, b: T) {
       edge(<methods>, <child>, "..>"),
 
       pause,
-      node((0, -1), [Parent parent Class], name: <parent-parent>, fill: red.lighten(70%)),
+      node(
+        (0, -1),
+        [Parent parent Class],
+        name: <parent-parent>,
+        fill: red.lighten(70%),
+      ),
       edge(<parent>, <parent-parent>, "->", label: "inherits", stroke: red),
       edge(<fields>, <parent-parent>, "..>", label: [overridable], stroke: red),
-      edge(<methods>, <parent-parent>, "..>", label: [overridable], stroke: red),
+      edge(
+        <methods>,
+        <parent-parent>,
+        "..>",
+        label: [overridable],
+        stroke: red,
+      ),
     )
   ][
     #pause
@@ -265,12 +276,20 @@ fn main() {
 === Visualisation
 
 #fletcher-diagram(
-  node((0, -1), [*External\ libary*]),
-  node(enclose: (<our-trait>, <method-1>, <method-2>), name: <trait-box>, fill: orange.lighten(90%)),
+  node((0, -1), [*External\ library*]),
+  node(
+    enclose: (<our-trait>, <method-1>, <method-2>),
+    name: <trait-box>,
+    fill: orange.lighten(90%),
+  ),
   node((0, 0), [External \ Trait], name: <our-trait>),
 
   pause,
-  node(enclose: (<our-trait-2>, <method-3>, <method-4>), name: <our-trait-box-2>, fill: orange.lighten(90%)),
+  node(
+    enclose: (<our-trait-2>, <method-3>, <method-4>),
+    name: <our-trait-box-2>,
+    fill: orange.lighten(90%),
+  ),
   node((-0.5, 1), [Method 1], name: <method-1>),
   node((0.5, 1), [Method 2], name: <method-2>),
   edge(<our-trait>, <method-1>, "->"),
@@ -282,7 +301,12 @@ fn main() {
   node((1.5, 2), name: <div-down>),
   edge(<div-up>, <div-down>, "="),
   node((2, -0.5), [Our \ Trait], name: <our-trait-2>),
-  node((4, 1), [Our concrete \ type], name: <our-type>, fill: blue.lighten(70%)),
+  node(
+    (4, 1),
+    [Our concrete \ type],
+    name: <our-type>,
+    fill: blue.lighten(70%),
+  ),
 
   pause,
 
@@ -293,7 +317,12 @@ fn main() {
 
   pause,
 
-  node((2.5, 0.8), [Blanket \ impl], name: <blanket-impl>, fill: green.lighten(70%)),
+  node(
+    (2.5, 0.8),
+    [Blanket \ impl],
+    name: <blanket-impl>,
+    fill: green.lighten(70%),
+  ),
   edge(<our-trait-2>, <blanket-impl>, "->"),
   edge(<blanket-impl>, <our-type>, "=>", label: [hooks up], bend: -15deg),
   edge(<trait-box>, <blanket-impl>, "->"),
@@ -406,7 +435,11 @@ It may not always be clear when to pick an associated type or a generic type.
   node((0, 0), [Generic \ datatype], name: <type>, fill: green.lighten(70%)),
   node((1, 0), [Non-generic \ trait], name: <trait>, fill: orange.lighten(70%)),
   pause,
-  node((0.5, 2), text(fill: blue)[Single, unique \ associated type], name: <assoc-type>),
+  node(
+    (0.5, 2),
+    text(fill: blue)[Single, unique \ associated type],
+    name: <assoc-type>,
+  ),
   edge(<trait>, <assoc-type>, "->"),
   edge(<type>, <assoc-type>, "->"),
 
@@ -415,12 +448,22 @@ It may not always be clear when to pick an associated type or a generic type.
   edge(<div-up>, <div-down>, "="),
   pause,
   node((2.5, -1), [*Generic types parameters*\ (chosen by the caller)]),
-  node((2.5, 0), [Generic\ datatype], name: <generic-data-type>, fill: green.lighten(70%)),
+  node(
+    (2.5, 0),
+    [Generic\ datatype],
+    name: <generic-data-type>,
+    fill: green.lighten(70%),
+  ),
   node((2, 1), text(fill: blue)[Concrete type 1], name: <concrete-type-1>),
   node((3, 1), text(fill: blue)[Concrete type 2], name: <concrete-type-2>),
   edge(<generic-data-type>, <concrete-type-1>, "->"),
   edge(<generic-data-type>, <concrete-type-2>, "->"),
-  node((2.5, 2.5), [Generic\ trait], name: <trait-assoc>, fill: orange.lighten(70%)),
+  node(
+    (2.5, 2.5),
+    [Generic\ trait],
+    name: <trait-assoc>,
+    fill: orange.lighten(70%),
+  ),
   pause,
   node((2, 1.5), [`impl` block 1], name: <impl-block-1>),
   node((3, 1.5), [`impl` block 2], name: <impl-block-2>),
@@ -430,7 +473,13 @@ It may not always be clear when to pick an associated type or a generic type.
   edge(<impl-block-1>, <trait-assoc>, "->"),
   edge(<impl-block-2>, <trait-assoc>, "->"),
   pause,
-  edge(<impl-block-1>, <impl-block-2>, "-/-", stroke: red, label: [May not \ overlap]),
+  edge(
+    <impl-block-1>,
+    <impl-block-2>,
+    "-/-",
+    stroke: red,
+    label: [May not \ overlap],
+  ),
 )
 
 - Associated types behave like output (first choice).

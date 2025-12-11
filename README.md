@@ -25,7 +25,7 @@ During in-person sessions:
 
 - Follow along with the presentation when new material arrives and ask questions
 - Open the exercise files located in the `examples` or `tests` folder of session X.
-- Turn of AI tools and read the assignment, try to solve, *ask for help anytime*
+- Turn of AI tools and read the assignment, try to solve, _ask for help anytime_
 
 Test your (partial) solution:
 

@@ -17,22 +17,33 @@
 
     pause,
 
-    node((2, -1), [Primitives\ `Option`, `Result`, `bool`, `array`, ...\ `fmt`, `panic`, ...], name: <primitives>),
+    node(
+      (2, -1),
+      [Primitives\ `Option`, `Result`, `bool`, `array`, ...\ `fmt`, `panic`, ...],
+      name: <primitives>,
+    ),
 
     edge(<core>, <primitives>, "->", label: [Includes], layer: 1),
     pause,
 
 
-    node((2, 0), [Collections\ `Vec`, `String`, `Box`, ...\ `Rc`, `Arc`, ...], name: <collections>),
+    node(
+      (2, 0),
+      [Collections\ `Vec`, `String`, `Box`, ...\ `Rc`, `Arc`, ...],
+      name: <collections>,
+    ),
 
     edge(<alloc>, <collections>, "->", label: [Includes], layer: 1),
     pause,
 
-    node((2, 1), [Operating system interaction\ `fs`, `TcpStream`, `io`, ...\ `thread`, `process`, ...], name: <os>),
+    node(
+      (2, 1),
+      [Operating system interaction\ `fs`, `TcpStream`, `io`, ...\ `thread`, `process`, ...],
+      name: <os>,
+    ),
     edge(<std>, <os>, "->", label: [Includes], layer: 1),
   )
 ]
-
 
 #slide[
 
@@ -84,7 +95,7 @@
 
 #slide[
 
-  === Funtion documentation
+  === Function documentation
   You can add "doc-comments" to your code using triple slashes `///`:
 
   ```rust
@@ -405,7 +416,9 @@
 - `E` appears in the `Err` variant.
 
 
-#warning(title: [Rule of thumb])[Use `Result` instead of `Option` when the reason of failure needs different handling.]
+#warning(
+  title: [Rule of thumb],
+)[Use `Result` instead of `Option` when the reason of failure needs different handling.]
 
 
 
@@ -437,34 +450,102 @@
 
     // Stack section
     node((0, 0), [*Stack*], stroke: none, name: <stack-title>),
-    node((0, 1), [`main()` frame\ `x: i32 = 5`], fill: blue.lighten(80%), name: <frame1>),
-    node((0, 2), [`foo()` frame\ `y: bool = true`], fill: blue.lighten(80%), name: <frame2>),
-    node((0, 3), [`bar()` frame\ `s: Box<...>`], fill: blue.lighten(80%), name: <frame3>),
+    node(
+      (0, 1),
+      [`main()` frame\ `x: i32 = 5`],
+      fill: blue.lighten(80%),
+      name: <frame1>,
+    ),
+    node(
+      (0, 2),
+      [`foo()` frame\ `y: bool = true`],
+      fill: blue.lighten(80%),
+      name: <frame2>,
+    ),
+    node(
+      (0, 3),
+      [`bar()` frame\ `s: Box<...>`],
+      fill: blue.lighten(80%),
+      name: <frame3>,
+    ),
 
     // Stack pointer indicator
     node((0, 4), [Stack pointer ↓], stroke: none, name: <sp>),
 
     edge(<frame1>, <frame2>, "->", stroke: 2pt + blue),
     edge(<frame2>, <frame3>, "->", stroke: 2pt + blue),
-    edge(<frame3>, <sp>, "->", stroke: 2pt + blue, label: [Grows], label-side: right),
+    edge(
+      <frame3>,
+      <sp>,
+      "->",
+      stroke: 2pt + blue,
+      label: [Grows],
+      label-side: right,
+    ),
 
     node(enclose: (<frame1>, <frame2>, <frame3>, <sp>), stroke: blue),
 
     // Heap section
     node((3, 0), [*Heap*], stroke: none, name: <heap-title>),
-    node((3, 1.5), [Allocated\ block], fill: orange.lighten(70%), width: 15mm, name: <heap1>),
-    node((4, 2.8), [Free\ space], fill: gray.lighten(80%), width: 12mm, name: <free1>),
-    node((2.5, 3.2), [Allocated\ block], fill: orange.lighten(70%), width: 15mm, name: <heap2>),
-    node((3.8, 1), [Free\ space], fill: gray.lighten(80%), width: 10mm, name: <free2>),
+    node(
+      (3, 1.5),
+      [Allocated\ block],
+      fill: orange.lighten(70%),
+      width: 15mm,
+      name: <heap1>,
+    ),
+    node(
+      (4, 2.8),
+      [Free\ space],
+      fill: gray.lighten(80%),
+      width: 12mm,
+      name: <free1>,
+    ),
+    node(
+      (2.5, 3.2),
+      [Allocated\ block],
+      fill: orange.lighten(70%),
+      width: 15mm,
+      name: <heap2>,
+    ),
+    node(
+      (3.8, 1),
+      [Free\ space],
+      fill: gray.lighten(80%),
+      width: 10mm,
+      name: <free2>,
+    ),
 
     // Pointer from stack to heap
-    edge(<frame3>, <heap2>, "->", stroke: 2pt + red, label: [Points to], label-side: center, bend: 20deg),
+    edge(
+      <frame3>,
+      <heap2>,
+      "->",
+      stroke: 2pt + red,
+      label: [Points to],
+      label-side: center,
+      bend: 20deg,
+    ),
 
     // Annotations
-    node((-1, 4), [Fast: pointer bump\ Fixed max size], stroke: none, fill: none),
-    node((3, 4), [Slower: search & bookkeeping\ Dynamic size], stroke: none, fill: none),
+    node(
+      (-1, 4),
+      [Fast: pointer bump\ Fixed max size],
+      stroke: none,
+      fill: none,
+    ),
+    node(
+      (3, 4),
+      [Slower: search & bookkeeping\ Dynamic size],
+      stroke: none,
+      fill: none,
+    ),
 
-    node(enclose: (<heap1>, <free1>, <heap2>, <free2>), label: [Heap memory area], stroke: orange),
+    node(
+      enclose: (<heap1>, <free1>, <heap2>, <free2>),
+      label: [Heap memory area],
+      stroke: orange,
+    ),
   )
 ]
 

@@ -70,7 +70,12 @@ fn main() {
       }
       ```
     ]),
-    edge(<step1>, <step2>, "->", label: [Operator `==` precedence\ above cast with `as`]),
+    edge(
+      <step1>,
+      <step2>,
+      "->",
+      label: [Operator `==` precedence\ above cast with `as`],
+    ),
     pause,
     node((1, 1), width: 20em, name: <step3>, [
       ```rust

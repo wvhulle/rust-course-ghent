@@ -1,4 +1,6 @@
-#import "dependencies.typ": codly, codly-disable, codly-init, codly-reset, no-codly, qrcode
+#import "dependencies.typ": (
+  codly, codly-disable, codly-init, codly-reset, no-codly, qrcode,
+)
 #let url(it) = {
   let url = if ("rust", "rs").contains(it.lang) {
     (
@@ -38,7 +40,10 @@
     #{
       it
       place(bottom + right, dx: -0.5em, dy: -0.5em)[
-        #link(url)[#qrcode(url, options: (scale: 0.8, fg-color: green.darken(40%)))]
+        #link(url)[#qrcode(url, options: (
+          scale: 0.8,
+          fg-color: green.darken(40%),
+        ))]
       ]
     }
   ]

@@ -193,7 +193,12 @@
 
     edge((-2, 1.5), (2.5, 1.5), "-", stroke: gray),
     edge(<root>, <excl>, "->"),
-    node((-1, 1), [Exclusive reference \ `&mut 1`], stroke: orange, name: <excl>),
+    node(
+      (-1, 1),
+      [Exclusive reference \ `&mut 1`],
+      stroke: orange,
+      name: <excl>,
+    ),
 
     edge(<shared>, <excl>, "<-/-/->", stroke: red),
     pause,
@@ -313,7 +318,11 @@
     node((3, 3), [Element `30`], name: <elem2>),
     node((3, 4), [Element `40`], name: <elem3>),
     edge(<elem2>, <elem3>, ".."),
-    node(enclose: (<elem0>, <elem1>, <elem2>, <elem3>), stroke: blue, name: <array_elems>),
+    node(
+      enclose: (<elem0>, <elem1>, <elem2>, <elem3>),
+      stroke: blue,
+      name: <array_elems>,
+    ),
     pause,
     node((0, 1), stroke: red, [Slice], name: <slice>),
     edge(<slice_elem0>, <elem2>, "->"),
@@ -322,7 +331,11 @@
     node((0, 3), [Element `40`], name: <slice_elem1>),
     edge(<slice_elem0>, <slice_elem1>, ".."),
     node((0, 4), [Length info \ omitted], name: <slice_elems>),
-    node(enclose: (<slice_elem0>, <slice_elem1>), stroke: red, name: <slice_elems>),
+    node(
+      enclose: (<slice_elem0>, <slice_elem1>),
+      stroke: red,
+      name: <slice_elems>,
+    ),
     // An algorithm on the left goes through the slice in the middle to the array on the right
 
     pause,
@@ -401,19 +414,32 @@
     node((3, 4), [Character `l`], name: <char3>),
     node((3, 5), [Character `o`], name: <char4>),
     edge(<char2>, <char3>, ".."),
-    node(enclose: (<char0>, <char1>, <char2>, <char3>, <char4>), stroke: blue, name: <string_chars>),
+    node(
+      enclose: (<char0>, <char1>, <char2>, <char3>, <char4>),
+      stroke: blue,
+      name: <string_chars>,
+    ),
     pause,
     node((4, 3), [Heap], name: <heap>),
     node(enclose: (<string_chars>, <string>, <heap>), stroke: purple),
     pause,
-    node((0, 1), stroke: red, [String slice `&str` \ (immutable)], name: <slice>),
+    node(
+      (0, 1),
+      stroke: red,
+      [String slice `&str` \ (immutable)],
+      name: <slice>,
+    ),
     edge(<slice_elem0>, <char2>, "->"),
     node((0, 2), [Character `l`], name: <slice_elem0>),
     edge(<slice_elem1>, <char3>, "->"),
     node((0, 3), [Character `l`], name: <slice_elem1>),
     edge(<slice_elem0>, <slice_elem1>, ".."),
     node((0, 4), [Length info \ omitted], name: <slice_elems>),
-    node(enclose: (<slice_elem0>, <slice_elem1>), stroke: red, name: <slice_elems>),
+    node(
+      enclose: (<slice_elem0>, <slice_elem1>),
+      stroke: red,
+      name: <slice_elems>,
+    ),
   )
 ]
 

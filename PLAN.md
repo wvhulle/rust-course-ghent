@@ -6,17 +6,17 @@
 
 **Covered in class:**
 
-- Welcome: *5 min*
-- Hello, world: *15 min*
-- Types and values: *40 min*
-- Control flow basics: *45 min*
-- Tuples and arrays: *35 min*
-- References: *55 min* (partially)
+- Welcome: _5 min_
+- Hello, world: _15 min_
+- Types and values: _40 min_
+- Control flow basics: _45 min_
+- Tuples and arrays: _35 min_
+- References: _55 min_ (partially)
 
 **Not covered in session 1:**
 
-- User-defined types: *60 min*
-- Pattern matching: *50 min*
+- User-defined types: _60 min_
+- Pattern matching: _50 min_
 
 **Homework:**
 
@@ -35,18 +35,18 @@
 
 **Covered in class:**
 
-- Methods and traits: *45 min*
+- Methods and traits: _45 min_
   - [Traits](https://doc.rust-lang.org/book/ch10-02-traits.html)
-- Generics: *50 min*
+- Generics: _50 min_
   - [Generic Types, Traits, and Lifetimes](https://doc.rust-lang.org/book/ch10-01-syntax.html)
   - [Advanced Traits](https://doc.rust-lang.org/book/ch20-02-advanced-traits.html)
-- Closures: *30 min* (see homework)
-- Standard library types: *15 min* (partially)
+- Closures: _30 min_ (see homework)
+- Standard library types: _15 min_ (partially)
 
-**Not covered in session 2** *(see homework)*:
+**Not covered in session 2** _(see homework)_:
 
-- Standard library types: *15 min* (partially)
-- Standard library traits: *60 min*
+- Standard library types: _15 min_ (partially)
+- Standard library traits: _60 min_
 
 **Homework:**
 
@@ -71,12 +71,12 @@
 
 **Planned for in-session:**
 
-- Mid-series exercise session (see subfolder `examples`): *60 min.*
+- Mid-series exercise session (see subfolder `examples`): _60 min._
   - Replace `todo!` macro calls by real code
   - Use `cargo run --example` to test your solutions
 - Standard library traits: 15 min. (depending on students)
   - <https://doc.rust-lang.org/book/appendix-03-derivable-traits.html>
-- Memory Management: *30 min*
+- Memory Management: _30 min_
   - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
 
 **Homework:**
@@ -84,8 +84,8 @@
 - Review the chapter about ownership:
   - [Understanding Ownership](https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html)
   - [Smart Pointers](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html)
-- Borrowing: *45 min*
-- Prepare lifetimes for next session: *65 min*
+- Borrowing: _45 min_
+- Prepare lifetimes for next session: _65 min_
 
 ---
 
@@ -96,8 +96,8 @@
 **Planned for in-session:**
 
 - Smart-pointers recap: 15 min. exercises
-- Lifetimes: *60 min* theory and exercises
-- Iterators: *45 min* theory
+- Lifetimes: _60 min_ theory and exercises
+- Iterators: _45 min_ theory
 
 **Homework:**
 
@@ -111,11 +111,11 @@
   - <https://doc.rust-lang.org/book/ch13-00-functional-features.html>
   - Exercise Rustlings, ch. 18 iterators
   - Extra exercise: make your own iterator and adapter
-- Modules: *45 min*
+- Modules: _45 min_
   - Read <https://doc.rust-lang.org/book/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html>
   - Read <https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html>
   - Exercise: Rustlings, ch. 10 modules
-- Testing: *45 min*
+- Testing: _45 min_
   - Read <https://doc.rust-lang.org/book/ch11-00-testing.html>
   - Exercise: Rustlings, ch. 17 tests
 
@@ -127,18 +127,18 @@
 
 **Planned for in-session:**
 
-- Review testing and modules: *30 min*
+- Review testing and modules: _30 min_
   - session5/tests/luhn.rs
-- Error handling: *55 min*
+- Error handling: _55 min_
   - Rustlings, chapter 13: Error handling
   - session5/tests/result.rs
-- Unsafe rust: *20 min*
+- Unsafe rust: _20 min_
 
 **Homework:**
 
 - Review error handling:
   - Read <https://doc.rust-lang.org/book/ch09-00-error-handling.html>
-- Unsafe Rust: *30 min*
+- Unsafe Rust: _30 min_
   - Read <https://google.github.io/comprehensive-rust/bare-metal/>
 
 ---
@@ -149,15 +149,15 @@
 
 **Planned for in-session:**
 
-- Threads: *30 min*
-- Channels: *20 min*
-- Send and Sync: *15 min*
-- Shared state: *30 min*
+- Threads: _30 min_
+- Channels: _20 min_
+- Send and Sync: _15 min_
+- Shared state: _30 min_
 
 **Homework:**
 
 - Project work (find a partner)
-- Exercises concurrency: *70 min*
+- Exercises concurrency: _70 min_
 
 ---
 
@@ -165,14 +165,14 @@
 
 **Planned for in-session:**
 
-- Async basics: *40 min*
-- Channels and control flow: *20 min*
-- Project presentation: *60 min*
+- Async basics: _40 min_
+- Channels and control flow: _20 min_
+- Project presentation: _60 min_
 
 **Homework:**
 
-- Blocking the Executor: *10 min*
+- Blocking the Executor: _10 min_
 - Pin: 20 min
 - Async traits: 5 min
 - Cancellation: 20 min
-- Exercises: *70 min*
+- Exercises: _70 min_

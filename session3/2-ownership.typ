@@ -35,34 +35,97 @@ fn main() {
 
   // Stack section
   node((0, 0), [*Stack*], stroke: none, name: <stack-title>),
-  node((0, 1), [`main()` frame\ `x: i32 = 5`], fill: blue.lighten(80%), name: <frame1>),
-  node((0, 2), [`foo()` frame\ `y: bool = true`], fill: blue.lighten(80%), name: <frame2>),
-  node((0, 3), [`bar()` frame\ `s: Box<...>`], fill: blue.lighten(80%), name: <frame3>),
+  node(
+    (0, 1),
+    [`main()` frame\ `x: i32 = 5`],
+    fill: blue.lighten(80%),
+    name: <frame1>,
+  ),
+  node(
+    (0, 2),
+    [`foo()` frame\ `y: bool = true`],
+    fill: blue.lighten(80%),
+    name: <frame2>,
+  ),
+  node(
+    (0, 3),
+    [`bar()` frame\ `s: Box<...>`],
+    fill: blue.lighten(80%),
+    name: <frame3>,
+  ),
 
   // Stack pointer indicator
   node((0, 4), [Stack pointer ↓], stroke: none, name: <sp>),
 
   edge(<frame1>, <frame2>, "->", stroke: 2pt + blue),
   edge(<frame2>, <frame3>, "->", stroke: 2pt + blue),
-  edge(<frame3>, <sp>, "->", stroke: 2pt + blue, label: [Grows], label-side: right),
+  edge(
+    <frame3>,
+    <sp>,
+    "->",
+    stroke: 2pt + blue,
+    label: [Grows],
+    label-side: right,
+  ),
 
   node(enclose: (<frame1>, <frame2>, <frame3>, <sp>), stroke: blue),
 
   // Heap section
   node((3, 0), [*Heap*], stroke: none, name: <heap-title>),
-  node((3, 1.5), [Allocated\ block], fill: orange.lighten(70%), width: 15mm, name: <heap1>),
-  node((4, 2.8), [Free\ space], fill: gray.lighten(80%), width: 12mm, name: <free1>),
-  node((2.5, 3.2), [Allocated\ block], fill: orange.lighten(70%), width: 15mm, name: <heap2>),
-  node((3.8, 1), [Free\ space], fill: gray.lighten(80%), width: 10mm, name: <free2>),
+  node(
+    (3, 1.5),
+    [Allocated\ block],
+    fill: orange.lighten(70%),
+    width: 15mm,
+    name: <heap1>,
+  ),
+  node(
+    (4, 2.8),
+    [Free\ space],
+    fill: gray.lighten(80%),
+    width: 12mm,
+    name: <free1>,
+  ),
+  node(
+    (2.5, 3.2),
+    [Allocated\ block],
+    fill: orange.lighten(70%),
+    width: 15mm,
+    name: <heap2>,
+  ),
+  node(
+    (3.8, 1),
+    [Free\ space],
+    fill: gray.lighten(80%),
+    width: 10mm,
+    name: <free2>,
+  ),
 
   // Pointer from stack to heap
-  edge(<frame3>, <heap2>, "->", stroke: 2pt + red, label: [Points to], label-side: center, bend: 20deg),
+  edge(
+    <frame3>,
+    <heap2>,
+    "->",
+    stroke: 2pt + red,
+    label: [Points to],
+    label-side: center,
+    bend: 20deg,
+  ),
 
   // Annotations
   node((-1, 4), [Fast: pointer bump\ Fixed max size], stroke: none, fill: none),
-  node((3, 4), [Slower: search & bookkeeping\ Dynamic size], stroke: none, fill: none),
+  node(
+    (3, 4),
+    [Slower: search & bookkeeping\ Dynamic size],
+    stroke: none,
+    fill: none,
+  ),
 
-  node(enclose: (<heap1>, <free1>, <heap2>, <free2>), label: [Heap memory area], stroke: orange),
+  node(
+    enclose: (<heap1>, <free1>, <heap2>, <free2>),
+    label: [Heap memory area],
+    stroke: orange,
+  ),
 )
 
 #pagebreak()

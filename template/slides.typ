@@ -1,5 +1,8 @@
-#import "dependencies.typ": codly, components, config-common, config-page, touying-slide, touying-slide-wrapper, utils
-#import "custom-outline.typ": custom-outline
+#import "dependencies.typ": (
+  codly, components, config-common, config-page, touying-slide,
+  touying-slide-wrapper, utils,
+)
+
 #import "math-helpers.typ": _type
 
 // Import all theme components
@@ -40,13 +43,25 @@
       rows: (auto, auto),
       row-gutter: 3mm,
       if self.store.progress-bar {
-        components.progress-bar(height: 2pt, self.colors.primary, self.colors.tertiary)
+        components.progress-bar(
+          height: 2pt,
+          self.colors.primary,
+          self.colors.tertiary,
+        )
       },
       block(
         inset: (x: .5em),
         components.left-and-right(
-          text(fill: self.colors.primary, weight: "bold", size: 1.2em, utils.call-or-display(self, self.store.header)),
-          text(fill: self.colors.primary.lighten(65%), utils.call-or-display(self, self.store.header-right)),
+          text(
+            fill: self.colors.primary,
+            weight: "bold",
+            size: 1.2em,
+            utils.call-or-display(self, self.store.header),
+          ),
+          text(fill: self.colors.primary.lighten(65%), utils.call-or-display(
+            self,
+            self.store.header-right,
+          )),
         ),
       ),
     )
@@ -64,9 +79,18 @@
       grid(
         columns: self.store.footer-columns,
         rows: 1.5em,
-        cell(fill: self.colors.primary, utils.call-or-display(self, self.store.footer-a)),
-        cell(fill: self.colors.secondary, utils.call-or-display(self, self.store.footer-b)),
-        cell(fill: self.colors.tertiary, utils.call-or-display(self, self.store.footer-c)),
+        cell(fill: self.colors.primary, utils.call-or-display(
+          self,
+          self.store.footer-a,
+        )),
+        cell(fill: self.colors.secondary, utils.call-or-display(
+          self,
+          self.store.footer-b,
+        )),
+        cell(fill: self.colors.tertiary, utils.call-or-display(
+          self,
+          self.store.footer-c,
+        )),
       )
     }
   }
@@ -77,7 +101,14 @@
       footer: footer,
     ),
   )
-  touying-slide(self: self, config: config, repeat: repeat, setting: setting, composer: composer, ..bodies)
+  touying-slide(
+    self: self,
+    config: config,
+    repeat: repeat,
+    setting: setting,
+    composer: composer,
+    ..bodies,
+  )
 })
 
 
@@ -134,7 +165,10 @@
           columns: (1fr,) * calc.min(info.authors.len(), 3),
           column-gutter: 1em,
           row-gutter: 1em,
-          ..info.authors.map(author => text(fill: self.colors.neutral-darkest, author))
+          ..info.authors.map(author => text(
+            fill: self.colors.neutral-darkest,
+            author,
+          ))
         )
         if info.institution != none {
           parbreak()
@@ -163,42 +197,6 @@
 })
 
 
-/// New section slide for the presentation. You can update it by updating the `new-section-slide-fn` argument for `config-common` function.
-///
-/// Example: `config-common(new-section-slide-fn: new-section-slide.with(numbered: false))`
-///
-/// - `level` is the level of the heading.
-///
-/// - `numbered` is whether the heading is numbered.
-///
-/// - `body` is the body of the section. It will be pass by touying automatically.
-#let new-section-slide(level: 1, numbered: true, body) = touying-slide-wrapper(self => {
-  let slide-body = {
-    set align(horizon)
-    show: pad.with(left: 15%, right: 15%)
-
-    custom-outline(
-      title: none,
-      filter: hd => hd.relation != none and not hd.relation.unrelated,
-      depth: 2,
-      transform: (hd, it) => {
-        set text(size: 1.25em, fill: self.colors.primary, weight: "bold") if hd.relation != none and hd.relation.same
-        set text(fill: self.colors.primary) if hd.relation != none and hd.relation.child
-        set text(fill: text.fill.transparentize(60%)) if hd.relation != none and hd.relation.sibling
-
-        it
-      },
-    )
-
-    body
-  }
-  self = utils.merge-dicts(
-    self,
-    config-page(fill: self.colors.neutral-lightest),
-  )
-  touying-slide(self: self, slide-body)
-})
-
 
 /// Focus on some content.
 ///
@@ -207,8 +205,14 @@
 /// - `background-color` is the background color of the slide. Default is the primary color.
 ///
 /// - `background-img` is the background image of the slide. Default is none.
-#let focus-slide(background-color: none, background-img: none, body) = touying-slide-wrapper(self => {
-  let background-color = if background-img == none and background-color == none {
+#let focus-slide(
+  background-color: none,
+  background-img: none,
+  body,
+) = touying-slide-wrapper(self => {
+  let background-color = if (
+    background-img == none and background-color == none
+  ) {
     rgb(self.colors.primary)
   } else {
     background-color
@@ -244,11 +248,17 @@
 /// - Check that there are enough rows and columns to fit in all the content blocks.
 ///
 /// That means that `#matrix-slide[...][...]` stacks horizontally and `#matrix-slide(columns: 1)[...][...]` stacks vertically.
-#let matrix-slide(columns: none, rows: none, ..bodies) = touying-slide-wrapper(self => {
-  self = utils.merge-dicts(
-    self,
-    config-common(freeze-slide-counter: true),
-    config-page(margin: 0em),
-  )
-  touying-slide(self: self, composer: components.checkerboard.with(columns: columns, rows: rows), ..bodies)
-})
+#let matrix-slide(columns: none, rows: none, ..bodies) = touying-slide-wrapper(
+  self => {
+    self = utils.merge-dicts(
+      self,
+      config-common(freeze-slide-counter: true),
+      config-page(margin: 0em),
+    )
+    touying-slide(
+      self: self,
+      composer: components.checkerboard.with(columns: columns, rows: rows),
+      ..bodies,
+    )
+  },
+)

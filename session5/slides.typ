@@ -166,7 +166,7 @@ fn main() {
 #slide[
 
 
-  #qa[Why does debug mode have more panices?][Debug mode prioritizes catching bugs early with runtime checks.  ]
+  #qa[Why does debug mode have more panics?][Debug mode prioritizes catching bugs early with runtime checks.  ]
 
   #qa[Why does release mode have fewer panics?][Release mode removes some runtime checks to optimize speed.]
 
@@ -291,7 +291,7 @@ Rustlings, chapter 13 (`error_handling`): ex. 1, 2, 4, 6
 
 == To `unwrap` or not to `unwrap`
 
-The `Result` type has a conventience method:
+The `Result` type has a convenience method:
 
 ```rs
 let file = File::open("diary.txt").unwrap();
