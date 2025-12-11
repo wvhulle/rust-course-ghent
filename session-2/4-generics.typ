@@ -305,14 +305,6 @@ fn main() {
 // #let tree = rule(
 //   label: [Label],
 //   name: [Rule name],
-//   [Our type implements ],
-//   [Premise 1],
-//   [Premise 2],
-//   [Premise 3],
-// )
-
-// $ prooftree(tree) $
-
 #slide[
   === Putting constraints on super-traits (advanced)
   #set text(size: 0.8em)

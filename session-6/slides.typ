@@ -161,9 +161,22 @@ fn main() {
   edge(<data>, <drop>, "->"),
 
   pause,
-  node((2, 2), name: <access>, [accesses `data`], shape: shapes.rect, stroke: red),
+  node(
+    (2, 2),
+    name: <access>,
+    [accesses `data`],
+    shape: shapes.rect,
+    stroke: red,
+  ),
   edge(<spawned>, <access>, "->"),
-  edge(<access>, <drop>, "<-->", stroke: red, label: [race!], label-side: right),
+  edge(
+    <access>,
+    <drop>,
+    "<-->",
+    stroke: red,
+    label: [race!],
+    label-side: right,
+  ),
 )
 
 
@@ -281,7 +294,13 @@ fn main() {
   node-stroke: 0.5pt,
 
   node((0, 0), name: <before>, [main before scope], shape: shapes.rect),
-  node((1, 0), name: <scope>, [`thread::scope`], shape: shapes.rect, stroke: blue),
+  node(
+    (1, 0),
+    name: <scope>,
+    [`thread::scope`],
+    shape: shapes.rect,
+    stroke: blue,
+  ),
   node((3, 0), name: <end>, [scope ends], shape: shapes.rect, stroke: blue),
   node((4, 0), name: <after>, [main continues], shape: shapes.rect),
 
@@ -297,7 +316,14 @@ fn main() {
   edge(<t2>, <end>, "->"),
 
   pause,
-  node((2, 0), name: <barrier>, [barrier], shape: shapes.rect, stroke: blue, fill: blue.lighten(80%)),
+  node(
+    (2, 0),
+    name: <barrier>,
+    [barrier],
+    shape: shapes.rect,
+    stroke: blue,
+    fill: blue.lighten(80%),
+  ),
   edge(<t1>, <barrier>, "->"),
   edge(<t2>, <barrier>, "->"),
   edge(<barrier>, <end>, "->", label: [all joined]),
@@ -471,8 +497,20 @@ This channel provides an additional method `try_send()` that returns immediately
   node-stroke: 0.5pt,
 
   node((0, 0), name: <mystruct>, [`MyStruct`], shape: shapes.rect),
-  node((1, -0.5), name: <field1>, [`field1: String`], shape: shapes.rect, stroke: green),
-  node((1, 0.5), name: <field2>, [`field2: i32`], shape: shapes.rect, stroke: green),
+  node(
+    (1, -0.5),
+    name: <field1>,
+    [`field1: String`],
+    shape: shapes.rect,
+    stroke: green,
+  ),
+  node(
+    (1, 0.5),
+    name: <field2>,
+    [`field2: i32`],
+    shape: shapes.rect,
+    stroke: green,
+  ),
 
   edge(<mystruct>, <field1>, "->", label: [contains]),
   edge(<mystruct>, <field2>, "->", label: [contains]),
@@ -610,12 +648,22 @@ fn thread2() {
 
   node((-0.7, 0), [Thread 1:], stroke: none),
   node((0, 0), name: <store1>, [`DATA.store(42, Release)`], shape: shapes.rect),
-  node((1, 0), name: <store2>, [`READY.store(true, Release)`], shape: shapes.rect),
+  node(
+    (1, 0),
+    name: <store2>,
+    [`READY.store(true, Release)`],
+    shape: shapes.rect,
+  ),
   edge(<store1>, <store2>, "->"),
 
   node((-0.7, 1), [Thread 2:], stroke: none),
   node((0, 1), name: <spin>, [spinning...], shape: shapes.rect, stroke: gray),
-  node((1, 1), name: <load1>, [`READY.load(Acquire)` → true], shape: shapes.rect),
+  node(
+    (1, 1),
+    name: <load1>,
+    [`READY.load(Acquire)` → true],
+    shape: shapes.rect,
+  ),
   node((2, 1), name: <load2>, [`DATA.load(Acquire)` → 42], shape: shapes.rect),
   edge(<spin>, <load1>, "->", stroke: gray),
   edge(<load1>, <load2>, "->"),
@@ -696,7 +744,9 @@ These types are not thread-safe and cannot be moved to other threads:
   columns: (auto, 1fr, 1fr),
   rows: (auto, auto, auto),
   inset: 12pt,
-  align: (x, y) => if x == 0 or y == 0 { center + horizon } else { left + horizon },
+  align: (x, y) => if x == 0 or y == 0 { center + horizon } else {
+    left + horizon
+  },
   stroke: 0.5pt,
   table.header([], [*Sync*], [*!Sync*]),
   [*Send*],
@@ -709,7 +759,10 @@ These types are not thread-safe and cannot be moved to other threads:
   [
     `Cell<T>`, `RefCell<T>`
 
-    #text(size: 0.85em, style: "italic")[Interior mutability: safe to move, not share]
+    #text(
+      size: 0.85em,
+      style: "italic",
+    )[Interior mutability: safe to move, not share]
   ],
 
   [*!Send*],
@@ -746,7 +799,13 @@ fn increment() {
   spacing: (7em, 1.5em),
   node-stroke: 0.5pt,
 
-  node((0.5, 1), name: <static>, [`static mut COUNTER`], shape: shapes.rect, stroke: red),
+  node(
+    (0.5, 1),
+    name: <static>,
+    [`static mut COUNTER`],
+    shape: shapes.rect,
+    stroke: red,
+  ),
   pause,
   node((0, 0), name: <stack1>, [Stack (Thread 1)], shape: shapes.rect),
   edge(<stack1>, <static>, "->", stroke: red, label: [unsafe]),
@@ -759,7 +818,12 @@ fn increment() {
   edge(<stack2>, <static>, "->", stroke: red, label: [unsafe]),
   pause,
   pause,
-  node((2, 1), name: <note>, [Shared memory,\ no synchronization!], stroke: red),
+  node(
+    (2, 1),
+    name: <note>,
+    [Shared memory,\ no synchronization!],
+    stroke: red,
+  ),
 )
 
 Disadvantages:
@@ -788,7 +852,14 @@ _(Notice that in this simple case we could just use an `AtomicU32` instead. This
   node-stroke: 0.5pt,
 
   node((1, 0), name: <data>, [`T` (heap)], shape: shapes.rect, stroke: blue),
-  node((1, -0.5), name: <count>, [count: 3], shape: shapes.rect, stroke: blue, fill: blue.lighten(90%)),
+  node(
+    (1, -0.5),
+    name: <count>,
+    [count: 3],
+    shape: shapes.rect,
+    stroke: blue,
+    fill: blue.lighten(90%),
+  ),
 
   node((0, 1), name: <t1>, [Thread 1], shape: shapes.pill),
   node((1, 1), name: <t2>, [Thread 2], shape: shapes.pill),
@@ -850,7 +921,14 @@ Prevents race conditions on complex shared data using synchronisation.
   node-stroke: 0.5pt,
 
   node((1, 0), name: <data>, [`T`], shape: shapes.rect, stroke: blue),
-  node((1, -0.5), name: <lock>, [lock], shape: shapes.rect, stroke: blue, fill: blue.lighten(90%)),
+  node(
+    (1, -0.5),
+    name: <lock>,
+    [lock],
+    shape: shapes.rect,
+    stroke: blue,
+    fill: blue.lighten(90%),
+  ),
 
   node((0, 1), name: <t1>, [Thread 1], shape: shapes.pill, stroke: green),
   node((1, 1), name: <t2>, [Thread 2], shape: shapes.pill, stroke: gray),
@@ -966,7 +1044,12 @@ Types with interior mutability:
     line((4, -0.5), (4, -8), stroke: gray)
 
     // Time arrow
-    line((7, -0.5), (7, -8), stroke: (dash: "dashed", paint: gray), mark: (end: ">"))
+    line(
+      (7, -0.5),
+      (7, -8),
+      stroke: (dash: "dashed", paint: gray),
+      mark: (end: ">"),
+    )
 
     (pause,)
     // Thread 1 actions
@@ -1002,7 +1085,11 @@ Types with interior mutability:
 
 
     content((-1.5, -7), text(size: 0.8em)[blocked!], anchor: "east")
-    line((0, -5.8), (0, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
+    line((0, -5.8), (0, -8), stroke: (
+      paint: red,
+      dash: "dashed",
+      thickness: 2pt,
+    ))
 
     (pause,)
 
@@ -1010,7 +1097,11 @@ Types with interior mutability:
 
     (pause,)
     rect((3.7, -6.2), (4.3, -6.8), fill: red.lighten(70%), stroke: red)
-    line((4, -6.8), (4, -8), stroke: (paint: red, dash: "dashed", thickness: 2pt))
+    line((4, -6.8), (4, -8), stroke: (
+      paint: red,
+      dash: "dashed",
+      thickness: 2pt,
+    ))
 
     (pause,)
 
@@ -1024,12 +1115,379 @@ Types with interior mutability:
 
   #pause
 
-  Exercise:
-
-  - examples/philosophers.rs
-
-  Solutions are provided as `*-solution.rs` files.
 ]
+
+== Origins of deadlocks
+
+A deadlock occurs when four conditions are met simultaneously (Coffman conditions):
+
+#table(
+  columns: (auto, 1.5fr),
+  inset: 8pt,
+  align: (center + horizon, left + horizon),
+  stroke: 0.5pt,
+  [*Condition*], [*Description*],
+  [Mutual exclusion], [Resources cannot be shared (only one thread at a time)],
+  [Hold and wait], [Threads hold resources while waiting for others],
+  [No preemption], [Resources cannot be forcibly taken from threads],
+  [Circular wait], [Threads form a cycle waiting for each other's resources],
+)
+
+#pause
+
+To prevent deadlock, break at least one condition:
+
+- *Lock ordering*: Always acquire locks in the same order (breaks circular wait)
+- *Timeout*: Release locks if waiting too long (breaks hold and wait)
+- *Try-lock*: Use `try_lock()` instead of `lock()` (breaks hold and wait)
+
+#pagebreak()
+
+== Dining Philosophers deadlock
+
+Simplified: 3 philosophers sitting around a table, 3 chopsticks between them.
+
+Rules:
+- Each philosopher needs 2 chopsticks (left and right) to eat
+- Eating takes time (must hold both chopsticks during eating)
+- All philosophers want to eat repeatedly
+
+#grid(columns: (1fr, 1fr), column-gutter: 1em)[
+
+  #set text(size: 0.7em)
+  #fletcher-diagram(
+    spacing: (3em, 3em),
+    node-stroke: 0.5pt,
+
+    // Slide 1: Initial philosophers and chopsticks (P0, C0)
+    node((0, 2.5), name: <p0>, [Philosopher 0], shape: shapes.circle),
+    node(
+      (2.2, 1.2),
+      name: <c0>,
+      [Chopstick 0],
+      shape: shapes.rect,
+      stroke: gray,
+    ),
+
+    pause,
+
+    // Slide 2: Add remaining philosophers and chopsticks
+    node((2.2, -1.2), name: <p1>, [Philosopher 1], shape: shapes.circle),
+    node(
+      (0, -2.5),
+      name: <c1>,
+      [Chopstick 1],
+      shape: shapes.rect,
+      stroke: gray,
+    ),
+    node((-2.2, -1.2), name: <p2>, [Philosopher 2], shape: shapes.circle),
+    node(
+      (-2.2, 1.2),
+      name: <c2>,
+      [Chopstick 2],
+      shape: shapes.rect,
+      stroke: gray,
+    ),
+
+    // Slide 2-3: Initial gray chopsticks (hide after P0 starts eating)
+    ..until(
+      3,
+      node(
+        (2.2, 1.2),
+        name: <c0-gray>,
+        [Chopstick 0],
+        shape: shapes.rect,
+        stroke: gray,
+      ),
+      node(
+        (-2.2, 1.2),
+        name: <c2-gray>,
+        [Chopstick 2],
+        shape: shapes.rect,
+        stroke: gray,
+      ),
+    ),
+
+    pause,
+
+    // Slide 3: P0 eating (blue state)
+    ..at(
+      3,
+      node(
+        (0, 2.5),
+        name: <p0eat>,
+        [P0 eating],
+        shape: shapes.circle,
+        stroke: blue,
+        fill: blue.lighten(85%),
+      ),
+      edge(
+        <p0eat>,
+        <c0>,
+        "->",
+        label: [holds exclusively\ (mutual exclusion)],
+        stroke: blue,
+        bend: 45deg,
+        label-pos: 0.6,
+        label-side: right,
+      ),
+      edge(
+        <p0eat>,
+        <c2>,
+        "->",
+        label: [holds exclusively\ (mutual exclusion)],
+        stroke: blue,
+        bend: -25deg,
+        label-pos: 0.7,
+      ),
+      node(
+        (2.2, 1.2),
+        name: <c0eat>,
+        [Chopstick 0],
+        shape: shapes.rect,
+        stroke: blue,
+        fill: blue.lighten(80%),
+      ),
+      node(
+        (-2.2, 1.2),
+        name: <c2eat>,
+        [Chopstick 2],
+        shape: shapes.rect,
+        stroke: blue,
+        fill: blue.lighten(80%),
+      ),
+    ),
+
+    pause,
+
+    // Slide 4: Back to gray chopsticks after eating
+    ..at(
+      4,
+      node(
+        (2.2, 1.2),
+        name: <c0-gray2>,
+        [Chopstick 0],
+        shape: shapes.rect,
+        stroke: gray,
+      ),
+      node(
+        (-2.2, 1.2),
+        name: <c2-gray2>,
+        [Chopstick 2],
+        shape: shapes.rect,
+        stroke: gray,
+      ),
+    ),
+
+    pause,
+
+    // Slide 5: All philosophers try to grab left (black edges, only this slide)
+    ..at(
+      5,
+      edge(
+        <p0>,
+        <c0>,
+        "->",
+        label: [grabs left],
+        stroke: (paint: black, thickness: 1.5pt),
+        bend: -20deg,
+        label-pos: 0.6,
+        label-side: right,
+      ),
+      edge(
+        <p1>,
+        <c1>,
+        "->",
+        label: [grabs left],
+        stroke: (paint: black, thickness: 1.5pt),
+        bend: -20deg,
+        label-pos: 0.4,
+        label-side: right,
+      ),
+      edge(
+        <p2>,
+        <c2>,
+        "->",
+        label: [grabs left],
+        stroke: (paint: black, thickness: 1.5pt),
+        bend: -20deg,
+        label-pos: 0.6,
+      ),
+    ),
+
+    pause,
+
+    // Slide 6+: Successfully holding left chopsticks (green)
+    ..between(
+      6,
+      10,
+      edge(
+        <p0>,
+        <c0>,
+        "->",
+        stroke: (paint: green, thickness: 2pt),
+        bend: -20deg,
+      ),
+      edge(
+        <p1>,
+        <c1>,
+        "->",
+        stroke: (paint: green, thickness: 2pt),
+        bend: -20deg,
+      ),
+      edge(
+        <p2>,
+        <c2>,
+        "->",
+        stroke: (paint: green, thickness: 2pt),
+        bend: -20deg,
+      ),
+      node(
+        (2.2, 1.2),
+        name: <c0-held>,
+        [Chopstick 0],
+        shape: shapes.rect,
+        stroke: green,
+        fill: green.lighten(80%),
+      ),
+      node(
+        (0, -2.5),
+        name: <c1-held>,
+        [Chopstick 1],
+        shape: shapes.rect,
+        stroke: green,
+        fill: green.lighten(80%),
+      ),
+      node(
+        (-2.2, 1.2),
+        name: <c2-held>,
+        [Chopstick 2],
+        shape: shapes.rect,
+        stroke: green,
+        fill: green.lighten(80%),
+      ),
+    ),
+
+    pause,
+
+    // Slide 7+: P0 wants right chopstick
+    ..between(7, 10, edge(
+      <p0>,
+      <c2>,
+      "-->",
+      label: [wants right],
+      stroke: red,
+      bend: 35deg,
+      label-pos: 0.3,
+    )),
+
+    pause,
+
+    // Slide 8+: P1 wants right chopstick
+    ..between(8, 10, edge(
+      <p1>,
+      <c0>,
+      "-->",
+      label: [wants right],
+      stroke: red,
+      bend: 35deg,
+      label-pos: 0.3,
+    )),
+
+    pause,
+
+    // Slide 9+: P2 wants right chopstick
+    ..between(9, 10, edge(
+      <p2>,
+      <c1>,
+      "-->",
+      label: [wants right],
+      stroke: red,
+      bend: 35deg,
+      label-pos: 0.3,
+    )),
+
+    pause,
+
+    // Slide 10: Show circular dependency (blocking reasons)
+    edge(
+      <c2>,
+      <p2>,
+      "<-",
+      label: [C2 held by P2!],
+      stroke: (paint: red, dash: "dotted", thickness: 2pt),
+      bend: -35deg,
+      label-pos: 0.5,
+    ),
+    edge(
+      <c0>,
+      <p0>,
+      "<-",
+      label: [C0 held by P0!],
+      stroke: (paint: red, dash: "dotted", thickness: 1pt),
+      bend: -35deg,
+      label-pos: 0.5,
+    ),
+    edge(
+      <c1>,
+      <p1>,
+      "<-",
+      label: [C1 held by P1!],
+      stroke: (paint: red, dash: "dotted", thickness: 2pt),
+      bend: -35deg,
+      label-pos: 0.5,
+    ),
+  )][
+  #set text(size: 0.75em)
+
+  *Legend:*
+
+  #table(
+    columns: 2,
+    stroke: none,
+    inset: 6pt,
+    align: (left, left),
+    [#line(length: 2em, stroke: (paint: black, thickness: 1.5pt))], [Trying to grab],
+
+    [#line(length: 2em, stroke: (paint: green, thickness: 2pt))], [Holding successfully],
+
+    [#line(length: 2em, stroke: (
+      paint: red,
+      dash: "dashed",
+      thickness: 1.5pt,
+    ))],
+    [Wants but blocked],
+
+    [#line(length: 2em, stroke: (paint: red, dash: "dotted", thickness: 2pt))], [Blocking reason],
+  )
+
+  #pause
+
+  Deadlock! All four Coffman conditions met:
+  - Mutual exclusion: each chopstick held by exactly one philosopher
+  - Hold and wait: each philosopher holds left chopstick, waits for right
+  - No preemption: philosophers cannot take chopsticks from each other
+  - Circular wait: P0 needs C2 (held by P2) → P2 needs C1 (held by P1) → P1 needs C0 (held by P0)
+
+  #pause
+
+  #qa[Which Coffman condition should we break to solve this?][Circular wait is easiest: change the lock acquisition order for some philosophers.]
+
+  #qa[How can we break the symmetry?][Make at least one philosopher acquire chopsticks in a different order than the others.]
+]
+#pagebreak()
+
+Exercise:
+
+- examples/philosophers.rs
+
+Hints:
+- All philosophers currently pick up left chopstick first, then right
+- Breaking the circular pattern requires asymmetry
+- You only need to change the behavior for one or more philosophers
+
+Solutions are provided as `*-solution.rs` files.
+
 == Best practices for Mutexes
 
 Structure code to minimize shared mutable state in mutexes.

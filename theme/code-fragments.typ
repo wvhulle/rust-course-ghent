@@ -1,8 +1,10 @@
-#import "@preview/codly:1.3.0": codly, codly-disable, codly-init, codly-reset, no-codly
-#import "@preview/tiaoma:0.3.0": *
+#import "dependencies.typ": codly, codly-disable, codly-init, codly-reset, no-codly, qrcode
 #let url(it) = {
   let url = if ("rust", "rs").contains(it.lang) {
-    "https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&code=" + it.text.replace("&", "%26").replace(" ", "%20").replace("\n", "%0A")
+    (
+      "https://play.rust-lang.org/?version=stable&mode=debug&edition=2024&code="
+        + it.text.replace("&", "%26").replace(" ", "%20").replace("\n", "%0A")
+    )
   } else {
     "google.com"
   }

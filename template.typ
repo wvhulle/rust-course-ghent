@@ -1,20 +1,16 @@
 // Based on a template by https://github.com/zeroeightysix/tt-lectures
 
-#import "@preview/touying:0.6.1": (
-  config-colors, config-common, config-info, config-methods, config-page, config-store, meanwhile, only, pause,
-  touying-slides, uncover, utils,
+// Import all dependencies from centralized file
+#import "theme/dependencies.typ": (
+  codly-init, config-colors, config-common, config-info, config-methods, config-page, config-store, meanwhile, only,
+  pause, show-theorion, theorem-counter, touying-slides, uncover, utils,
 )
-#import "@preview/codly:1.3.0": codly-init
-#import "@preview/theorion:0.3.2": *
 // Import all theme components
 #import "theme/colors.typ": primary-color, secondary-color, tertiary-color, text-color
 #import "theme/slides.typ": new-section-slide, slide
 #import "theme/components.typ": qa
 #import "theme/code-fragments.typ": embed-qr-code, embed-url-code, init-code-fragments
-#import "@preview/tiaoma:0.3.0": *
-#import "@preview/codly:1.3.0": *
 #import "theme/math-helpers.typ": *
-#import "@preview/curryst:0.5.1": *
 #let rust-course(
   aspect-ratio: "16-9",
   progress-bar: true,
@@ -23,7 +19,9 @@
   footer-columns: (25%, 1fr, 25%),
   footer-a: self => self.info.author,
   footer-b: self => [#{
-      if self.info.short-title == auto { self.info.title } else { self.info.short-title }
+      if self.info.short-title == auto { self.info.title } else {
+        self.info.short-title
+      }
     }  #place(right + horizon)[#text(fill: gray, style: "italic")[#link(
         "https://play.rust-lang.org/?version=stable&mode=debug&edition=2024",
       )[play.rust-lang.org]]#h(0.5em)]],
@@ -102,7 +100,8 @@
 
 // Re-export commonly used functions for convenience
 #import "theme/slides.typ": focus-slide, matrix-slide, new-section-slide, slide, title-slide
-#import "theme/components.typ": error, info, large-center-text, legend, todo, warning
-#import "theme/diagram-helpers.typ": *
+#import "theme/components.typ": definition, error, info, proposition, qa, warning
+#import "theme/dependencies.typ": (
+  at, between, cetz-canvas, codly, diagram, draw, edge, fletcher, fletcher-diagram, hide, node, shapes, until,
+)
 #import "theme/colors.typ": accent, arrow-width, colors, node-outset, node-radius, stroke-width
-

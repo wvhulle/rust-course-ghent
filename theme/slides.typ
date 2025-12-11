@@ -1,8 +1,6 @@
-#import "@preview/touying:0.6.1": components, config-common, config-page, touying-slide, touying-slide-wrapper, utils
-#import "@preview/codly:1.3.0": codly
+#import "dependencies.typ": codly, components, config-common, config-page, touying-slide, touying-slide-wrapper, utils
 #import "custom-outline.typ": custom-outline
 #import "math-helpers.typ": _type
-#import "@preview/tiaoma:0.3.0": *
 
 // Import all theme components
 

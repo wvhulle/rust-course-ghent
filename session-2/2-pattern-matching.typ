@@ -349,8 +349,6 @@ fn main() {
   ```
 
   #qa[When to use `if let` over `match`?][Use `if let` when you only care about one specific pattern and want to ignore all others.]
-
-  // TODO: some slides  skipped
 ]
 
 == Practice: Exercism Clock

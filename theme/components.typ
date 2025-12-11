@@ -1,7 +1,7 @@
 // UI components and helpers
 
 #import "colors.typ": accent, colors, node-radius, stroke-width as default-stroke-width
-#import "@preview/touying:0.6.1": pause
+#import "dependencies.typ": pause
 
 // Shared implementation for titled boxes (warning, error, etc.)
 #let titled-box(
@@ -127,35 +127,36 @@
   content,
 )
 
-#let legend(items, vertical: false) = {
-  align(center)[
-    #grid(
-      columns: if vertical { 1 } else { items.len() },
-      rows: if vertical { items.len() } else { auto },
-      column-gutter: 2em,
-      row-gutter: if vertical { 1em } else { 0em },
-      ..items
-        .map(item => {
-          (
-            align(if vertical { left } else { center })[
-              #box(width: 2em, height: 0.8em, rect(fill: item.color, stroke: accent(item.color)))
-              #h(0.5em)
-              #text(size: 0.7em)[#item.label]
-            ],
-          )
-        })
-        .flatten()
-    )]
-}
+#let definition(
+  title: auto,
+  color: colors.stream,
+  stroke-width: default-stroke-width,
+  inset: 0.7em,
+  radius: node-radius,
+  content,
+) = titled-box(
+  title: title,
+  default-title: "Definition",
+  color: color,
+  stroke-width: stroke-width,
+  inset: inset,
+  radius: radius,
+  content,
+)
 
-
-// TODO helper
-#let todo(content: text(style: "oblique")[TODO]) = box(stroke: 2pt + red, content)
-
-// Large centered text helper
-#let large-center-text(content) = [
-  #set text(72pt)
-  #set align(center)
-  #content
-]
-
+#let proposition(
+  title: auto,
+  color: colors.state,
+  stroke-width: default-stroke-width,
+  inset: 0.7em,
+  radius: node-radius,
+  content,
+) = titled-box(
+  title: title,
+  default-title: "Proposition",
+  color: color,
+  stroke-width: stroke-width,
+  inset: inset,
+  radius: radius,
+  content,
+)

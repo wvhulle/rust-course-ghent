@@ -1,8 +1,8 @@
 // Diagram helpers using Fletcher and CeTZ
 
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, hide, node, shapes
-#import "@preview/touying:0.6.1": touying-reducer
-#import "@preview/cetz:0.4.2": canvas, draw
+#import "dependencies.typ": (
+  at, between, canvas, diagram, draw, edge, fletcher, hide, node, shapes, touying-reducer, until,
+)
 #import "colors.typ": (
   accent, arrow-width as default-arrow-width, colors, node-outset as default-node-outset,
   node-radius as default-node-radius, stroke-width as default-stroke-width,
@@ -11,6 +11,27 @@
 // Touying bindings for CeTZ and Fletcher
 #let cetz-canvas = touying-reducer.with(reduce: canvas, cover: draw.hide.with(bounds: true))
 #let fletcher-diagram = touying-reducer.with(reduce: diagram, cover: hide.with(bounds: true))
+
+// Helper to cover entire diagram area with white background
+// Use this to implement "until(n)" pattern by covering all previous content
+// and redrawing only what should remain visible
+#let reset-diagram(center: (1, 0), width: 20em, height: 15em, ..body) = {
+  // Draw a large white rectangle covering the diagram area
+  // The rectangle is drawn first, then content is drawn on top of it
+  (
+    node(
+      center,
+      // Use an empty box with large dimensions to cover everything
+      box(width: width, height: height, fill: white),
+      fill: white,
+      stroke: none,
+      shape: shapes.rect,
+      inset: 0pt,
+    ),
+    // Then add the content that should be visible (drawn on top)
+    ..body.pos(),
+  )
+}
 
 // Fletcher diagram helpers
 #let spaced-diagram(
