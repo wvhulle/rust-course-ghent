@@ -1168,7 +1168,7 @@ Rules:
       stroke: gray,
     ),
 
-    pause,
+    step(2),
 
     // Slide 2: Add remaining philosophers and chopsticks
     node((2.2, -1.2), name: <p1>, [Plato], shape: shapes.circle),
@@ -1207,10 +1207,10 @@ Rules:
       ),
     ),
 
-    pause,
+    step(3),
 
     // Slide 3: P0 eating (blue state)
-    ..at(
+    at(
       3,
       node(
         (0, 2.5),
@@ -1257,10 +1257,10 @@ Rules:
       ),
     ),
 
-    pause,
+    step(4),
 
     // Slide 4: Back to gray chopsticks after eating
-    ..at(
+    at(
       4,
       node(
         (2.2, 1.2),
@@ -1278,10 +1278,10 @@ Rules:
       ),
     ),
 
-    pause,
+    step(5),
 
     // Slide 5: All philosophers try to grab left (black edges, only this slide)
-    ..at(
+    at(
       5,
       edge(
         <p0>,
@@ -1314,10 +1314,10 @@ Rules:
       ),
     ),
 
-    pause,
+    step(6),
 
     // Slide 6+: Successfully holding left chopsticks (green)
-    ..between(
+    between(
       6,
       10,
       edge(
@@ -1367,10 +1367,10 @@ Rules:
       ),
     ),
 
-    pause,
+    step(7),
 
     // Slide 7+: P0 wants right chopstick
-    ..between(7, 10, edge(
+    between(7, 10, edge(
       <p0>,
       <c0>,
       "-->",
@@ -1380,10 +1380,10 @@ Rules:
       label-pos: 0.3,
     )),
 
-    pause,
+    step(8),
 
     // Slide 8+: P1 wants right chopstick
-    ..between(8, 10, edge(
+    between(8, 10, edge(
       <p1>,
       <c1>,
       "-->",
@@ -1393,10 +1393,10 @@ Rules:
       label-pos: 0.3,
     )),
 
-    pause,
+    step(9),
 
     // Slide 9+: P2 wants right chopstick
-    ..between(9, 10, edge(
+    between(9, 10, edge(
       <p2>,
       <c2>,
       "-->",
@@ -1406,7 +1406,7 @@ Rules:
       label-pos: 0.3,
     )),
 
-    pause,
+    step(10),
 
     // Slide 10: Focus on Socrates' deadlock situation
     node(

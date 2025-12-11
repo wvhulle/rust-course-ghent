@@ -6,8 +6,9 @@
 // Presentation framework
 #import "@local/touying:0.6.1": (
   at, between, components, config-colors, config-common, config-info,
-  config-methods, config-page, config-store, meanwhile, only, touying-reducer,
-  touying-slide, touying-slide-wrapper, touying-slides, uncover, until, utils,
+  config-methods, config-page, config-store, meanwhile, only, step,
+  touying-reducer, touying-slide, touying-slide-wrapper, touying-slides,
+  uncover, until, utils,
 )
 
 // Code syntax highlighting and formatting

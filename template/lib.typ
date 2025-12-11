@@ -3,7 +3,7 @@
 // Import all dependencies from centralized file
 #import "dependencies.typ": (
   codly-init, config-colors, config-common, config-info, config-methods,
-  config-page, config-store, meanwhile, only, pause, show-theorion,
+  config-page, config-store, meanwhile, only, pause, show-theorion, step,
   theorem-counter, touying-slides, uncover, utils,
 )
 // Import all template components
