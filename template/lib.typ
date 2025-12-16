@@ -8,7 +8,7 @@
 )
 // Import all template components
 #import "colors.typ": primary-color, secondary-color, tertiary-color, text-color
-#import "slides.typ": slide
+#import "slides.typ": new-section-slide, slide
 #import "components.typ": qa
 #import "code-fragments.typ": embed-qr-code, embed-url-code, init-code-fragments
 #import "math-helpers.typ": *
@@ -41,7 +41,7 @@
   // Default heading numbering for presentations
   set heading(numbering: "1.")
   set text(size: 1.6em)
-
+  show link: it => underline(it, offset: 0.1em)
   show: codly-init.with()
   init-code-fragments()
   show: show-theorion
@@ -65,6 +65,7 @@
     ),
     config-common(
       slide-fn: slide,
+      new-section-slide-fn: new-section-slide,
       frozen-counters: (theorem-counter,),
     ),
     config-methods(

@@ -2,7 +2,7 @@
   codly, components, config-common, config-page, touying-slide,
   touying-slide-wrapper, utils,
 )
-
+#import "custom-outline.typ": *
 #import "math-helpers.typ": _type
 
 // Import all theme components
@@ -235,6 +235,51 @@
   set text(fill: self.colors.neutral-lightest, weight: "bold", size: 2em)
   touying-slide(self: self, align(horizon, body))
 })
+
+/// New section slide for the presentation. You can update it by updating the `new-section-slide-fn` argument for `config-common` function.
+///
+/// Example: `config-common(new-section-slide-fn: new-section-slide.with(numbered: false))`
+///
+/// - `level` is the level of the heading.
+///
+/// - `numbered` is whether the heading is numbered.
+///
+/// - `body` is the body of the section. It will be pass by touying automatically.
+#let new-section-slide(level: 1, numbered: true, body) = touying-slide-wrapper(
+  self => {
+    let slide-body = {
+      set align(horizon)
+      show: pad.with(left: 15%, right: 15%)
+
+      custom-outline(
+        title: none,
+        filter: hd => hd.relation != none and not hd.relation.unrelated,
+        depth: 2,
+        transform: (hd, it) => {
+          set text(size: 1.25em, fill: self.colors.primary, weight: "bold") if (
+            hd.relation != none and hd.relation.same
+          )
+          set text(fill: self.colors.primary) if (
+            hd.relation != none and hd.relation.child
+          )
+          set text(fill: text.fill.transparentize(60%)) if (
+            hd.relation != none and hd.relation.sibling
+          )
+
+          it
+        },
+      )
+
+      body
+    }
+    self = utils.merge-dicts(
+      self,
+      config-page(fill: self.colors.neutral-lightest),
+    )
+    touying-slide(self: self, slide-body)
+  },
+)
+
 
 
 // Create a slide where the provided content blocks are displayed in a grid and coloured in a checkerboard pattern without further decoration. You can configure the grid using the rows and `columns` keyword arguments (both default to none). It is determined in the following way:

@@ -1,0 +1,15 @@
+[package]
+edition = "2024"
+name = "session7"
+version = "0.1.0"
+
+[dependencies]
+tokio = { version = "1.26.0", features = [
+    "sync",
+    "time",
+    "macros",
+    "rt-multi-thread",
+] }
+
+[lints]
+workspace = true
