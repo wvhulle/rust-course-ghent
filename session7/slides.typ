@@ -407,41 +407,47 @@ async fn main() {
 
 Async tasks are also aborted if not awaited in main.
 
-= Basic tools
-
-
+= Common async datatypes and functions
 
 == Tasks
 
-#slide[
-  #set text(size: 0.7em)
-  ```rs
-  use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
-  use tokio::net::TcpListener;
+A task is a top-level future that may be sent to different worker threads (if necessary).
 
-  #[tokio::main]
-  async fn main() -> io::Result<()> {
-      let listener = TcpListener::bind("127.0.0.1:0").await?;
-      println!("listening on port {}", listener.local_addr()?.port());
 
-      loop {
-          let (mut socket, addr) = listener.accept().await?;
+```rs
+#[tokio::main]
+async fn main() -> io::Result<()> {
+    let listener = TcpListener::bind("127.0.0.1:0").await?;
 
-          println!("connection from {addr:?}");
+    loop {
+        let (mut socket, addr) = listener.accept().await?;
 
-          tokio::spawn(async move {
-              socket.write_all(b"Who are you?\n").await.expect("socket error");
+        tokio::spawn(async move {
+            // Handle connection
+        });
+    }
+}
+```
 
-              let mut buf = vec![0; 1024];
-              let name_size = socket.read(&mut buf).await.expect("socket error");
-              let name = std::str::from_utf8(&buf[..name_size]).unwrap().trim();
-              let reply = format!("Thanks for dialing in, {name}!\n");
-              socket.write_all(reply.as_bytes()).await.expect("socket error");
-          });
-      }
-  }
-  ```
+#pause
+
+#warning[
+  Although we use `tokio` in this section, the same functionality is available in most async runtimes.
 ]
+
+#pagebreak()
+
+Inside `tokio::spawn`:
+
+```rs
+socket.write_all(b"Who are you?\n").await?;
+
+let mut buf = vec![0; 1024];
+let name_size = socket.read(&mut buf).await?;
+let name = std::str::from_utf8(&buf[..name_size])?.trim();
+
+socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
+```
 == Exercise
 
 #info[
@@ -456,131 +462,118 @@ Refactor `session7/examples/tasks.rs`:
 
 == Channels
 
-#slide[
-  #set text(size: 0.7em)
-  ```rs
-  use tokio::sync::mpsc;
+```rs
+async fn ping_handler(mut input: mpsc::Receiver<()>) {
+    let mut count: usize = 0;
+    while let Some(_) = input.recv().await {
+        count += 1;
+        println!("Received {count} pings so far.");
+    }
+}
+```
 
-  async fn ping_handler(mut input: mpsc::Receiver<()>) {
-      let mut count: usize = 0;
+#pause
 
-      while let Some(_) = input.recv().await {
-          count += 1;
-          println!("Received {count} pings so far.");
-      }
-
-      println!("ping_handler complete");
-  }
-
-  #[tokio::main]
-  async fn main() {
-      let (sender, receiver) = mpsc::channel(32);
-      let ping_handler_task = tokio::spawn(ping_handler(receiver));
-      for i in 0..10 {
-          sender.send(()).await.expect("Failed to send ping.");
-          println!("Sent {} pings so far.", i + 1);
-      }
-
-      drop(sender);
-      ping_handler_task.await.expect("Something went wrong in ping handler task.");
-  }
-  ```
-]
+```rs
+async fn main() {
+    let (sender, receiver) = mpsc::channel(32);
+    let handler_task = tokio::spawn(ping_handler(receiver));
+    for i in 0..10 {
+        sender.send(()).await.expect("Failed to send");
+    }
+    drop(sender);
+    handler_task.await.expect("Handler failed");
+}
+```
 
 == Joining
 
+```rs
+async fn size_of_page(url: &str) -> Result<usize> {
+    let resp = reqwest::get(url).await?;
+    Ok(resp.text().await?.len())
+}
+```
 
-#slide[
-  #set text(size: 0.7em)
-  ```rs
-  use anyhow::Result;
-  use futures::future;
-  use reqwest;
-  use std::collections::HashMap;
+#pause
 
-  async fn size_of_page(url: &str) -> Result<usize> {
-      let resp = reqwest::get(url).await?;
-      Ok(resp.text().await?.len())
-  }
+```rs
+async fn main() {
+    let urls = ["https://google.com", "https://httpbin.org/ip", /*...*/];
 
-  #[tokio::main]
-  async fn main() {
-      let urls: [&str; 4] = [
-          "https://google.com",
-          "https://httpbin.org/ip",
-          "https://play.rust-lang.org/",
-          "BAD_URL",
-      ];
-      let futures_iter = urls.into_iter().map(size_of_page);
-      let results = future::join_all(futures_iter).await;
-      let page_sizes_dict: HashMap<&str, Result<usize>> =
-          urls.into_iter().zip(results.into_iter()).collect();
-      println!("{page_sizes_dict:?}");
-  }
-  ```
-]
+    let futures = urls.into_iter().map(size_of_page);
+    let results = future::join_all(futures).await;
+
+    println!("{results:?}");
+}
+```
 
 
 == Select
 
-#slide[
-  #set text(size: 0.7em)
+Waits until any of a set of futures is ready. Similar to `Promise.race` or Python's `asyncio.wait()`.
 
-  A select operation waits until any of a set of futures is ready, and responds to that future’s result. In JavaScript, this is similar to Promise.race. In Python, it compares to asyncio.wait(task_set, return_when=asyncio.FIRST_COMPLETED).
+```rs
+#[tokio::main]
+async fn main() {
+    let (tx, mut rx) = mpsc::channel(32);
 
-  ```rs
-  use tokio::sync::mpsc;
-  use tokio::time::{Duration, sleep};
+    tokio::spawn(async move {
+        tokio::select! {
+            Some(msg) = rx.recv() => println!("got: {msg}"),
+            _ = sleep(Duration::from_millis(50)) => println!("timeout"),
+        };
+    });
 
-  #[tokio::main]
-  async fn main() {
-      let (tx, mut rx) = mpsc::channel(32);
-      let listener = tokio::spawn(async move {
-          tokio::select! {
-              Some(msg) = rx.recv() => println!("got: {msg}"),
-              _ = sleep(Duration::from_millis(50)) => println!("timeout"),
-          };
-      });
-      sleep(Duration::from_millis(10)).await;
-      tx.send(String::from("Hello!")).await.expect("Failed to send greeting");
+    sleep(Duration::from_millis(10)).await;
+    tx.send(String::from("Hello!")).await?;
+    // ...
+}
+```
 
-      listener.await.expect("Listener failed");
-  }
-  ```
-]
+== Streams
+
+Streams are runtime-agnostic asynchronous iterators:
+
+```rs
+use futures::stream::{self, StreamExt};
+
+let stream = stream::iter(vec!['a', 'b', 'c']);
+
+let mut stream = stream.enumerate();
+
+assert_eq!(stream.next().await, Some((0, 'a')));
+assert_eq!(stream.next().await, Some((1, 'b')));
+assert_eq!(stream.next().await, Some((2, 'c')));
+assert_eq!(stream.next().await, None);
+```
+
+See my project #link("https://github.com/wvhulle/clone-stream")
 
 = Pitfalls
 
 
 == Blocking executor
 
-#slide[
-  #set text(0.7em)
+CPU blocking tasks will block the executor and prevent other tasks from being executed.
 
-  CPU blocking tasks will block the executor and prevent other tasks from being executed.
+```rs
+async fn sleep_ms(start: &Instant, id: u64, duration_ms: u64) {
+    std::thread::sleep(std::time::Duration::from_millis(duration_ms));
+    println!("future {id} finished after {}ms", start.elapsed().as_millis());
+}
 
-  ```rs
-  use futures::future::join_all;
-  use std::time::Instant;
+#[tokio::main(flavor = "current_thread")]
+async fn main() {
+    let start = Instant::now();
+    let futures = (1..=10).map(|t| sleep_ms(&start, t, t * 10));
+    join_all(futures).await;
+}
+```
 
-  async fn sleep_ms(start: &Instant, id: u64, duration_ms: u64) {
-      std::thread::sleep(std::time::Duration::from_millis(duration_ms));
-      println!(
-          "future {id} slept for {duration_ms}ms, finished after {}ms",
-          start.elapsed().as_millis()
-      );
-  }
+#pause
 
-  #[tokio::main(flavor = "current_thread")]
-  async fn main() {
-      let start = Instant::now();
-      let sleep_futures = (1..=10).map(|t| sleep_ms(&start, t, t * 10));
-      join_all(sleep_futures).await;
-  }
-  ```
-
-  #qa[What is a workaround?][An easy workaround is to use async equivalent methods where possible. Switch the `std::thread::sleep` to `tokio::time::sleep` and await its result]
-]
+#qa[What is a workaround?][Use async methods: `tokio::time::sleep` instead of `std::thread::sleep`]
 
 == When to use parallelism
 
