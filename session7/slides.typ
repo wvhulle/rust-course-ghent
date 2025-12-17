@@ -241,8 +241,130 @@ Key characteristics:
 
 #pause
 
-The state machines are allocated on the stack by default. When the state machine transitions to the next state, the async runtime does not move it.
+The state machines are allocated on the stack by default. Once allocated, the async runtime never moves the state machine to a different memory location.
 
+#definition[Rust uses *stackless coroutines*: async functions don't have their own call stack. Instead, they compile to state machines that store only the data needed at suspension points, enabling zero-cost abstractions.]
+
+== Stackless vs Stackful
+
+#slide[
+  #grid(
+    columns: (1fr, 1fr),
+    column-gutter: 2em,
+    [
+      *Stackful (Go, goroutines)*
+
+      #fletcher-diagram(
+        spacing: (1.2em, 2em),
+        node-stroke: 1pt,
+        // Task 1
+        node((0, 0), [Task], shape: shapes.rect, name: <c1>),
+        node(
+          (0, 1),
+          [Full \ call \ stack],
+          fill: red.lighten(80%),
+          name: <s1>,
+          shape: shapes.rect,
+        ),
+        node((0, 2), [8KB-2MB], fill: red.lighten(60%), name: <sz1>),
+        edge(<c1>, <s1>, "->", label: text(size: 0.6em)[owns]),
+        edge(<s1>, <sz1>, "->", text(size: 0.6em)[estimate \ pre-allocated]),
+
+        pause,
+
+        // Task 2
+        node((1, 0), [Task], shape: shapes.rect, name: <c2>),
+        node(
+          (1, 1),
+          [Full \ call \ stack],
+          fill: red.lighten(80%),
+          name: <s2>,
+          shape: shapes.rect,
+        ),
+        node((1, 2), [8KB-2MB], fill: red.lighten(60%), name: <sz2>),
+        edge(<c2>, <s2>, "->", label: text(size: 0.6em)[owns]),
+        edge(<s2>, <sz2>, "->"),
+
+        pause,
+
+        // Task 3
+        node((2, 0), [Task], shape: shapes.rect, name: <c3>),
+        node(
+          (2, 1),
+          [Full \ call \ stack],
+          fill: red.lighten(80%),
+          name: <s3>,
+          shape: shapes.rect,
+        ),
+        node((2, 2), [8KB-2MB], fill: red.lighten(60%), name: <sz3>),
+        edge(<c3>, <s3>, "->", label: text(size: 0.6em)[owns]),
+        edge(<s3>, <sz3>, "->"),
+      )
+
+      #pause
+
+      10K tasks = 80MB-20GB
+    ],
+    [
+      *Stackless (Rust async)*
+
+      #fletcher-diagram(
+        spacing: (1.2em, 2em),
+        node-stroke: 1pt,
+        // Future 1
+        node((0, 0), [Future], shape: shapes.rect, name: <f1>),
+        node(
+          (0, 1),
+          [State \ machine],
+          fill: green.lighten(80%),
+          name: <st1>,
+          shape: shapes.rect,
+        ),
+        node((0, 2), [varies], fill: green.lighten(60%), name: <sz1>),
+        edge(<f1>, <st1>, "->", label: text(size: 0.6em)[is]),
+        edge(<st1>, <sz1>, "->", text(size: 0.6em)[tightly \ pre-allocated]),
+
+        pause,
+
+        // Future 2
+        node((1, 0), [Future], shape: shapes.rect, name: <f2>),
+        node(
+          (1, 1),
+          [State \ machine],
+          fill: green.lighten(80%),
+          name: <st2>,
+          shape: shapes.rect,
+        ),
+        node((1, 2), [varies], fill: green.lighten(60%), name: <sz2>),
+        edge(<f2>, <st2>, "->", label: text(size: 0.6em)[is]),
+        edge(<st2>, <sz2>, "->"),
+
+        pause,
+
+        // Future 3
+        node((2, 0), [Future], shape: shapes.rect, name: <f3>),
+        node(
+          (2, 1),
+          [State \ machine],
+          fill: green.lighten(80%),
+          name: <st3>,
+          shape: shapes.rect,
+        ),
+        node((2, 2), [varies], fill: green.lighten(60%), name: <sz3>),
+        edge(<f3>, <st3>, "->", label: text(size: 0.6em)[is]),
+        edge(<st3>, <sz3>, "->"),
+      )
+
+      #pause
+
+      10K tasks = ~1MB
+    ],
+  )
+
+  #pause
+
+  *Key difference:* Stackful tasks allocate a fixed-size stack (pre-allocated for deep call chains), while stackless state machines allocate only the exact space needed for live variables at each suspension point.
+]
 
 == Transformation
 
@@ -775,38 +897,45 @@ async fn main() {
 
 #qa[What is a workaround?][Use async methods: `tokio::time::sleep` instead of `std::thread::sleep`]
 
-== Spawning too much
+== Async for limited parallelism
 
-#warning[Spawning async tasks is no different than spawning (lightweight) threads and doing parallel computing.]
+#warning[Async tasks run on a limited thread pool and don't provide true parallelism for CPU-bound work.]
 
+Async is designed for I/O concurrency, not CPU parallelism:
 
+- Spawning 10,000 async tasks doesn't create 10,000 workers
+- Tasks execute sequentially on the available thread pool
+- CPU-bound work sees no benefit from async spawning
 
-#table(
-  columns: (auto, 1fr, 1fr),
-  inset: 8pt,
-  align: (center + horizon, left + horizon, left + horizon),
-  stroke: 0.5pt,
-  [*Aspect*], [*Threads (Parallelism)*], [*Async (Concurrency)*],
-  [Use case],
-  [CPU-bound tasks: heavy computation],
-  [I/O-bound tasks: waiting for external resources],
+#pause
 
-  [Goal],
-  [Utilize multiple CPU cores for true parallelism],
-  [Handle many operations on single thread],
+*Recommendation:* If there's no real I/O waiting:
+- Use a small number of OS threads instead (`std::thread` or `rayon`)
+- Match thread count to CPU cores for optimal performance
+- Reserve async for coordinating I/O operations
 
-  [Examples],
-  [Data processing, scientific computing, compilation, rendering],
-  [Web servers, database queries, network clients, file I/O],
+== Avoid spawn-ception
 
-  [Overhead],
-  [Higher: context switching, separate stacks],
-  [Lower: cooperative yielding, shared stack],
+#warning[Spawning tasks from within spawned tasks creates hard-to-debug complexity.]
 
-  [When best],
-  [Independent computations that can run simultaneously],
-  [Many concurrent operations that mostly wait],
-)
+Common anti-pattern:
+
+```rs
+tokio::spawn(async {
+    // Some work
+    tokio::spawn(async {  // Nested spawn!
+        // More work
+        tokio::spawn(async { /* ... */ })
+    })
+})
+```
+
+#pause
+
+*Recommendation:* Spawn once at application boundaries:
+- Spawn tasks at the top level (e.g., per incoming request)
+- Use regular async functions and `.await` for sequential steps
+- Only spawn when you need true concurrent execution
 
 
 
