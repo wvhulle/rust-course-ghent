@@ -413,7 +413,7 @@ Async tasks are also aborted if not awaited in main.
 
 == Tasks
 
-A task is a top-level future that may be sent to different worker threads (if necessary).
+A task is a top-level future spawned into the runtime. In multi-threaded runtimes, tasks must be `Send + 'static` and may be moved between worker threads by the work-stealing scheduler.
 
 
 ```rs
@@ -450,6 +450,115 @@ let name = std::str::from_utf8(&buf[..name_size])?.trim();
 
 socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 ```
+
+#pagebreak()
+
+#slide[
+  #fletcher-diagram(
+    spacing: (3em, 3.5em),
+    node-stroke: 1pt,
+    // Runtime box
+    node(
+      (1.5, 0),
+      [*Tokio Runtime*],
+      stroke: 2pt,
+      shape: shapes.rect,
+      name: <runtime>,
+    ),
+
+    pause,
+
+    // Executor
+    node(
+      (0, 1),
+      [*Executor*],
+      fill: blue.lighten(80%),
+      stroke: blue + 1pt,
+      shape: shapes.rect,
+      name: <executor>,
+    ),
+
+    pause,
+
+    // Worker Threads
+    node((-1, 2), [Thread 1], stroke: 1pt, shape: shapes.circle, name: <th1>),
+    node((-1, 3), [Thread 2], stroke: 1pt, shape: shapes.circle, name: <th2>),
+    node((-1, 4), [Thread 3], stroke: 1pt, shape: shapes.circle, name: <th3>),
+
+    pause,
+
+    // Reactor
+    node(
+      (3, 1),
+      [*Reactor*],
+      fill: green.lighten(80%),
+      stroke: green + 1pt,
+      shape: shapes.rect,
+      name: <reactor>,
+    ),
+
+    pause,
+
+    // Tasks
+    node((1, 2.5), [Task 1], stroke: 1pt, shape: shapes.rect, name: <t1>),
+    node((1, 3.5), [Task 2], stroke: 1pt, shape: shapes.rect, name: <t2>),
+
+    pause,
+
+    // I/O Events
+    node(
+      (3, 3),
+      [I/O Events],
+      stroke: 1pt,
+      shape: shapes.hexagon,
+      name: <io>,
+    ),
+
+    pause,
+
+    // Edges from executor to threads
+    edge(
+      <executor>,
+      <th1>,
+      "->",
+      stroke: 2pt + blue,
+      label: text(size: 0.8em)[schedules tasks],
+      bend: -10deg,
+    ),
+    edge(<executor>, <th2>, "->", stroke: 2pt + blue, bend: 0deg),
+    edge(<executor>, <th3>, "->", stroke: 2pt + blue, bend: 10deg),
+
+    pause,
+
+    // Edges from threads to tasks
+    edge(
+      <th1>,
+      <t1>,
+      "->",
+      stroke: 2pt + green,
+      label: text(size: 0.8em)[executes],
+      bend: -15deg,
+    ),
+    edge(<th2>, <t2>, "->", stroke: 2pt + green, bend: 15deg),
+
+    pause,
+
+    // Edges from I/O to reactor
+    edge(<io>, <reactor>, "-|>", label: text(size: 0.6em)[notify]),
+
+    pause,
+
+    // Edge between reactor and executor
+    edge(
+      <reactor>,
+      <executor>,
+      "<->",
+      label: text(size: 0.6em)[wake],
+      bend: -20deg,
+    ),
+  )
+]
+
 == Exercise
 
 #info[
@@ -584,7 +693,7 @@ async fn main() {
 
 #pagebreak()
 
-#text(size: 0.6em)[
+#text(size: 0.9em)[
   #chronos.diagram({
     import chronos: *
 
@@ -612,7 +721,6 @@ async fn main() {
 
     _gap()
 
-    _seq("select!", "sleep(50ms)", comment: "drop", destroy-dst: true)
     _seq(
       "select!",
       "Task",
@@ -620,6 +728,7 @@ async fn main() {
       dashed: true,
       disable-dst: true,
     )
+    _note("left", "sleep future dropped")
   })]
 
 == Streams
@@ -666,39 +775,40 @@ async fn main() {
 
 #qa[What is a workaround?][Use async methods: `tokio::time::sleep` instead of `std::thread::sleep`]
 
-== When to use parallelism
+== Spawning too much
+
+#warning[Spawning async tasks is no different than spawning (lightweight) threads and doing parallel computing.]
 
 
-#slide[
 
-  #table(
-    columns: (auto, 1fr, 1fr),
-    inset: 8pt,
-    align: (center + horizon, left + horizon, left + horizon),
-    stroke: 0.5pt,
-    [*Aspect*], [*Threads (Parallelism)*], [*Async (Concurrency)*],
-    [Use case],
-    [CPU-bound tasks: heavy computation],
-    [I/O-bound tasks: waiting for external resources],
+#table(
+  columns: (auto, 1fr, 1fr),
+  inset: 8pt,
+  align: (center + horizon, left + horizon, left + horizon),
+  stroke: 0.5pt,
+  [*Aspect*], [*Threads (Parallelism)*], [*Async (Concurrency)*],
+  [Use case],
+  [CPU-bound tasks: heavy computation],
+  [I/O-bound tasks: waiting for external resources],
 
-    [Goal],
-    [Utilize multiple CPU cores for true parallelism],
-    [Handle many operations on single thread],
+  [Goal],
+  [Utilize multiple CPU cores for true parallelism],
+  [Handle many operations on single thread],
 
-    [Examples],
-    [Data processing, scientific computing, compilation, rendering],
-    [Web servers, database queries, network clients, file I/O],
+  [Examples],
+  [Data processing, scientific computing, compilation, rendering],
+  [Web servers, database queries, network clients, file I/O],
 
-    [Overhead],
-    [Higher: context switching, separate stacks],
-    [Lower: cooperative yielding, shared stack],
+  [Overhead],
+  [Higher: context switching, separate stacks],
+  [Lower: cooperative yielding, shared stack],
 
-    [When best],
-    [Independent computations that can run simultaneously],
-    [Many concurrent operations that mostly wait],
-  )
+  [When best],
+  [Independent computations that can run simultaneously],
+  [Many concurrent operations that mostly wait],
+)
 
-]
+
 
 == Deadlocks: Coffman Conditions
 
