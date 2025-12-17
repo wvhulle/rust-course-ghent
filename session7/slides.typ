@@ -578,7 +578,7 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 #slide[
   #set text(size: 0.8em)
   #fletcher-diagram(
-    spacing: (4em, 2.5em),
+    spacing: (6em, 2.5em),
     node-stroke: 1pt,
     // Runtime box
     node(
@@ -619,7 +619,7 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
     node((-1, 3), [Thread 1], stroke: 1pt, shape: shapes.circle, name: <th1>),
     node(
       (-0.5, 4),
-      [Local Q],
+      [Local \ Queue],
       fill: yellow.lighten(80%),
       stroke: 1pt,
       name: <lq1>,
@@ -630,7 +630,7 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
     node((1.5, 3), [Thread 2], stroke: 1pt, shape: shapes.circle, name: <th2>),
     node(
       (1, 4),
-      [Local Q],
+      [Local \ Queue],
       fill: yellow.lighten(80%),
       stroke: 1pt,
       name: <lq2>,
@@ -651,10 +651,10 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
     pause,
 
     // Tasks in queues
-    node((-0.2, 3), [T1], stroke: 1pt, shape: shapes.rect, name: <t1>),
-    node((-0.5, 5), [T2], stroke: 1pt, shape: shapes.rect, name: <t2>),
-    node((1, 5), [T3], stroke: 1pt, shape: shapes.rect, name: <t3>),
-    node((0.2, 3), [T4], stroke: 1pt, shape: shapes.rect, name: <t4>),
+    node((-0.2, 3), [Task 1], stroke: 1pt, shape: shapes.rect, name: <t1>),
+    node((-0.5, 5), [Task 2], stroke: 1pt, shape: shapes.rect, name: <t2>),
+    node((1, 5), [Task 3], stroke: 1pt, shape: shapes.rect, name: <t3>),
+    node((0.2, 3), [Task 4], stroke: 1pt, shape: shapes.rect, name: <t4>),
 
     pause,
 
@@ -802,7 +802,7 @@ async fn main() {
 }
 ```
 
-#pagebreak
+#pagebreak()
 
 #text(size: 0.8em)[
   #chronos.diagram({
@@ -972,6 +972,10 @@ Async is designed for I/O concurrency, not CPU parallelism:
 - Match thread count to CPU cores for optimal performance
 - Reserve async for coordinating I/O operations
 
+#focus-slide[
+  #image("images/inception.jpg")
+]
+
 == Avoid spawn-ception
 
 #warning[Spawning tasks from within spawned tasks creates hard-to-debug complexity.]
@@ -997,7 +1001,9 @@ tokio::spawn(async {
 
 
 
-== Deadlocks: Coffman Conditions
+== Forget handling deadlocks
+
+Asynchronous code is still susceptible to deadlocks.
 
 A deadlock occurs when four conditions are met simultaneously (Coffman conditions):
 
@@ -1393,3 +1399,71 @@ Solutions are provided as `*-solution.rs` files.
 
 
 
+= Exercise: broadcast chat application
+
+== Overview
+
+In this exercise, we want to use our new knowledge to implement a broadcast chat application. We have a chat server that the clients connect to and publish their messages. The client reads user messages from the standard input, and sends them to the server. The chat server broadcasts each message that it receives to all the clients.
+
+For this, we use a broadcast channel on the server, and tokio_websockets for the communication between the client and the server.
+
+== APIs
+
+You are going to need the following functions from tokio and tokio_websockets. Spend a few minutes to familiarize yourself with the API.
+
+From the `futures` (or `futures-util`) crate:
+
+- StreamExt::next() implemented by WebSocketStream: for asynchronously reading messages from a Websocket Stream.
+- SinkExt::send() implemented by WebSocketStream: for asynchronously sending messages on a Websocket Stream.
+
+Specific to Tokio:
+
+- Lines::next_line(): for asynchronously reading user messages from the standard input. #link("https://docs.rs/tokio/latest/tokio/io/struct.Lines.html#method.next_line")
+- Sender::subscribe(): for subscribing to a broadcast channel. #link("https://docs.rs/tokio/latest/tokio/sync/broadcast/struct.Sender.html#method.subscribe")
+
+
+== Binaries
+
+Normally in a Cargo project, you can have only one binary, and one src/main.rs file.
+
+
+In this project, we need two binaries:one for the client, and one for the server.
+
+
+_You could potentially make them two separate Cargo projects, but we are going to put them in a single Cargo project with two binaries._
+
+
+For this to work, the client and the server code are in session7/src/bin.
+
+Run the server with:
+
+```bash
+cargo run --bin server
+```
+and the client with:
+```bash
+cargo run --bin client
+```
+
+== Tasks
+
+=== Server
+
+Implement the `handle_connection` function in src/bin/server.rs.
+
+
+Hint: Use `tokio::select!` for concurrently performing two tasks in a continuous loop:
+
+- One task receives messages from the client and broadcasts them.
+- The other sends messages received by the server to the client.
+
+=== Client
+
+Complete the main function in src/bin/client.rs.
+
+
+Hint: As before, use tokio::select! in a continuous loop for concurrently performing two tasks:
+1. reading user messages from standard input and sending them to the server, and
+2. receiving messages from the server, and displaying them for the user.
+
+Optional: Once you are done, change the code to broadcast messages to all clients, but the sender of the message.
