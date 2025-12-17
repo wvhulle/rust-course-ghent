@@ -35,7 +35,7 @@
   Multiple tasks execute concurrently by running until they would block on I/O, then yielding to another ready task.
 
   #fletcher-diagram(
-    spacing: (1.5em, 1em),
+    spacing: (3.5em, 1em),
     node((0, 0), [Task A]),
     node((0, 1), [Task B]),
     edge((1, 0), (3, 0), "-", stroke: green + 2pt, label: [run]),
@@ -125,20 +125,20 @@
         node((0, 0), [`co_await`], shape: shapes.rect),
         node((2, -0.5), [Promise], shape: shapes.rect, fill: red.lighten(80%)),
         node((2, 0.5), [Awaitable], shape: shapes.rect, fill: red.lighten(80%)),
-        edge((0, 0), (2, -0.5), "->", label: [manual]),
-        edge((0, 0), (2, 0.5), "->", label: [manual]),
+        edge((0, 0), (2, -0.5), "->", label: [manual], bend: 20deg),
+        edge((0, 0), (2, 0.5), "->", label: [manual], bend: -20deg),
       )
 
       - Manual promise types
       - Manual awaitable objects
       - No standard runtime
-      - Heap allocation by default
+      - *Heap allocation* by default
     ],
     [
       *Rust async/await*
 
       #fletcher-diagram(
-        spacing: (1.5em, 1em),
+        spacing: (2.5em, 1em),
         node(
           (0, 0),
           [`async fn`],
@@ -156,8 +156,8 @@
 
       - Compiler generates state machines
       - Built-in syntax
-      - Mature ecosystem (tokio, async-std)
-      - Stack-allocated by default
+      - Mature ecosystem (tokio)
+      - *Stack-allocated* by default
     ],
   )
 ]
@@ -333,7 +333,7 @@ This adds heap allocation overhead but makes recursion possible.
   ],
 
   diagram(
-    spacing: (15mm, 10mm),
+    spacing: (15mm, 30mm),
     node-stroke: 1pt,
     {
       // Runtime container
@@ -344,6 +344,8 @@ This adds heap allocation overhead but makes recursion possible.
         shape: shapes.rect,
         name: <runtime>,
       )
+
+      node(enclose: (<executor>, <reactor>), fill: red.lighten(50%), inset: 1em)
 
       // Executor
       node(
@@ -488,6 +490,8 @@ async fn main() {
 
 == Joining
 
+We might need to do the same `async` function multiple times:
+
 ```rs
 async fn size_of_page(url: &str) -> Result<usize> {
     let resp = reqwest::get(url).await?;
@@ -495,19 +499,66 @@ async fn size_of_page(url: &str) -> Result<usize> {
 }
 ```
 
+
+#qa[How can we await a list of futures conccurently?][We use the `join_all` function.]
+
 #pause
 
 ```rs
 async fn main() {
     let urls = ["https://google.com", "https://httpbin.org/ip", /*...*/];
-
     let futures = urls.into_iter().map(size_of_page);
     let results = future::join_all(futures).await;
-
     println!("{results:?}");
 }
 ```
 
+#pagebreak
+
+#text(size: 0.8em)[
+  #chronos.diagram({
+    import chronos: *
+
+    _par("Main")
+    _par("join_all")
+    _par("Future 1")
+    _par("Future 2")
+    _par("Future 3")
+
+    _gap()
+    _seq("Main", "join_all", comment: "futures collection")
+    _gap()
+
+    _seq("join_all", "Future 1", comment: "poll()", enable-dst: true)
+    _seq("join_all", "Future 2", comment: "poll()", enable-dst: true)
+    _seq("join_all", "Future 3", comment: "poll()", enable-dst: true)
+
+    _gap()
+
+    _seq("Future 2", "join_all", comment: "Ready(result2)", dashed: true)
+    _note("right", "Future 2 completes first")
+
+    _gap()
+
+    _seq("Future 3", "join_all", comment: "Ready(result3)", dashed: true)
+    _note("left", "Future 3 completes second")
+
+    _gap()
+
+    _seq("Future 1", "join_all", comment: "Ready(result1)", dashed: true)
+    _note("right", "Future 1 completes last")
+
+    _gap()
+
+    _seq(
+      "join_all",
+      "Main",
+      comment: "[result1, result2, result3]",
+      dashed: true,
+    )
+    _note("left", "All results collected")
+  })
+]
 
 == Select
 
@@ -530,6 +581,46 @@ async fn main() {
     // ...
 }
 ```
+
+#pagebreak()
+
+#text(size: 0.6em)[
+  #chronos.diagram({
+    import chronos: *
+
+    _par("Main")
+    _par("Task")
+    _par("select!")
+    _par("rx.recv()")
+    _par("sleep(50ms)")
+
+    _seq("Main", "Task", comment: "spawn", enable-dst: true)
+    _seq("Task", "select!", comment: "enter select!", enable-dst: true)
+
+    _gap()
+
+    _seq("select!", "rx.recv()", comment: "poll()", enable-dst: true)
+    _seq("select!", "sleep(50ms)", comment: "poll()", enable-dst: true)
+    _seq("rx.recv()", "select!", comment: "Pending", dashed: true)
+    _seq("sleep(50ms)", "select!", comment: "Pending", dashed: true)
+
+    _gap()
+
+    _seq("Main", "rx.recv()", comment: "send(Hello!)")
+    _seq("rx.recv()", "select!", comment: "Ready(msg)", dashed: true)
+    _note("right", "rx.recv() wins!")
+
+    _gap()
+
+    _seq("select!", "sleep(50ms)", comment: "drop", destroy-dst: true)
+    _seq(
+      "select!",
+      "Task",
+      comment: "Some(msg)",
+      dashed: true,
+      disable-dst: true,
+    )
+  })]
 
 == Streams
 
