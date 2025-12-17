@@ -576,8 +576,9 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 #pagebreak()
 
 #slide[
+  #set text(size: 0.8em)
   #fletcher-diagram(
-    spacing: (3em, 3.5em),
+    spacing: (4em, 2.5em),
     node-stroke: 1pt,
     // Runtime box
     node(
@@ -602,10 +603,38 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 
     pause,
 
-    // Worker Threads
-    node((-1, 2), [Thread 1], stroke: 1pt, shape: shapes.circle, name: <th1>),
-    node((-1, 3), [Thread 2], stroke: 1pt, shape: shapes.circle, name: <th2>),
-    node((-1, 4), [Thread 3], stroke: 1pt, shape: shapes.circle, name: <th3>),
+    // Global queue
+    node(
+      (0, 2),
+      [Global \ Queue],
+      fill: purple.lighten(80%),
+      stroke: purple + 1pt,
+      shape: shapes.rect,
+      name: <global>,
+    ),
+
+    pause,
+
+    // Worker Threads with local queues
+    node((-1, 3), [Thread 1], stroke: 1pt, shape: shapes.circle, name: <th1>),
+    node(
+      (-0.5, 4),
+      [Local Q],
+      fill: yellow.lighten(80%),
+      stroke: 1pt,
+      name: <lq1>,
+    ),
+
+    pause,
+
+    node((1.5, 3), [Thread 2], stroke: 1pt, shape: shapes.circle, name: <th2>),
+    node(
+      (1, 4),
+      [Local Q],
+      fill: yellow.lighten(80%),
+      stroke: 1pt,
+      name: <lq2>,
+    ),
 
     pause,
 
@@ -621,9 +650,11 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 
     pause,
 
-    // Tasks
-    node((1, 2.5), [Task 1], stroke: 1pt, shape: shapes.rect, name: <t1>),
-    node((1, 3.5), [Task 2], stroke: 1pt, shape: shapes.rect, name: <t2>),
+    // Tasks in queues
+    node((-0.2, 3), [T1], stroke: 1pt, shape: shapes.rect, name: <t1>),
+    node((-0.5, 5), [T2], stroke: 1pt, shape: shapes.rect, name: <t2>),
+    node((1, 5), [T3], stroke: 1pt, shape: shapes.rect, name: <t3>),
+    node((0.2, 3), [T4], stroke: 1pt, shape: shapes.rect, name: <t4>),
 
     pause,
 
@@ -638,30 +669,57 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
 
     pause,
 
-    // Edges from executor to threads
+    // Edges from executor to global queue
     edge(
       <executor>,
-      <th1>,
+      <global>,
       "->",
-      stroke: 2pt + blue,
-      label: text(size: 0.8em)[schedules tasks],
-      bend: -10deg,
+      stroke: 2pt + purple,
+      label: text(size: 0.7em)[push tasks],
     ),
-    edge(<executor>, <th2>, "->", stroke: 2pt + blue, bend: 0deg),
-    edge(<executor>, <th3>, "->", stroke: 2pt + blue, bend: 10deg),
 
     pause,
 
-    // Edges from threads to tasks
+    // Edges from global queue to local queues
     edge(
-      <th1>,
-      <t1>,
+      <global>,
+      <lq1>,
       "->",
-      stroke: 2pt + green,
-      label: text(size: 0.8em)[executes],
-      bend: -15deg,
+      stroke: 1pt + purple,
+      label: text(size: 0.6em)[steal],
+      bend: -20deg,
     ),
-    edge(<th2>, <t2>, "->", stroke: 2pt + green, bend: 15deg),
+    edge(<global>, <lq2>, "->", stroke: 1pt + purple, label: text(
+      size: 0.6em,
+    )[steal]),
+
+    pause,
+
+    // Edges showing work stealing between local queues
+    edge(
+      <lq2>,
+      <lq1>,
+      "<->",
+      stroke: 1pt + orange,
+      label: text(size: 0.6em)[work-steal],
+      bend: 20deg,
+    ),
+
+    pause,
+
+    // Edges from threads to local queues
+    edge(<th1>, <lq1>, "->", stroke: 2pt + green, label: text(
+      size: 0.7em,
+    )[polls]),
+    edge(<th2>, <lq2>, "->", stroke: 2pt + green),
+
+    pause,
+
+    // Tasks stored in queues
+    edge(<global>, <t1>, "->", label: text(size: 0.6em)[stores]),
+    edge(<global>, <t4>, "->", label: text(size: 0.6em)[stores]),
+    edge(<lq1>, <t2>, "->", label: text(size: 0.6em)[stores]),
+    edge(<lq2>, <t3>, "->", label: text(size: 0.6em)[stores]),
 
     pause,
 
@@ -676,7 +734,7 @@ socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
       <executor>,
       "<->",
       label: text(size: 0.6em)[wake],
-      bend: -20deg,
+      // bend: -20deg,
     ),
   )
 ]
