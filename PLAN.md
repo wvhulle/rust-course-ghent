@@ -163,16 +163,19 @@
 
 ## Session 7
 
+[Slides](./session7/slides.pdf)
+
 **Planned for in-session:**
 
+- Project presentation: _15 min_
 - Async basics: _40 min_
-- Channels and control flow: _20 min_
-- Project presentation: _60 min_
+- How async works: 15 min
+- Async data structures and functions: 20 min
+- Streams: _20 min_
+- Pitfalls: _20 min_
 
 **Homework:**
 
-- Blocking the Executor: _10 min_
-- Pin: 20 min
-- Async traits: 5 min
+- Pin: 60 min
+- Async traits: 15 min
 - Cancellation: 20 min
-- Exercises: _70 min_

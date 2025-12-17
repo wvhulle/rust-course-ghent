@@ -129,10 +129,10 @@
         edge((0, 0), (2, 0.5), "->", label: [manual], bend: -20deg),
       )
 
-      - Manual promise types
-      - Manual awaitable objects
-      - No standard runtime
-      - *Heap allocation* by default
+      - Requires custom promise and awaitable types
+      - Low-level control over suspension
+      - Flexible but verbose
+      - Coroutine frame heap-allocated (optimizable)
     ],
     [
       *Rust async/await*
@@ -154,15 +154,16 @@
         edge((0, 0), (2, 0), "->", label: [automatic]),
       )
 
-      - Compiler generates state machines
-      - Built-in syntax
-      - Mature ecosystem (tokio)
-      - *Stack-allocated* by default
+      - Compiler automatically generates `Future` trait
+      - High-level syntax with `.await`
+      - Ecosystem provides runtime and utilities
+      - State machine stack-allocated by default
     ],
   )
 ]
 
 = Asynchronous Rust
+
 
 == Await syntax
 
@@ -209,7 +210,32 @@ pub enum Poll<T> {
   Context allows a Future to schedule itself to be polled again when an event such as a timeout occurs.
 ]
 
-== JoinHandle
+
+== Simplest `Future`
+
+The simplest future is an `Option`.
+
+
+```rs
+#[must_use = "futures do nothing unless you `.await` or poll them"]
+pub struct Ready<T>(Option<T>);
+
+impl<T> Future for Ready<T> {
+    type Output = T;
+
+    fn poll(mut self: Pin<&mut Self>, _cx: &mut Context<'_>) -> Poll<T> {
+        Poll::Ready(self.0.take().expect("Ready polled after completion"))
+    }
+}
+```
+
+#pause
+
+Not a very interesting future of course!
+
+#qa[Name a few "real" (also called leaf) futures][...]
+
+== More realistic `JoinHandle`
 
 One common type implementing `Future` is a Tokio `JoinHandle`:
 
@@ -224,9 +250,64 @@ let join = task::spawn(async {
 assert!(join.await.is_err());
 ```
 
+== Spawning
+
+Spawning creates a new task that runs concurrently with the spawner.
+
+Use spawning when tasks can progress independently:
+
+```rs
+async fn main() {
+    let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
+    loop {
+        let (socket, addr) = listener.accept().await.unwrap();
+        // Spawn a new task for each connection
+        tokio::spawn(async move {
+            handle_client(socket, addr).await;
+        });
+    }
+}
+```
+
+#pause
+
+Each connection is handled independently without blocking the server from accepting new connections.
+
+
+#focus-slide[
+  #image("images/inception.jpg")
+]
+
+== Avoid spawn-ception
+
+#warning[Spawning tasks from within spawned tasks creates hard-to-debug complexity.]
+
+Common anti-pattern:
+
+```rs
+tokio::spawn(async {
+    // Some work
+    tokio::spawn(async {  // Nested spawn!
+        // More work
+        tokio::spawn(async { /* ... */ })
+    })
+})
+```
+
+#pause
+
+*Recommendation:* Spawn once at application boundaries:
+- Spawn tasks at the top level (e.g., per incoming request)
+- Use regular async functions and `.await` for sequential steps
+- Only spawn when you need true concurrent execution
+
+
 = Rust's async implementation
 
 
+#focus-slide[
+  #image("images/packt.webp")
+]
 == State machine
 
 Rust transforms async functions into state machines that implement `Future`.
@@ -432,9 +513,38 @@ Box::pin(count_to(n - 1)).await;
 
 This adds heap allocation overhead but makes recursion possible.
 
+
+== Coroutines
+
+Async functions in Rust are coroutines that yield nothing.
+
+
+#definition[Coroutines are a type of functions that may yield intermediate results and can be resumed.]
+
+
+
+#text(size: 0.8em)[
+  ```rs
+  fn main() {
+      let mut coroutine = #[coroutine] || {
+          yield 1;
+          return "foo"
+      };
+
+      match Pin::new(&mut coroutine).resume(()) {
+          CoroutineState::Yielded(1) => {}
+          _ => panic!("unexpected value from resume"),
+      }
+      match Pin::new(&mut coroutine).resume(()) {
+          CoroutineState::Complete("foo") => {}
+          _ => panic!("unexpected value from resume"),
+      }
+  }
+  ```]
+
 = Ecosystem
 
-== Runtimes
+== Async runtimes
 
 #grid(
   columns: (1fr, 1fr),
@@ -443,8 +553,8 @@ This adds heap allocation overhead but makes recursion possible.
   [
     A runtime provides support for:
 
-    - performing operations asynchronously (a *reactor*)
-    - and is responsible for executing futures (an *executor*).
+    - *reactor*: reacting to IO events asynchronously
+    - *executor*: pushing futures forward  concurrently
 
     #pause
 
@@ -452,6 +562,11 @@ This adds heap allocation overhead but makes recursion possible.
 
     - `futures` offers a bare bones executor #link("https://docs.rs/futures/latest/futures/executor/struct.ThreadPool.html")[`ThreadPool`]
     - `tokio` offers a `Runtime` with reactor included (supplies "time" etc.)
+
+
+    #pause
+
+    #warning[Embassy is not a traditional async run-time, built for small embedded devices. It has no allocator (no heap).]
   ],
 
   diagram(
@@ -519,7 +634,7 @@ async fn count_to(count: i32) {
         time::sleep(time::Duration::from_millis(5)).await;
     }
 }
-#[tokio::main]
+#[tokio::main] // Optional macro to start async multi-threaded runtime.
 async fn main() {
     tokio::spawn(count_to(10));
     for i in 0..5 {
@@ -531,15 +646,18 @@ async fn main() {
 
 Async tasks are also aborted if not awaited in main.
 
-= Common async datatypes and functions
 
 == Tasks
 
-A task is a top-level future spawned into the runtime. In multi-threaded runtimes, tasks must be `Send + 'static` and may be moved between worker threads by the work-stealing scheduler.
+A task is a top-level future spawned into the runtime.
+
+#pause
+
+#warning[In multi-threaded runtimes, tasks must be `Send + 'static` and may be moved between worker threads by the work-stealing scheduler.]
+
 
 
 ```rs
-#[tokio::main]
 async fn main() -> io::Result<()> {
     let listener = TcpListener::bind("127.0.0.1:0").await?;
 
@@ -553,27 +671,10 @@ async fn main() -> io::Result<()> {
 }
 ```
 
-#pause
-
-#warning[
-  Although we use `tokio` in this section, the same functionality is available in most async runtimes.
-]
 
 #pagebreak()
 
-Inside `tokio::spawn`:
 
-```rs
-socket.write_all(b"Who are you?\n").await?;
-
-let mut buf = vec![0; 1024];
-let name_size = socket.read(&mut buf).await?;
-let name = std::str::from_utf8(&buf[..name_size])?.trim();
-
-socket.write_all(format!("Thanks, {name}!\n").as_bytes()).await?;
-```
-
-#pagebreak()
 
 #slide[
   #set text(size: 0.8em)
@@ -750,6 +851,9 @@ Refactor `session7/examples/tasks.rs`:
 - Create async helper function from async block
 - Improve error handling
 
+= Common async datatypes and functions
+
+
 
 == Channels
 
@@ -777,7 +881,35 @@ async fn main() {
 }
 ```
 
-== Joining
+== Joining two futures
+
+When you need to wait for exactly two futures concurrently, use the `join!` macro:
+
+```rs
+use tokio::join;
+
+async fn fetch_user(id: u32) -> User { /* ... */ }
+async fn fetch_posts(user_id: u32) -> Vec<Post> { /* ... */ }
+
+#[tokio::main]
+async fn main() {
+    let (user, posts) = join!(
+        fetch_user(1),
+        fetch_posts(1)
+    );
+    println!("User: {user:?}, Posts: {}", posts.len());
+}
+```
+
+#pause
+
+Unlike sequential awaits, both futures run concurrently. If one fails, both are awaited before returning the error.
+
+#pagebreak()
+
+*Exercise:* Refactor `session7/examples/join.rs` to use `join!` instead of sequential awaits.
+
+== Joining an iterable
 
 We might need to do the same `async` function multiple times:
 
@@ -911,7 +1043,70 @@ async fn main() {
     _note("left", "sleep future dropped")
   })]
 
-== Streams
+
+#pagebreak()
+
+== Select exercise
+
+Use `tokio::select!` to implement a timeout mechanism for a long-running operation.
+
+```rs
+async fn fetch_data() -> String {
+    sleep(Duration::from_secs(5)).await;
+    "Data fetched".to_string()
+}
+
+#[tokio::main]
+async fn main() {
+    // TODO: Use select! to race fetch_data() against a 2-second timeout
+    // Print "Success: {data}" if fetch completes
+    // Print "Timeout!" if the timeout occurs first
+}
+```
+
+#pause
+
+*Exercise:* Complete `session7/examples/select.rs` to implement timeout logic using `tokio::select!`.
+
+
+== Async `Mutex`
+
+Prefer `std::sync::Mutex` by default - it's faster and cheaper for short critical sections.
+
+#pause
+
+Use `tokio::sync::Mutex` only when you need to hold the lock across `.await` points:
+
+```rs
+// Won't compile: std::sync::MutexGuard is not Send
+let guard = std_mutex.lock().unwrap();
+some_async_operation().await; // Error!
+drop(guard);
+```
+
+```rs
+// Works: tokio::sync::MutexGuard is Send
+let guard = tokio_mutex.lock().await;
+some_async_operation().await; // OK
+drop(guard);
+```
+
+#pause
+
+The `Send` requirement exists because futures may move between threads at await points. `std::sync::MutexGuard` is deliberately not `Send` to prevent deadlocks.
+
+#pause
+
+*Alternative:* Consider using message passing (channels) instead of shared mutable state.
+
+= Streams
+
+#focus-slide[
+  #image("images/signal.webp")
+]
+
+
+== Like iterators
 
 Streams are runtime-agnostic asynchronous iterators:
 
@@ -928,14 +1123,89 @@ assert_eq!(stream.next().await, Some((2, 'c')));
 assert_eq!(stream.next().await, None);
 ```
 
-See my project #link("https://github.com/wvhulle/clone-stream")
+== Awaiting many futures
+
+The `FuturesUnordered` is a `Stream` that yields results as futures complete (in completion order, not insertion order).
+
+#pause
+
+```rs
+async fn process_item(id: u32) -> String {
+    sleep(Duration::from_millis(100 * id as u64)).await;
+    format!("Processed item {id}")
+}
+
+async fn main() {
+    let mut futures = FuturesUnordered::new();
+
+    for i in 1..=5 { futures.push(process_item(i)); }
+
+    while let Some(result) = futures.next().await {
+        println!("{result}");
+    }
+}
+```
+
+
+
+== Stream operators
+
+You can also apply "adapters" to streams (similar to iterator adapters):
+
+```rs
+#[tokio::main]
+async fn main() {
+    let stream = stream::iter(1..=10);
+
+    let result: Vec<_> = stream
+        .filter(|x| futures::future::ready(x % 2 == 0))
+        .map(|x| x * 2)
+        .collect()
+        .await;
+
+    println!("{result:?}"); // [4, 8, 12, 16, 20]
+}
+```
+
+#pause
+
+Common adapters: `map`, `filter`, `filter_map`, `fold`, `take`, `skip`, `zip`, `chain`
+
+See: Futures `StreamExt` trait and my project #link("https://github.com/wvhulle/clone-stream")
+
+
+== Stream exercise
+
+Process a stream of numbers using adapters to:
+1. Filter out numbers less than 5
+2. Square each number
+3. Take only the first 3 results
+
+```rs
+use futures::future::ready;
+use futures::stream::{self, StreamExt};
+
+#[tokio::main]
+async fn main() {
+    let numbers = stream::iter(1..=20);
+
+    // TODO: Chain filter, map, and take adapters
+    // to get the first 3 squares of numbers >= 5
+    // Use ready() in the filter predicate
+
+    let result: Vec<_> = numbers.collect().await;
+    println!("{result:?}");
+}
+```
+
+#pause
+
+*Exercise:* Complete `session7/examples/streams.rs` to transform the stream using adapters.
 
 = Pitfalls
 
 
-== Blocking executor
-
-CPU blocking tasks will block the executor and prevent other tasks from being executed.
+== Blocking operations prevent context switching
 
 ```rs
 async fn sleep_ms(start: &Instant, id: u64, duration_ms: u64) {
@@ -953,7 +1223,7 @@ async fn main() {
 
 #pause
 
-#qa[What is a workaround?][Use async methods: `tokio::time::sleep` instead of `std::thread::sleep`]
+#qa[While `std::thread::sleep` blocks, the executor cannot poll other tasks. How to run them concurrently?][Use async-aware operations like `tokio::time::sleep` that yield control back to the executor, allowing context switching.]
 
 == Async for limited parallelism
 
@@ -971,35 +1241,47 @@ Async is designed for I/O concurrency, not CPU parallelism:
 - Use a small number of OS threads instead (`std::thread` or `rayon`)
 - Match thread count to CPU cores for optimal performance
 - Reserve async for coordinating I/O operations
+== Pinning too much
 
-#focus-slide[
-  #image("images/inception.jpg")
-]
-
-== Avoid spawn-ception
-
-#warning[Spawning tasks from within spawned tasks creates hard-to-debug complexity.]
-
-Common anti-pattern:
-
-```rs
-tokio::spawn(async {
-    // Some work
-    tokio::spawn(async {  // Nested spawn!
-        // More work
-        tokio::spawn(async { /* ... */ })
-    })
-})
-```
-
-#pause
-
-*Recommendation:* Spawn once at application boundaries:
-- Spawn tasks at the top level (e.g., per incoming request)
-- Use regular async functions and `.await` for sequential steps
-- Only spawn when you need true concurrent execution
+The compiler may tell you to use `Box::pin` to pin futures to the heap.
 
 
+#grid(
+  columns: 2,
+  gutter: 1em,
+  [
+    *Heap pinning (avoid in hot paths):*
+    ```rs
+    loop {
+        let fut = Box::pin(async {
+            process().await
+        });
+        tokio::select! {
+            r = fut => handle(r),
+            _ = shutdown() => break,
+        }
+    }
+    ```
+  ],
+  [
+    *Stack pinning (zero-cost):*
+    ```rs
+    use tokio::pin;
+    loop {
+        let fut = async {
+            process().await
+        };
+        pin!(fut);
+        tokio::select! {
+            r = fut => handle(r),
+            _ = shutdown() => break,
+        }
+    }
+    ```
+  ],
+)
+
+Use `Box::pin` for collections or return values, `pin!` for hot paths, `pin_project` for custom structs.
 
 == Forget handling deadlocks
 
@@ -1406,6 +1688,35 @@ Solutions are provided as `*-solution.rs` files.
 In this exercise, we want to use our new knowledge to implement a broadcast chat application. We have a chat server that the clients connect to and publish their messages. The client reads user messages from the standard input, and sends them to the server. The chat server broadcasts each message that it receives to all the clients.
 
 For this, we use a broadcast channel on the server, and tokio_websockets for the communication between the client and the server.
+
+
+#pagebreak()
+
+#align(center)[
+  #fletcher.diagram(
+    node-stroke: 1pt,
+    edge-stroke: 1pt,
+    node((0, 0), [Client 1 \ stdin], shape: rect, name: <c1>),
+    node((0, 2), [Client 2 \ stdin], shape: rect, name: <c2>),
+    node((0, 4), [Client 3 \ stdin], shape: rect, name: <c3>),
+    node(
+      (3, 2),
+      [Server \ Broadcast \ Channel],
+      shape: rect,
+      width: 2.5cm,
+      name: <server>,
+    ),
+    node((6, 0), [Client 1 \ stdout], shape: rect, name: <c1out>),
+    node((6, 2), [Client 2 \ stdout], shape: rect, name: <c2out>),
+    node((6, 4), [Client 3 \ stdout], shape: rect, name: <c3out>),
+    edge(<c1>, <server>, "->", [WebSocket], label-side: left),
+    edge(<c2>, <server>, "->", [WebSocket], label-side: left),
+    edge(<c3>, <server>, "->", [WebSocket], label-side: left),
+    edge(<server>, <c1out>, "->", [Broadcast], label-side: right),
+    edge(<server>, <c2out>, "->", [Broadcast], label-side: right),
+    edge(<server>, <c3out>, "->", [Broadcast], label-side: right),
+  )
+]
 
 == APIs
 

@@ -1,5 +1,3 @@
 [editor.lsp]
 auto-signature-help = false
 
-[keys.insert]
-'C-c' = "signature_help"
