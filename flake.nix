@@ -9,15 +9,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    git-hooks = {
-      url = "github:cachix/git-hooks.nix";
+    typix = {
+      url = "github:loqusion/typix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
+    typst-packages = {
+      url = "github:typst/packages";
+      flake = false;
     };
+
+    crane.url = "github:ipetkov/crane";
   };
 
   outputs =
@@ -25,95 +27,102 @@
       self,
       nixpkgs,
       fenix,
-      git-hooks,
-      treefmt-nix,
+      typix,
+      typst-packages,
+      crane,
     }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+      lib = pkgs.lib;
+
       rustToolchain = fenix.packages.${system}.fromToolchainFile {
         file = ./rust-toolchain.toml;
         sha256 = "sha256-SDu4snEWjuZU475PERvu+iO50Mi39KVjqCeJeNvpguU=";
       };
 
-      treefmtEval = treefmt-nix.lib.evalModule pkgs {
-        projectRootFile = "flake.nix";
+      # Typst slide building
+      typixLib = typix.lib.${system};
 
-        programs = {
-          nixfmt.enable = true;
-          prettier = {
-            enable = true;
-            includes = [ "*.md" ];
-          };
-          typstyle.enable = true;
-          rustfmt = {
-            enable = true;
-            package = rustToolchain;
-          };
-        };
-
-        settings.global.excludes = [
-          "target/*"
-          "*.lock"
-          ".direnv/*"
-        ];
+      slideSrc = lib.fileset.toSource {
+        root = ./.;
+        fileset = lib.fileset.unions ([ ./template ] ++ map (s: ./${s}) sessions);
       };
 
-      pre-commit-check = git-hooks.lib.${system}.run {
-        src = ./.;
-        hooks = {
-          cspell = {
-            enable = false;
-            name = "cspell";
-            description = "Check spelling with cspell";
-            entry = "${pkgs.cspell}/bin/cspell lint --no-progress --no-summary";
-            types = [ "text" ];
+      buildSlides =
+        session:
+        let
+          pdf = typixLib.buildTypstProject {
+            src = slideSrc;
+            typstSource = "${session}/slides.typ";
+            typstOpts.root = ".";
+            TYPST_PACKAGE_CACHE_PATH = "${typst-packages}/packages";
           };
-          typos = {
-            enable = true;
-          };
-          typstyle = {
-            enable = true;
-          };
-          rustfmt = {
-            enable = true;
-            packageOverrides.rustfmt = rustToolchain;
-            packageOverrides.cargo = rustToolchain;
-          };
-          clippy = {
-            enable = false;
-            packageOverrides.clippy = rustToolchain;
-            packageOverrides.cargo = rustToolchain;
-            settings.allFeatures = true;
-          };
-          nixfmt = {
-            enable = true;
-          };
-        };
+        in
+        pkgs.runCommand "${session}-slides" { } ''
+          mkdir -p $out
+          cp ${pdf} $out/${session}-slides.pdf
+        '';
+
+      sessions = [
+        "session1"
+        "session2"
+        "session3"
+        "session4"
+        "session5"
+        "session6"
+        "session7"
+      ];
+
+      slidePackages = lib.listToAttrs (
+        map (s: {
+          name = "${s}-slides";
+          value = buildSlides s;
+        }) sessions
+      );
+
+      # Rust workspace building
+      craneLib = (crane.mkLib pkgs).overrideToolchain (_: rustToolchain);
+      craneSource = craneLib.cleanCargoSource ./.;
+
+      commonArgs = {
+        src = craneSource;
+        pname = "rust-course-ghent";
+        version = "0.1.0";
+        strictDeps = true;
+        nativeBuildInputs = [ pkgs.pkg-config ];
+        buildInputs = [ pkgs.openssl ];
       };
+
+      # Only verify that dependencies resolve and lock file is up-to-date;
+      # individual session code includes intentionally incomplete exercises.
+      workspace = craneLib.buildDepsOnly commonArgs;
+
     in
     {
-      formatter.${system} = treefmtEval.config.build.wrapper;
+
+      packages.${system} =
+        let
+          allSlides = pkgs.symlinkJoin {
+            name = "all-slides";
+            paths = lib.attrValues slidePackages;
+          };
+        in
+        slidePackages
+        // {
+          all-slides = allSlides;
+          inherit workspace;
+          default = allSlides;
+        };
 
       checks.${system} = {
-        inherit pre-commit-check;
-        formatting = treefmtEval.config.build.check self;
+        workspace-deps = workspace;
       };
 
-      devShells.${system}.default = pkgs.mkShell {
-        inherit (pre-commit-check) shellHook;
+      devShells.${system}.default = craneLib.devShell {
+        inputsFrom = [ workspace ];
 
-        nativeBuildInputs = [
-          pkgs.pkg-config
-          rustToolchain
-        ]
-        ++ pre-commit-check.enabledPackages;
-
-        buildInputs = [
-          pkgs.openssl
-        ];
-
-        LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [ pkgs.openssl ];
+        LD_LIBRARY_PATH = lib.makeLibraryPath [ pkgs.openssl ];
       };
     };
 }
