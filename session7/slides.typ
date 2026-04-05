@@ -1339,7 +1339,7 @@ To prevent deadlock, break at least one condition:
         stroke: gray,
       ),
 
-      step(2),
+      jump(2),
 
       // Slide 2: Add remaining philosophers and chopsticks
       node((2.2, -1.2), name: <p1>, [Plato], shape: shapes.circle),
@@ -1360,8 +1360,8 @@ To prevent deadlock, break at least one condition:
       ),
 
       // Slide 2-3: Initial gray chopsticks (hide after P0 starts eating)
-      ..until(
-        3,
+      only(
+        "1-3",
         node(
           (2.2, 1.2),
           name: <c0-gray>,
@@ -1369,6 +1369,9 @@ To prevent deadlock, break at least one condition:
           shape: shapes.rect,
           stroke: gray,
         ),
+      ),
+      only(
+        "1-3",
         node(
           (-2.2, 1.2),
           name: <c2-gray>,
@@ -1378,11 +1381,11 @@ To prevent deadlock, break at least one condition:
         ),
       ),
 
-      step(3),
+      jump(3),
 
       // Slide 3: P0 eating (blue state)
-      at(
-        3,
+      only(
+        "3",
         node(
           (0, 2.5),
           name: <p0eat>,
@@ -1391,6 +1394,9 @@ To prevent deadlock, break at least one condition:
           stroke: blue,
           fill: blue.lighten(85%),
         ),
+      ),
+      only(
+        "3",
         edge(
           <p0eat>,
           <c0>,
@@ -1401,6 +1407,9 @@ To prevent deadlock, break at least one condition:
           label-pos: 0.6,
           label-side: right,
         ),
+      ),
+      only(
+        "3",
         edge(
           <p0eat>,
           <c2>,
@@ -1410,6 +1419,9 @@ To prevent deadlock, break at least one condition:
           bend: -25deg,
           label-pos: 0.7,
         ),
+      ),
+      only(
+        "3",
         node(
           (2.2, 1.2),
           name: <c0eat>,
@@ -1418,6 +1430,9 @@ To prevent deadlock, break at least one condition:
           stroke: blue,
           fill: blue.lighten(80%),
         ),
+      ),
+      only(
+        "3",
         node(
           (-2.2, 1.2),
           name: <c2eat>,
@@ -1428,11 +1443,11 @@ To prevent deadlock, break at least one condition:
         ),
       ),
 
-      step(4),
+      jump(4),
 
       // Slide 4: Back to gray chopsticks after eating
-      at(
-        4,
+      only(
+        "4",
         node(
           (2.2, 1.2),
           name: <c0-gray2>,
@@ -1440,6 +1455,9 @@ To prevent deadlock, break at least one condition:
           shape: shapes.rect,
           stroke: gray,
         ),
+      ),
+      only(
+        "4",
         node(
           (-2.2, 1.2),
           name: <c2-gray2>,
@@ -1449,11 +1467,11 @@ To prevent deadlock, break at least one condition:
         ),
       ),
 
-      step(5),
+      jump(5),
 
       // Slide 5: All philosophers try to grab left (black edges, only this slide)
-      at(
-        5,
+      only(
+        "5",
         edge(
           <p0>,
           <c2>,
@@ -1464,6 +1482,9 @@ To prevent deadlock, break at least one condition:
           label-pos: 0.6,
           label-side: right,
         ),
+      ),
+      only(
+        "5",
         edge(
           <p1>,
           <c0>,
@@ -1474,6 +1495,9 @@ To prevent deadlock, break at least one condition:
           label-pos: 0.4,
           label-side: right,
         ),
+      ),
+      only(
+        "5",
         edge(
           <p2>,
           <c1>,
@@ -1485,12 +1509,11 @@ To prevent deadlock, break at least one condition:
         ),
       ),
 
-      step(6),
+      jump(6),
 
       // Slide 6+: Successfully holding left chopsticks (green)
-      between(
-        6,
-        10,
+      only(
+        "6-10",
         edge(
           <p0>,
           <c2>,
@@ -1498,6 +1521,9 @@ To prevent deadlock, break at least one condition:
           stroke: (paint: green, thickness: 2pt),
           bend: -20deg,
         ),
+      ),
+      only(
+        "6-10",
         edge(
           <p1>,
           <c0>,
@@ -1505,6 +1531,9 @@ To prevent deadlock, break at least one condition:
           stroke: (paint: green, thickness: 2pt),
           bend: -20deg,
         ),
+      ),
+      only(
+        "6-10",
         edge(
           <p2>,
           <c1>,
@@ -1512,6 +1541,9 @@ To prevent deadlock, break at least one condition:
           stroke: (paint: green, thickness: 2pt),
           bend: -20deg,
         ),
+      ),
+      only(
+        "6-10",
         node(
           (2.2, 1.2),
           name: <c0-held>,
@@ -1520,6 +1552,9 @@ To prevent deadlock, break at least one condition:
           stroke: green,
           fill: green.lighten(80%),
         ),
+      ),
+      only(
+        "6-10",
         node(
           (0, -2.5),
           name: <c1-held>,
@@ -1528,6 +1563,9 @@ To prevent deadlock, break at least one condition:
           stroke: green,
           fill: green.lighten(80%),
         ),
+      ),
+      only(
+        "6-10",
         node(
           (-2.2, 1.2),
           name: <c2-held>,
@@ -1538,10 +1576,10 @@ To prevent deadlock, break at least one condition:
         ),
       ),
 
-      step(7),
+      jump(7),
 
       // Slide 7+: P0 wants right chopstick
-      between(7, 10, edge(
+      only("7-10", edge(
         <p0>,
         <c0>,
         "-->",
@@ -1551,10 +1589,10 @@ To prevent deadlock, break at least one condition:
         label-pos: 0.3,
       )),
 
-      step(8),
+      jump(8),
 
       // Slide 8+: P1 wants right chopstick
-      between(8, 10, edge(
+      only("8-10", edge(
         <p1>,
         <c1>,
         "-->",
@@ -1564,10 +1602,10 @@ To prevent deadlock, break at least one condition:
         label-pos: 0.3,
       )),
 
-      step(9),
+      jump(9),
 
       // Slide 9+: P2 wants right chopstick
-      between(9, 10, edge(
+      only("9-10", edge(
         <p2>,
         <c2>,
         "-->",
@@ -1577,7 +1615,7 @@ To prevent deadlock, break at least one condition:
         label-pos: 0.3,
       )),
 
-      step(10),
+      jump(10),
 
       // Slide 10: Focus on Socrates' deadlock situation
       node(

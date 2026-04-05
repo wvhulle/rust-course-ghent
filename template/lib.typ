@@ -3,7 +3,7 @@
 // Import all dependencies from centralized file
 #import "dependencies.typ": (
   codly-init, config-colors, config-common, config-info, config-methods,
-  config-page, config-store, meanwhile, only, pause, show-theorion, step,
+  config-page, config-store, jump, meanwhile, only, pause, show-theorion,
   theorem-counter, touying-slides, uncover, utils,
 )
 // Import all template components
@@ -103,8 +103,8 @@
 #import "slides.typ": focus-slide, matrix-slide, slide, title-slide
 #import "components.typ": definition, error, info, proposition, qa, warning
 #import "dependencies.typ": (
-  at, between, cetz-canvas, codly, diagram, draw, edge, fletcher,
-  fletcher-diagram, hide, node, shapes, until,
+  cetz-canvas, codly, diagram, draw, edge, fletcher,
+  fletcher-diagram, hide, jump, node, only, shapes,
 )
 #import "colors.typ": (
   accent, arrow-width, colors, node-outset, node-radius, stroke-width,

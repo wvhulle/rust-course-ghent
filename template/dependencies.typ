@@ -4,11 +4,11 @@
 // only update them here.
 
 // Presentation framework
-#import "@local/touying:0.6.1": (
-  at, between, components, config-colors, config-common, config-info,
-  config-methods, config-page, config-store, meanwhile, only, step,
+#import "@preview/touying:0.7.0": (
+  components, config-colors, config-common, config-info,
+  config-methods, config-page, config-store, jump, meanwhile, only,
   touying-reducer, touying-slide, touying-slide-wrapper, touying-slides,
-  uncover, until, utils,
+  uncover, utils,
 )
 
 // Code syntax highlighting and formatting
@@ -28,7 +28,7 @@
 
 // Re-export commonly used items for convenience
 #let pause = {
-  import "@local/touying:0.6.1": pause
+  import "@preview/touying:0.7.0": pause
   pause
 }
 
@@ -38,9 +38,9 @@
 // Touying bindings for CeTZ and Fletcher diagrams
 #let cetz-canvas = touying-reducer.with(
   reduce: canvas,
-  cover: draw.hide.with(bounds: true),
+  cover: draw.hide,
 )
 #let fletcher-diagram = touying-reducer.with(
   reduce: diagram,
-  cover: hide.with(bounds: true),
+  cover: hide,
 )
