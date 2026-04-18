@@ -13,7 +13,7 @@
 
 // Code syntax highlighting and formatting
 #import "@preview/codly:1.3.0": (
-  codly, codly-disable, codly-init, codly-reset, no-codly,
+  codly, codly-init,
 )
 
 // QR code generation

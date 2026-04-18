@@ -25,14 +25,11 @@
 }
 
 #let colors = (
-  title: color.rgb("#bfeddc"),
-  code: color.rgb("#fcfcf5"),
   neutral: color.hsl(0deg, 0%, 90.98%),
   stream: color.hsl(200deg, 65%, 92%),
   operator: color.hsl(45.16deg, 100%, 88.76%),
   data: color.hsl(330.91deg, 57.89%, 95%),
   state: color.hsl(140deg, 34.88%, 84.71%),
-  action: color.hsl(21.25deg, 68.57%, 86.27%),
   pin: color.hsl(240deg, 100%, 93.92%),
   error: color.hsl(0deg, 100%, 90.39%),
 )

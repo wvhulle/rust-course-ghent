@@ -121,6 +121,7 @@
 
       devShells.${system}.default = craneLib.devShell {
         inputsFrom = [ workspace ];
+        packages = [ pkgs.typst ];
 
         LD_LIBRARY_PATH = lib.makeLibraryPath [ pkgs.openssl ];
       };

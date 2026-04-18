@@ -1,5 +1,5 @@
 #import "dependencies.typ": (
-  codly, codly-disable, codly-init, codly-reset, no-codly, qrcode,
+  codly, codly-init, qrcode,
 )
 #let url(it) = {
   let url = if ("rust", "rs").contains(it.lang) {

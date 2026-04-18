@@ -3,15 +3,14 @@
 // Import all dependencies from centralized file
 #import "dependencies.typ": (
   codly-init, config-colors, config-common, config-info, config-methods,
-  config-page, config-store, jump, meanwhile, only, pause, show-theorion,
-  theorem-counter, touying-slides, uncover, utils,
+  config-page, config-store, jump, only, pause, show-theorion,
+  theorem-counter, touying-slides, utils,
 )
 // Import all template components
 #import "colors.typ": primary-color, secondary-color, tertiary-color, text-color
 #import "slides.typ": new-section-slide, slide
 #import "components.typ": qa
 #import "code-fragments.typ": embed-qr-code, embed-url-code, init-code-fragments
-#import "math-helpers.typ": *
 #let rust-course(
   aspect-ratio: "16-9",
   progress-bar: true,
@@ -34,7 +33,6 @@
     h(1fr)
   },
   enable-qr-codes: false, // Set to true to enable QR code generation
-  enable-diagrams: true, // Set to false to disable diagram rendering for faster compilation
   ..args,
   body,
 ) = {

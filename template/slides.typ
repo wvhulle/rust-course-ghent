@@ -3,7 +3,7 @@
   touying-slide-wrapper, utils,
 )
 #import "custom-outline.typ": *
-#import "math-helpers.typ": _type
+#let _type = type
 
 // Import all theme components
 

@@ -11,7 +11,6 @@
     institution: [DevLab Rust 2025],
     url: "https://github.com/wvhulle/rust-course-ghent",
   ),
-  diagram-enabled: true,
   enable-qr-codes: false,
 )
 

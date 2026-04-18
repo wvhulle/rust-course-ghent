@@ -1,5 +1,4 @@
 #import "../template/lib.typ": *
-#import "../template/diagram-helpers.typ": *
 #import "@preview/cetz:0.4.2"
 #import "@preview/chronos:0.2.1"
 
@@ -13,7 +12,6 @@
     institution: [DevLab Rust 2025],
     url: "https://github.com/wvhulle/rust-course-ghent",
   ),
-  diagram-enabled: true,
   enable-qr-codes: false,
 )
 
@@ -1786,7 +1784,7 @@ For this to work, the client and the server code are in session7/src/bin.
 
 Run the server with:
 
-```bash
+```
 cargo run --bin server
 ```
 and the client with:

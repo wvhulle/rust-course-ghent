@@ -1,23 +1,13 @@
 // Diagram helpers using Fletcher and CeTZ
 
 #import "dependencies.typ": (
-  canvas, diagram, draw, edge, fletcher, hide, jump, node, only, shapes,
-  touying-reducer,
+  canvas, cetz-canvas, diagram, draw, edge, fletcher, fletcher-diagram, hide,
+  node, shapes,
 )
 #import "colors.typ": (
   accent, arrow-width as default-arrow-width, colors,
   node-outset as default-node-outset, node-radius as default-node-radius,
   stroke-width as default-stroke-width,
-)
-
-// Touying bindings for CeTZ and Fletcher
-#let cetz-canvas = touying-reducer.with(
-  reduce: canvas,
-  cover: draw.hide,
-)
-#let fletcher-diagram = touying-reducer.with(
-  reduce: diagram,
-  cover: hide,
 )
 
 // Helper to cover entire diagram area with white background
