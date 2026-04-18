@@ -1,5 +1,5 @@
 
-#import "../template/lib.typ": *
+#import "@local/slide-theme:0.1.0": *
 
 
 = Ownership

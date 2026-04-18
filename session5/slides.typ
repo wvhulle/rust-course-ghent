@@ -1,11 +1,11 @@
 
-#import "../template/lib.typ": *
+#import "@local/slide-theme:0.1.0": *
 
 #import "@preview/cetz:0.4.2"
 
 
 
-#show: rust-course.with(
+#show: slide-theme.with(
   config-info(
     title: [Lecture 5: Error handling],
     subtitle: [Review tests, learn error handling, unsafe Rust],

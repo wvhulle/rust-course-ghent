@@ -1,9 +1,9 @@
 
-#import "../template/lib.typ": *
+#import "@local/slide-theme:0.1.0": *
 
 
 
-#show: rust-course.with(
+#show: slide-theme.with(
   config-info(
     title: [Lecture 3: Ownership],
     subtitle: [Mid-series exercises and move semantics],

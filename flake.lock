@@ -57,6 +57,7 @@
         "crane": "crane",
         "fenix": "fenix",
         "nixpkgs": "nixpkgs",
+        "slide-theme": "slide-theme",
         "typix": "typix",
         "typst-packages": "typst-packages"
       }
@@ -76,6 +77,26 @@
         "ref": "nightly",
         "repo": "rust-analyzer",
         "type": "github"
+      }
+    },
+    "slide-theme": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1776515645,
+        "narHash": "sha256-4Uh5sprPH38E/SZ5tZFe2Wq+2at5RFh+ARpI2Fcn9+Q=",
+        "ref": "refs/heads/main",
+        "rev": "16da2ec64b4c39317cac59c7d31f81d89b762554",
+        "revCount": 4,
+        "type": "git",
+        "url": "https://codeberg.org/wvhulle/slide-theme"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://codeberg.org/wvhulle/slide-theme"
       }
     },
     "typix": {

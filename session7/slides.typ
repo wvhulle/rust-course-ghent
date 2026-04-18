@@ -1,9 +1,9 @@
-#import "../template/lib.typ": *
+#import "@local/slide-theme:0.1.0": *
 #import "@preview/cetz:0.4.2"
 #import "@preview/chronos:0.2.1"
 
 
-#show: rust-course.with(
+#show: slide-theme.with(
   config-info(
     title: [Lecture 7: Asynchronous programming],
     subtitle: [Presentations students, introduction to async],

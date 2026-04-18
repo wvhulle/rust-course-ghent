@@ -1,6 +1,4 @@
 {
-  description = "Rust course - Ghent";
-
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
@@ -14,6 +12,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    slide-theme = {
+      url = "git+https://codeberg.org/wvhulle/slide-theme";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     typst-packages = {
       url = "github:typst/packages";
       flake = false;
@@ -24,12 +27,13 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       fenix,
       typix,
+      slide-theme,
       typst-packages,
       crane,
+      ...
     }:
     let
       system = "x86_64-linux";
@@ -46,7 +50,7 @@
 
       slideSrc = lib.fileset.toSource {
         root = ./.;
-        fileset = lib.fileset.unions ([ ./template ] ++ map (s: ./${s}) sessions);
+        fileset = lib.fileset.unions (map (s: ./${s}) sessions);
       };
 
       buildSlides =
@@ -56,6 +60,8 @@
             src = slideSrc;
             typstSource = "${session}/slides.typ";
             typstOpts.root = ".";
+            fontPaths = [ "${slide-theme.packages.${system}.fonts}/share/fonts" ];
+            TYPST_PACKAGE_PATH = "${slide-theme.packages.${system}.typstPackagePath}";
             TYPST_PACKAGE_CACHE_PATH = "${typst-packages}/packages";
           };
         in
@@ -124,6 +130,9 @@
         packages = [ pkgs.typst ];
 
         LD_LIBRARY_PATH = lib.makeLibraryPath [ pkgs.openssl ];
+
+        TYPST_PACKAGE_PATH = "${slide-theme.packages.${system}.typstPackagePath}";
+        TYPST_FONT_PATHS = "${slide-theme.packages.${system}.fonts}/share/fonts";
       };
     };
 }

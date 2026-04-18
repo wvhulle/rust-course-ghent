@@ -1,8 +1,8 @@
-#import "../template/lib.typ": *
+#import "@local/slide-theme:0.1.0": *
 #import "@preview/cetz:0.4.2"
 
 
-#show: rust-course.with(
+#show: slide-theme.with(
   config-info(
     title: [Lecture 6: Parallel programming],
     subtitle: [Threads, channels and shared state],
